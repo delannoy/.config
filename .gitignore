@@ -1,0 +1,12 @@
+*
+!.gitignore
+# !README.md
+# !bash/*
+# !git/*
+# git/user
+# !less/*
+# !python/*
+# !readline/*
+# !ssh/*
+# !vim/*
+# !wget/*
