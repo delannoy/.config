@@ -1,28 +1,32 @@
 # XDG dotfiles
 
-This repo intends to organize dotfiles into the `$XDG_CONFIG_HOME` directory, following the [XDG Base Directory Specification](https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html), and simply version control said directory.
+This repo aims to organize dotfiles into the `$XDG_CONFIG_HOME` directory, following the [XDG Base Directory Specification](https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html), and simply version control said directory.
 It relies heavily on information collected in the [ArchWiki XDG Base Directory page](https://wiki.archlinux.org/title/XDG_Base_Directory).
-Note that the .gitignore file ignores _everything_, thus, `git add` must be run for all new files in order to be tracked.
+Note that the .gitignore file ignores _everything_, thus, `git add` must be run for all new files in order to track them.
 A private git submodule, which links to a private git repo, is used to version control private config files.
 
 # Installation
+The instructions below set `$XDG_CONFIG_HOME` to its default location (`${HOME}/.config`).
+If the `${HOME}/.config` directory aleady exists, it is moved/renamed to `${HOME}/.config.bkp`.
+The public repo is cloned into `$XDG_CONFIG_HOME`.
+A `private` submodule is cloned within `$XDG_CONFIG_HOME`.
+Then, the contents of `${HOME}/.config.bkp` (if present) are copied to `${HOME}/.config`, where the user can check for any file conflicts.
+Finally, `${HOME}/.profile` and `${HOME}/.bashrc` are moved/renamed (if they are present) and replaced with a single line sourcing their corresponding location in `${HOME}/.config`.
 
-The instructions below sets `$XDG_CONFIG_HOME` to its default `"${HOME}/.config"` location and assumes that this directory is not empty, but not already under version control.
-The user will be prompted to clean up any file conflicts.
-
-```bash
+```shell
 export XDG_CONFIG_HOME="${HOME}/.config"
-mkdir --parents "${XDG_CONFIG_HOME}" && cd "${XDG_CONFIG_HOME}"
+[[ -d "${XDG_CONFIG_HOME}" ]] && mv --verbose --interactive "${XDG_CONFIG_HOME}" "${XDG_CONFIG_HOME}.bkp"
 
-# [How do I clone into a non-empty directory?](https://stackoverflow.com/a/18999726/13019084)
-# [How to clone a git repo to an existing folder (not empty)](https://gist.github.com/ZeroDragon/6707408#gistcomment-3235804)
-git init
-git remote add origin 'git@github.com:delannoy/.config.git'
-git fetch
-git checkout --track origin/main # [When creating a new branch, set up "upstream" configuration. If no -b option is given, the name of the new branch will be derived from the remote-tracking branch](https://git-scm.com/docs/git-checkout#Documentation/git-checkout.txt---track)
-# git checkout --track origin/main -b main # [Specifying -b causes a new branch to be created as if git-branch[1] were called and then checked out.](https://git-scm.com/docs/git-checkout#Documentation/git-checkout.txt-emgitcheckoutem-b-Bltnewbranchgtltstartpointgt)
-# git checkout --track origin/main -B main # [If -B is given, <new_branch> is created if it doesn't exist; otherwise, it is reset](https://git-scm.com/docs/git-checkout#Documentation/git-checkout.txt-emgitcheckoutem-b-Bltnewbranchgtltstartpointgt)
+user='delannoy'
+git clone "git@github.com:${user}/.config.git" "${XDG_CONFIG_HOME}"
+cd "${XDG_CONFIG_HOME}"
+git submodule add "git@github.com:${user}/private.git" # [Using Git Submodules for Private Content](https://www.taniarascia.com/git-submodules-private-content/)
+# git submodule init
 
-[[ "$(grep --count '${HOME}/.config/bash/profile' "${HOME}/.profile" 2>/dev/null)" != 1 ]] && echo 'source "${HOME}/.config/bash/profile"' >> "${HOME}/.profile"
-[[ "$(grep --count '${HOME}/.config/bash/bashrc' "${HOME}/.bashrc" 2>/dev/null)" != 1 ]] && echo 'source "${HOME}/.config/bash/bashrc"' >> "${HOME}/.bashrc"
+[[ -d "${XDG_CONFIG_HOME}.bkp" ]] && mv --verbose --interactive "${XDG_CONFIG_HOME}.bkp/"* "${XDG_CONFIG_HOME}/"
+
+for file in profile bashrc; do
+    [[ -f "${HOME}/.${file}" ]] && mv --verbose --interactive "${HOME}/.${file}.bkp";
+    echo 'source "${HOME}/.config/bash/${file}"' > "${HOME}/.${file}";
+done
 ```
