@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+
+[[ -n "${BASH}" ]] && shopt -q login_shell && printf '%s\n' "***$(realpath "${BASH_SOURCE[0]}")***" || return
+
+# [XDG Base Directory](https://wiki.archlinux.org/title/XDG_Base_Directory#Supported)
+# [https://github.com/avioli/woegjiub-config/blob/edd41628b374de3747165421abd80e5840e23c77/sh/xdg.sh]
+
+export CARGO_HOME="${XDG_CACHE_HOME}/cargo" # [Cargo maintains a local cache of the registry index and of git checkouts of crates](https://doc.rust-lang.org/cargo/reference/environment-variables.html#environment-variables)
+export DOCKER_CONFIG="${XDG_CONFIG_HOME}/docker" # [The location of your client configuration files](https://docs.docker.com/engine/reference/commandline/cli/#environment-variables)
+export GNUPGHOME="${XDG_DATA_HOME}/gnupg" # [If set, directory used instead of "~/.gnupg"](https://www.gnupg.org/documentation/manuals/gnupg/GPG-Configuration.html)
+export GOPATH="${XDG_DATA_HOME}/go" # [The GOPATH environment variable specifies the location of your workspace](https://golang.org/doc/gopath_code#GOPATH)
+export HTTPIE_CONFIG_DIR="${XDG_CONFIG_HOME}/httpie" # [Config file directory](https://github.com/httpie/httpie#251config-file-directory)
+export IPYTHONDIR="${XDG_CONFIG_HOME}/ipython" # [path to a directory, which IPython will use for user data. IPython will create it if it does not exist](https://ipython.org/ipython-doc/3/config/intro.html#envvar-IPYTHONDIR)
+export JULIA_DEPOT_PATH="${XDG_CACHE_HOME}/julia:${JULIA_DEPOT_PATH}" # [The JULIA_DEPOT_PATH environment variable is used to populate the global Julia DEPOT_PATH variable](https://docs.julialang.org/en/v1/manual/environment-variables/#JULIA_DEPOT_PATH)
+export JUPYTER_CONFIG_DIR="${XDG_CONFIG_HOME}/jupyter" # [use a particular directory, other than the default, for Jupyter config files](https://jupyter.readthedocs.io/en/latest/use/jupyter-directories.html#envvar-JUPYTER_CONFIG_DIR)
+export PARALLEL_HOME="${XDG_CONFIG_HOME}/parallel" # [Dir where GNU parallel stores config files, semaphores, and caches information between invocations](https://www.gnu.org/software/parallel/parallel.html#environment-variables)
+export PYENV_ROOT="${XDG_CACHE_HOME}/pyenv" # [Defines the directory under which Python versions and shims reside](https://github.com/pyenv/pyenv#environment-variables)
+export SCREENDIR="${SCREENRC%/*}" && chmod 700 "${SCREENDIR}" # [Socket Directory. If screen is not running setuid-root, the user can specify any mode 700 directory in the environment variable $SCREENDIR](https://www.gnu.org/software/screen/manual/html_node/Socket-Directory.html)
+export ZDOTDIR="${XDG_CONFIG_HOME}/zsh" # [startup files that zsh will read commands from](https://zsh.sourceforge.io/Intro/intro_3.html)
+
+# export GIT_CONFIG="${XDG_CONFIG_HOME}/git/config" # [If no --file option is provided to git config, use the file given by GIT_CONFIG as if it were provided via --file. This variable has no effect on other Git commands, and is mostly for historical compatibility; there is generally no reason to use it instead of the --file option.](https://git-scm.com/docs/git-config#_environment) # [How Do I Use `GIT_CONFIG` Environment Variable](https://stackoverflow.com/a/68697328/13019084)
+export ICEAUTHORITY="${XDG_CACHE_HOME}/ICEauthority" # [This variable identifies where the authentication information is located](https://www.ibm.com/docs/en/zos/2.2.0?topic=motif-x-window-system-environment-variables) # [https://wiki.archlinux.org/title/XDG_Base_Directory#:~:text=libice]
+export MATPLOTLIBRC="${XDG_CONFIG_HOME}/matplotlib/matplotlibrc" # [Matplotlib uses matplotlibrc configuration files to customize all kinds of properties](https://matplotlib.org/stable/tutorials/introductory/customizing.html#the-matplotlibrc-file)
+export PIP_CONFIG_FILE="${XDG_CONFIG_HOME}/pip/conf" # [PIP_CONFIG_FILE can be used to specify a configuration file that’s loaded first, and whose values are overridden by the values set in the aforementioned files](https://pip.pypa.io/en/stable/topics/configuration/#pip-config-file)
+export PYTHONSTARTUP="${XDG_CONFIG_HOME}/python/startup" # [Python commands in that file are executed before the first prompt is displayed in interactive mode](https://docs.python.org/3/using/cmdline.html#envvar-PYTHONSTARTUP)
+export SCREENRC="${XDG_CONFIG_HOME}/screen/conf" # [Alternate user screenrc file](https://www.gnu.org/software/screen/manual/screen.html#Environment)
+export TMUXRC="${XDG_CONFIG_HOME}/tmux/conf" # [XDG reluctantly and half-heartedly "implemented" in version 3.2](https://github.com/tmux/tmux/issues/142)
+export WGETRC="${XDG_CONFIG_HOME}/wget/conf" # [Wgetrc Location](https://www.gnu.org/software/wget/manual/html_node/Wgetrc-Location.html)
+export XAUTHORITY="${XDG_RUNTIME_DIR}/Xauthority" # [Specifies the name of the authority file on the local host](https://www.ibm.com/docs/en/zos/2.2.0?topic=motif-x-window-system-environment-variables)
