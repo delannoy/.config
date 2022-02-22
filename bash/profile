@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+# [How to check if a shell is login/interactive/batch](https://unix.stackexchange.com/a/26782)
+# [Reliable way for a Bash script to get the full path to itself [duplicate]](https://stackoverflow.com/a/11114547)
+[[ -n "${BASH}" ]] && shopt -q login_shell && printf '%s\n' "***$(realpath "${BASH_SOURCE[0]}")***" || return
+
+source "${HOME}/bash/env/xdg"
+source "${XDG_CONFIG_HOME}/bash/env/env"
+source "${XDG_CONFIG_HOME}/private/bash/env"
+source "${XDG_CONFIG_HOME}/bash/bashrc"
