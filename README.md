@@ -11,7 +11,7 @@ If the `${HOME}/.config` directory aleady exists, it is moved/renamed to `${HOME
 The public repo is cloned into `$XDG_CONFIG_HOME`.
 A `private` submodule is cloned within `$XDG_CONFIG_HOME`.
 Then, the contents of `${HOME}/.config.bkp` (if present) are copied to `${HOME}/.config`, where the user can check for any file conflicts.
-Finally, `${HOME}/.profile` and `${HOME}/.bashrc` are moved/renamed (if they are present) and replaced with a single line sourcing their corresponding location in `${HOME}/.config`.
+Finally, `${HOME}/.bash_profile`, `${HOME}/.bash_login`, `${HOME}/.profile`, and `${HOME}/.bashrc` are moved/renamed (if they are present) and replaced with `${HOME}/.profile`, which simply sources `${HOME}/.config/bash/profile`.
 
 ```shell
 export XDG_CONFIG_HOME="${HOME}/.config"
@@ -25,8 +25,7 @@ git submodule add "git@github.com:${user}/private.git" # [Using Git Submodules f
 
 [[ -d "${XDG_CONFIG_HOME}.bkp" ]] && mv --verbose --interactive "${XDG_CONFIG_HOME}.bkp/"* "${XDG_CONFIG_HOME}/"
 
-for file in profile bashrc; do
-    [[ -f "${HOME}/.${file}" ]] && mv --verbose --interactive "${HOME}/.${file}.bkp";
-    echo 'source "${HOME}/.config/bash/${file}"' > "${HOME}/.${file}";
-done
+for file in bash_profile bash_login profile bashrc; do [[ -f "${HOME}/.${file}" ]] && mv --verbose --interactive "${HOME}/.${file}" "${XDG_CONFIG_HOME}/bash/${file}.bkp"; done
+
+echo 'source "${HOME}/.config/bash/profile"' > "${HOME}/.profile";
 ```
