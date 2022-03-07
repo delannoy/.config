@@ -1,0 +1,58 @@
+#!/usr/bin/env bash
+
+# [Exit if shell is not running BASH or is non-interactive](https://askubuntu.com/a/1070182)
+# [Reliable way for a Bash script to get the full path to itself [duplicate]](https://stackoverflow.com/a/11114547)
+(( "${_VERBOSE}" >= 1 )) && [[ -n "${BASH}" ]] && [[ $- == *i* ]] && printf '%s\n' "***$(realpath "${BASH_SOURCE[0]}")***" || return
+
+_source(){
+    [[ -f "$1" ]] && source "$1";
+    [[ -d "$1" ]] && find "$1/" -type f -not -name '.*' | xargs --max-args=1 source;
+}
+
+_hostConfig(){
+    local hostName="$(hostname --long 2>/dev/null || echo "${HOSTNAME}")" # hostName=$(hostname; hostname --domain; hostname --all-fqdns; hostname --alias)
+    [[ "${HOSTSLOCAL[@]}" =~ "${hostName}" ]] && _source "${XDG_CONFIG_HOME}/private/bash/local"
+    [[ "${HOSTSREMOTE[@]}" =~ "${hostName}" ]] && _source "${XDG_CONFIG_HOME}/private/bash/remote"
+    [[ "${hostName}" =~ 'cern.ch'$ ]] && _source "${XDG_CONFIG_HOME}/bash/functions/cern"
+    [[ "${hostName}" =~ 'fnal.gov'$ ]] && _source "${XDG_CONFIG_HOME}/bash/functions/fnal"
+    [[ "${hostName}" =~ '.cms'$ ]] && _source "${XDG_CONFIG_HOME}/bash/functions/cms"
+}
+
+_textFormatting(){
+    # [How can I print text in various colors?](https://mywiki.wooledge.org/BashFAQ/037)
+    # [Terminal codes (ANSI/VT100) introduction](https://wiki.bash-hackers.org/scripting/terminalcodes)
+    # [tput](https://linuxcommand.org/lc3_adv_tput.php#text-effects)
+    # [Wrapping the tput output in \[ \] is recommended by the Bash man page. [...] The wrap will not work with command substitution, in which case the raw \1 \2 must be used](https://wiki.archlinux.org/title/Bash/Prompt_customization#Terminfo_escape_sequences)
+    local SOH='\001' # [https://www.compart.com/en/unicode/U+0001]
+    local STX='\002' # [https://www.compart.com/en/unicode/U+0002]
+    TXT[reset]="${SOH}$(tput sgr0)${STX}" && TXT[r]="${TXT[reset]}"
+    TXT[bold]="${SOH}$(tput bold)${STX}"
+    TXT[ital]="${SOH}$(tput sitm)${STX}"
+    TXT[uline]="${SOH}$(tput smul)${STX}"
+    declare -a colorFG=(black red green yellow blue magenta cyan white BLACK RED GREEN YELLOW BLUE MAGENTA CYAN WHITE)
+    declare -a colorBG=(blackBG redBG greenBG yellowBG blueBG magentaBG cyanBG whiteBG BLACKBG REDBG GREENBG YELLOWBG BLUEBG MAGENTABG CYANBG WHITEBG)
+    local i; for ((i=0; i<=${#colorFG[@]}-1; i++)); do
+        TXT["${colorFG[i]}"]="${SOH}$(tput setaf "${i}")${STX}"
+        TXT["${colorBG[i]}"]="${SOH}$(tput setab "${i}")${STX}"
+    done
+}
+
+testColor(){
+    # [256-xterm-24bit-rgb-color-chart](http://www.calmar.ws/vim/256-xterm-24bit-rgb-color-chart.html)
+    msgcat --color=test # [The environment variable TERM](https://www.gnu.org/software/gettext/manual/html_node/The-TERM-variable.html#The-TERM-variable)
+    for bg in {0..15}; do printf "$(tput setab $bg)%*s$(tput sgr0)" "$(tput cols)"; done
+    for fg in {0..15}; do for bg in {0..15}; do printf "$(tput setaf $fg)$(tput setab $bg)%s%02d %s%02d$(tput sgr0) " 'fg' "$fg" 'bg' "$bg"; done; echo; done
+    local colors=(black red green yellow blue magenta cyan white); for fg in "${colors[@]}"; do for bg in "${colors[@]}"; do printf "$(git config --get-color '' "${fg} ${bg}")%8s%8s$(git config --get-color '' 'reset') " "${fg}" "${bg}"; done; echo; done # [https://git-scm.com/docs/git-config#Documentation/git-config.txt-color]
+}
+
+# [before BASH 4.2](https://wiki.bash-hackers.org/scripting/bashchanges#other_builtins_and_keywords), [associative array must be declared outside function in order to be global](https://stackoverflow.com/a/10806853/13019084)
+declare -A TXT # [https://wiki.bash-hackers.org/commands/builtin/declare] [https://wiki.bash-hackers.org/syntax/arrays]
+_textFormatting
+
+_source "${XDG_CONFIG_HOME}/bash/shellOptions"
+_source "${XDG_CONFIG_HOME}/bash/functions/meta"
+_source "${XDG_CONFIG_HOME}/bash/functions/functions"
+_source "${XDG_CONFIG_HOME}/private/bash/functions/functions"
+_source "${XDG_CONFIG_HOME}/bash/aliases/aliases"
+_source "${XDG_CONFIG_HOME}/bash/prompt/prompt"
+_hostConfig
