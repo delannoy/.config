@@ -6,17 +6,17 @@
 
 _set(){
     # [The Set Builtin](https://www.gnu.org/software/bash/manual/html_node/The-Set-Builtin.html)
-    # [The set builtin command](https://wiki-dev.bash-hackers.org/commands/builtin/set)
+    # [The set builtin command](https://wiki.bash-hackers.org/commands/builtin/set)
     set -o pipefail     # If set, the exit code from a pipeline is different from the normal ("last command in pipeline") behaviour: TRUE when no command failed, FALSE when something failed (code of the rightmost command that failed).
     set -o notify       # Don't wait for the next prompt to print when showing the reports for a terminated background job (only with job control).
     # set -o allexport  # Automatically mark new and altered variables to be exported to subsequent environments.
     # set -o errexit    # When set, the shell exits when a simple command in a command list exits non-zero (FALSE). This is not done in situations, where the exit code is already checked (if, while, until, ||, &&)
     # set -o errtrace   # ERR-traps are inherited by shell functions, command substitutions, and commands executed in a subshell environment.
     # set -o functrace  # DEBUG- and RETURN-traps are inherited by subsequent environments, like -E for ERR trap.
-    # set -o ignoreeof  # The effect is as if the shell command IGNOREEOF=10 had been executed. See [shell variables](https://wiki-dev.bash-hackers.org/syntax/shellvars).
+    # set -o ignoreeof  # The effect is as if the shell command IGNOREEOF=10 had been executed. See [shell variables](https://wiki.bash-hackers.org/syntax/shellvars).
     # set -o keyword    # Allows to place environment-assignments everywhere in the commandline, not only in front of the called command.
-    # set -o noclobber  # Don't overwrite files on redirection operations. You can override that by specifying the >| redirection operator when needed. See [redirection](https://wiki-dev.bash-hackers.org/syntax/redirection)
-    # set -o noglob     # Disable [pathname expansion](https://wiki-dev.bash-hackers.org/syntax/expansion/globs) (globbing)
+    # set -o noclobber  # Don't overwrite files on redirection operations. You can override that by specifying the >| redirection operator when needed. See [redirection](https://wiki.bash-hackers.org/syntax/redirection)
+    # set -o noglob     # Disable [pathname expansion](https://wiki.bash-hackers.org/syntax/expansion/globs) (globbing)
     # set -o nounset    # Treat unset variables as an error when performing parameter expansion. Non-interactive shells exit on this error.
     # set -o onecmd     # Exit after reading and executing one command.
     # set -o physical   # Don't follow symlinks when changing directories - use the physical filesystem structure.
@@ -29,8 +29,8 @@ _set(){
 
 _setDefaults(){
     # [The Set Builtin](https://www.gnu.org/software/bash/manual/html_node/The-Set-Builtin.html)
-    # [The set builtin command](https://wiki-dev.bash-hackers.org/commands/builtin/set)
-    set -o braceexpand  # The shell performs [brace expansion](https://wiki-dev.bash-hackers.org/syntax/expansion/brace) This is on by default.
+    # [The set builtin command](https://wiki.bash-hackers.org/commands/builtin/set)
+    set -o braceexpand  # The shell performs [brace expansion](https://wiki.bash-hackers.org/syntax/expansion/brace) This is on by default.
     set -o emacs        # Use an emacs-style command line editing interface. This is enabled by default when the shell is interactive, unless the shell is started with –noediting option.
     set -o hashall      # Remembers the location of commands when they're called (hashing). Enabled by default.
     set -o histexpand   # Enable !-style history expansion. Defaults to on for interactive shells.
@@ -49,8 +49,8 @@ _shopt(){
     shopt -s checkwinsize               # If set, Bash checks the window size after each command and, if necessary, updates the values of the variables LINES and COLUMNS.
     shopt -s direxpand                  # If set, bash replaces directory names with the results of word expansion when performing filename completion. This changes the contents of the readline editing buffer. If not set, bash attempts to preserve what the user typed.
     shopt -s dirspell                   # If set, Bash will perform spelling corrections on directory names to match a glob.
-    shopt -s dotglob                    # If set, Bash includes filenames beginning with a . (dot) in the results of [pathname expansion](https://wiki-dev.bash-hackers.org/syntax/expansion/globs). [dotglob](https://mywiki.wooledge.org/glob#dotglob)
-    shopt -s extglob                    # If set, the extended pattern matching features are enabled. See the important note below under [Parser configurations](https://wiki-dev.bash-hackers.org/internals/shell_options#parser_configurations). [extglob](https://mywiki.wooledge.org/glob#extglob)
+    shopt -s dotglob                    # If set, Bash includes filenames beginning with a . (dot) in the results of [pathname expansion](https://wiki.bash-hackers.org/syntax/expansion/globs). [dotglob](https://mywiki.wooledge.org/glob#dotglob)
+    shopt -s extglob                    # If set, the extended pattern matching features are enabled. See the important note below under [Parser configurations](https://wiki.bash-hackers.org/internals/shell_options#parser_configurations). [extglob](https://mywiki.wooledge.org/glob#extglob)
     shopt -s globstar                   # If set, recursive globbing with ** is enabled. [globstar (since bash 4.0-alpha)](https://mywiki.wooledge.org/glob#globstar_.28since_bash_4.0-alpha.29)
     shopt -s histappend                 # If set, the history list is appended to the file named by the value of the HISTFILE variable when the shell exits, rather than overwriting the file.
     shopt -s histreedit                 # If set, and readline is being used, a user is given the opportunity to re-edit a failed history substitution.
@@ -84,12 +84,12 @@ _shopt(){
 _shoptDefaults(){
     # [The Shopt Builtin](https://www.gnu.org/software/bash/manual/html_node/The-Shopt-Builtin.html)
     # [The shopt builtin command](https://wiki.bash-hackers.org/commands/builtin/shopt)
-    shopt -s checkwinsize           # If set, Bash checks the window size after each command and, if necessary, updates the values of the variables [LINES](https://wiki-dev.bash-hackers.org/syntax/shellvars#lines) and [COLUMNS](https://wiki-dev.bash-hackers.org/syntax/shellvars#columns).
+    shopt -s checkwinsize           # If set, Bash checks the window size after each command and, if necessary, updates the values of the variables [LINES](https://wiki.bash-hackers.org/syntax/shellvars#lines) and [COLUMNS](https://wiki.bash-hackers.org/syntax/shellvars#columns).
     shopt -s cmdhist                # If set, Bash attempts to save all lines of a multiple-line command in the same history entry. This allows easy re-editing of multi-line commands.
     shopt -s complete_fullquote     # If set, Bash quotes all shell metacharacters in filenames and directory names when performing completion. If not set, Bash removes metacharacters such as the dollar sign from the set of characters that will be quoted in completed filenames when these metacharacters appear in shell variable references in words to be completed. This means that dollar signs in variable names that expand to directories will not be quoted; however, any dollar signs appearing in filenames will not be quoted, either. This is active only when bash is using backslashes to quote completed filenames. This variable is set by default, which is the default Bash behavior in versions through 4.2.
     shopt -s expand_aliases         # If set, aliases are expanded. This option is enabled by default for interactive shells.
-    shopt -s extquote               # If set, $'string' and $"string" quoting is performed within [parameter expansions](https://wiki-dev.bash-hackers.org/syntax/pe) enclosed in double quotes. See the important note below under [Parser configurations](https://wiki-dev.bash-hackers.org/internals/shell_options#parser_configurations).
-    shopt -s force_fignore          # If set, the suffixes specified by the [FIGNORE](https://wiki-dev.bash-hackers.org/syntax/shellvars#fignore) shell variable cause words to be ignored when performing word completion even if the ignored words are the only possible completions. This option is enabled by default.
+    shopt -s extquote               # If set, $'string' and $"string" quoting is performed within [parameter expansions](https://wiki.bash-hackers.org/syntax/pe) enclosed in double quotes. See the important note below under [Parser configurations](https://wiki.bash-hackers.org/internals/shell_options#parser_configurations).
+    shopt -s force_fignore          # If set, the suffixes specified by the [FIGNORE](https://wiki.bash-hackers.org/syntax/shellvars#fignore) shell variable cause words to be ignored when performing word completion even if the ignored words are the only possible completions. This option is enabled by default.
     shopt -s globasciiranges        # If set, range expressions used in pattern matching behave as if in the traditional C locale when performing comparisons. That is, the current locale's collating sequence is not taken into account, so b will not collate between A and B, and upper-case and lower-case ASCII characters will collate together.
     shopt -s hostcomplete           # If set, Bash completion also completes hostnames. On by default.
     shopt -s interactive_comments   # Allow commenting in interactive shells, on by default.

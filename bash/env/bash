@@ -3,5 +3,5 @@
 (( "${_VERBOSE}" >= 2 )) && [[ -n "${BASH}" ]] && shopt -q login_shell && printf '%s\n' "***$(realpath "${BASH_SOURCE[0]}")***" || return
 
 export INPUTRC="${XDG_CONFIG_HOME}/readline/inputrc" # [The filename for the readline startup file](https://wiki.bash-hackers.org/syntax/shellvars#inputrc)
-export IGNOREEOF=2 # [Controls the action of an interactive shell on receipt of an EOF character (e.g. by Ctrl-D) as the sole input. If set, the value is the number of consecutive EOF characters which must be typed as the first characters on an input line before Bash exits.](https://wiki-dev.bash-hackers.org/syntax/shellvars)
+export IGNOREEOF=2 # [Controls the action of an interactive shell on receipt of an EOF character (e.g. by Ctrl-D) as the sole input. If set, the value is the number of consecutive EOF characters which must be typed as the first characters on an input line before Bash exits.](https://wiki.bash-hackers.org/syntax/shellvars)
 export PATH="${XDG_DATA_HOME/share/bin}:${PATH}" # [The search path for commands. This is a colon-separated list of directories in which the shell looks for commands.](https://wiki.bash-hackers.org/syntax/shellvars#path)
