@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-[[ -n "${BASH}" ]] && shopt -q login_shell && printf '%s\n' "***$(realpath "${BASH_SOURCE[0]}")***" || return
+(( "${_VERBOSE}" >= 1 )) && [[ -n "${BASH}" ]] && shopt -q login_shell && printf '%s\n' "***$(realpath "${BASH_SOURCE[0]}")***" || return
 
 # [Environment Variables](https://mywiki.wooledge.org/Environment)
 # [Environment variables](https://wiki.archlinux.org/title/environment_variables)
@@ -10,6 +10,6 @@
 source "${XDG_CONFIG_HOME}/bash/env/bash"
 source "${XDG_CONFIG_HOME}/bash/env/history"
 source "${XDG_CONFIG_HOME}/bash/env/editor"
-source "${XDG_CONFIG_HOME}/bash/env/software"
+source "${XDG_CONFIG_HOME}/bash/env/software" # && { type _envDir | sed --quiet --regexp-extended 's|.*export ([[:alnum:]_]+)=.*|\"${\1}\"|p' | xargs --delimiter='\n' -- mkdir --parents; }
 source "${XDG_CONFIG_HOME}/bash/env/user"
-source "${XDG_CONFIG_HOME}/bash/env/exitStatusCodes"
+source "${XDG_CONFIG_HOME}/bash/env/exitCodes"

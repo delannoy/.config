@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-[[ -n "${BASH}" ]] && shopt -q login_shell && printf '%s\n' "***$(realpath "${BASH_SOURCE[0]}")***" || return
+(( "${_VERBOSE}" >= 2 )) && [[ -n "${BASH}" ]] && shopt -q login_shell && printf '%s\n' "***$(realpath "${BASH_SOURCE[0]}")***" || return
 
 # [XDG Base Directory Specification](https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html#variables)
 # [XDG Base Directory](https://wiki.archlinux.org/index.php/XDG_Base_Directory)

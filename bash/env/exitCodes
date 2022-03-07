@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-[[ -n "${BASH}" ]] && shopt -q login_shell && printf '%s\n' "***$(realpath "${BASH_SOURCE[0]}")***" || return
+(( "${_VERBOSE}" >= 2 )) && [[ -n "${BASH}" ]] && shopt -q login_shell && printf '%s\n' "***$(realpath "${BASH_SOURCE[0]}")***" || return
 
 declare -A ERR
 
