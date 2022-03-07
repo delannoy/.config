@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+_source "${XDG_CONFIG_HOME}/bash/aliases/network"
+_source "${XDG_CONFIG_HOME}/bash/aliases/pager"
+_source "${XDG_CONFIG_HOME}/bash/aliases/posixUtilities"

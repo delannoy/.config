@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+
+alias scp='scp -F "${SSHCONFIG}" -p -r -v'
+# -F ssh_config         Specifies an alternative per-user configuration file for ssh. This option is directly passed to ssh(1)
+# -p                    Preserves modification times, access times, and modes from the original file
+# -r                    Recursively copy entire directories. Note that scp follows symbolic links encountered in the tree traversal
+# -v                    Verbose mode. Causes scp and ssh(1) to print debugging messages about their progress.  This is helpful in debugging connection, authentication, and configuration problems.
+
+alias rsyncArchive='rsync --verbose --archive --update --human-readable --progress --out-format="${RSYNCOF}"'
+# --verbose             increase verbosity
+# --archive             archive mode (equals --recursive --links --perms --times --group --owner --devices --specials)
+#   --recursive         recurse into directories
+#   --links             copy symlinks as symlinks
+#   --perms             preserve permissions
+#   --times             preserve modification times "(you’re much better off using -t)"
+#   --group             preserve group
+#   --owner             preserve owner (super-user only)
+#   --devices           preserve device files (super-user only)
+#   --specials          preserve special files
+# --update              skip files that are newer on the receiver
+# --human-readable      output numbers in a human-readable format
+# --progress            show progress during transfer
+# --out-format=FORMAT   output updates using the specified FORMAT
+
+alias rsyncChecksum='rsyncArchive --checksum'
+# --checksum            skip based on checksum, not mod-time & size
+
+alias rsyncAppend='rsyncArchive --partial --append-verify --timeout=300'
+# --partial             keep partially transferred files # [https://unix.stackexchange.com/a/165417]
+# --append-verify       --append w/old data in file checksum # [https://unix.stackexchange.com/a/165417]
+# --timeout=SECONDS     set I/O timeout in seconds # [https://stackoverflow.com/a/19804114]
+
+alias rsyncNoMeta='rsyncArchive --no-perms --no-times --no-group --no-owner'
+# --no-OPTION           turn off an implied OPTION (e.g. --no-D) [https://unix.stackexchange.com/a/102214]
+
+alias ssh='ssh -F "${SSHCONFIG}"'
+# -F configfile     Specifies an alternative per-user configuration file. If a configuration file is given on the command line, the system-wide configuration file (/etc/ssh/ssh_config) will be ignored. The default for the per-user configuration file is ~/.ssh/config.
+
+alias wget='wget --hsts-file="${XDG_CACHE_HOME}/wget/hsts"' # [HSTS database file](https://www.gnu.org/software/wget/manual/html_node/HTTPS-_0028SSL_002fTLS_0029-Options.html#index-HSTS)
+# --hsts-file=file      By default, Wget stores its HSTS database in ~/.wget-hsts. You can use --hsts-file to override this. Wget will use the supplied file as the HSTS database.

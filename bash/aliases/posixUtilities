@@ -1,0 +1,71 @@
+#!/usr/bin/env bash
+
+# [POSIX Utilities](https://pubs.opengroup.org/onlinepubs/9699919799/idx/utilities.html)
+
+alias cp='cp --interactive --preserve="all" --verbose'
+# --interactive             prompt before overwrite (overrides a previous -n option)
+# --preserve[=ATTR_LIST]    preserve the specified attributes (default: mode,ownership,timestamps), if possible additional attributes: context, links, xattr, all
+# --verbose                 explain what is being done
+
+alias date='date "${STRFTIME}"'
+# [date(1)](https://man7.org/linux/man-pages/man1/date.1.html#DESCRIPTION)
+
+alias df='df --human-readable --print-type --total'
+# --human-readable  print sizes in powers of 1024 (e.g., 1023M)
+# --print-type      print file system type
+# --total           elide all entries insignificant to available space, and produce a grand total
+
+alias diff='diff --context=3 --unified=3 --width=130 --tabsize=8 --color=auto'
+# --context[=NUM]           output NUM (default 3) lines of copied context
+# --unified[=NUM]           output NUM (default 3) lines of unified context
+# --width=NUM               output at most NUM (default 130) print columns
+# --tabsize=NUM             tab stops every NUM (default 8) print columns
+# --color[=WHEN]            colorize the output; WHEN can be 'never', 'always', or 'auto' (the default)
+
+alias du='du --human-readable --exclude=".git" --total'
+# --human-readable  print sizes in human readable format (e.g., 1K 234M 2G)
+# --total           produce a grand total
+# --exclude=PATTERN exclude files that match PATTERN
+
+alias grep='grep --color=auto --exclude-dir=".git"'
+# --color[=WHEN]        Surround the matched objects with escape sequences to display them in color on the terminal. WHEN is never, always, or auto.
+# --exclude-dir=GLOB    Skip any command-line directory with a name suffix that matches the pattern GLOB.  When searching recursively, skip any subdirectory whose base name matches GLOB.  Ignore any redundant trailing slashes in GLOB.
+# --recursive           Read all files under each directory, recursively, following symbolic links only if they are on the command line.
+
+alias regrep='grep --extended-regexp'
+# --extended-regexp     Interpret PATTERN as an extended regular expression.
+
+alias ls='ls --color="auto" --group-directories-first --indicator-style="slash"'
+# --color[=WHEN]            colorize the output; WHEN can be 'always' (default if omitted), 'auto', or 'never'; more info below
+# --group-directories-first group directories before files
+# --indicator-style=WORD    append indicator with style WORD to entry names: none (default), slash (-p), file-type (--file-type), classify (-F)
+# --indicator-style=slash   append / indicator to directories
+
+alias ll='ls -l --human-readable --time-style="${STRFTIME}"'
+# -l                        use a long listing format
+# --human-readable          with -l, print sizes in human readable format (e.g., 1K 234M 2G)
+# --time-style=STYLE        with -l, show times using style STYLE: full-iso, long-iso, iso, locale, or +FORMAT; FORMAT is interpreted like in 'date'
+
+alias la='ll --all --almost-all'
+# --all                     do not ignore entries starting with .
+# --almost-all              do not list implied . and ..
+
+alias mkdir='mkdir --mode=775 --parents --verbose'
+# --mode=MODE               set file mode (as in chmod), not a=rwx - umask
+# --parents                 no error if existing, make parent directories as needed
+# --verbose                 print a message for each created directory
+
+alias mv='mv --interactive --verbose'
+# --interactive             prompt before overwrite
+# --verbose                 explain what is being done
+
+alias rm='rm --interactive="once" --dir --verbose'
+# --interactive[=WHEN]      prompt according to WHEN: never, once (-I), or always (-i); without WHEN, prompt always
+# --dir                     remove empty directories
+# --verbose                 explain what is being done
+
+alias printPATH='echo "${PATH}" | tr ":" "\n"'
+# [https://wiki.bash-hackers.org/syntax/shellvars#path]
+
+alias which='command -v'
+# unlike `which`, `command` is a SHELL built-in [https://unix.stackexchange.com/a/85250] [https://stackoverflow.com/a/37056347/13019084]
