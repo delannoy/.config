@@ -3,13 +3,45 @@
 (( "${_VERBOSE}" >= 2 )) && [[ -n "${BASH}" ]] && shopt -q login_shell && printf '%s\n' "***$(realpath "${BASH_SOURCE[0]}")***" || return
 
 export BASHRC="${XDG_CONFIG_HOME}/bash/bashrc"
+
 export CURLWO="[%{filename_effective}] [%{size_download} B] [%{time_total} s]\n" # [curl write out](https://everything.curl.dev/usingcurl/verbose/writeout)
+# %{filename_effective} the ultimate filename that curl writes out to. This is only meaningful if curl is told to write to a file with the --remote-name or --output option. It's most useful in combination with the --remote-header-name option.
+# %{size_download}      the total number of bytes that were downloaded.
+# %{time_total}         the total time, in seconds, that the full operation lasted. The time will be displayed with millisecond resolution.
+
 export DISTROVERSION="$(source '/etc/os-release' 2>/dev/null && echo "${ID}${VERSION_ID}" || lsb_release --short --id --release 2>/dev/null | tr -d '\n ')" # [https://unix.stackexchange.com/a/6348] [https://unix.stackexchange.com/a/25131]
-export DATEFORMAT='+%Y.%m.%d-%H.%M.%S.%3N'  # [strftime - format date and time](https://man7.org/linux/man-pages/man3/strftime.3.html) [Command to get time in milliseconds](https://stackoverflow.com/a/18704121)
-export FZF_DEFAULT_COMMAND="find -type f -maxdepth 10 -not -path '*/\.git/*'" # [Default command to use when input is tty](https://github.com/junegunn/fzf#environment-variables)
+
+export STRFTIME='+%Y.%m.%d-%H.%M.%S.%3N'  # [date(1)](https://man7.org/linux/man-pages/man1/date.1.html#DESCRIPTION) # [Command to get time in milliseconds](https://stackoverflow.com/a/18704121)
+# %Y    year
+# %m    month (01..12)
+# %d    day of month (e.g., 01)
+# %H    hour (00..23)
+# %M    minute (00..59)
+# %S    second (00..60)
+# %N    nanoseconds (000000000..999999999)
+
+export FZF_DEFAULT_COMMAND='find -type f -maxdepth 10 -not -path "*.git/*"' # [Default command to use when input is tty](https://github.com/junegunn/fzf#environment-variables)
+
 export GITSTATUSPROMPT='true'
-export RSYNCOF="%i %o %b/%7''l %B %L %C %n" # [rsync log format](https://man7.org/linux/man-pages/man5/rsyncd.conf.5.html#:~:text=log%20format)
+
+export RSYNCOF='%i %o %b/%7''l %B %L %C %n' # [rsyncd log format](https://download.samba.org/pub/rsync/rsyncd.conf.html#log_format)
+# An optional numeric field width may also be specified between the percent and the escape letter (e.g. "%-50n %8l %07p").
+# In addition, one or more apostrophes may be specified prior to a numerical escape to indicate that the numerical value should be made more human-readable.
+# The 3 supported levels are the same as for the --human-readable command-line option
+# Each added apostrophe increases the level (e.g. "%''l %'b %f")
+#   [The unit letters that are appended in levels 2 and 3 are: K (kilo), M (mega), G (giga), T (tera), or P (peta).  For example, a 1234567-byte file would output as 1.23M in level-2 (assuming that a period is your local decimal point).](https://download.samba.org/pub/rsync/rsync.1#opt--human-readable)
+# %i    an itemized list of what is being updated
+# %o    the operation, which is "send", "recv", or "del." (the latter includes the trailing period)
+# %b    the number of bytes actually transferred
+# %l    the length of the file in bytes
+# %B    the permission bits of the file (e.g. rwxrwxrwt)
+# %L    the string "-> SYMLINK", "=> HARDLINK", or "" (where SYMLINK or HARDLINK is a filename)
+# %c    the total size of the block checksums received for the basis file (only when sending)
+# %n    the filename (short form; trailing "/" on dir)
+
 export SSHCONFIG="${XDG_CONFIG_HOME}/ssh/config"
-export USERAGENT="$( ((RANDOM % 997)) || yt-dlp --dump-user-agent 2>/dev/null)" # [Display the current browser identification](https://github.com/ytdl-org/youtube-dl#options)
-export USERAGENT="${USERAGENT:-'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3685.1 Safari/537.36'}"
+
+# export USERAGENT="$(yt-dlp --dump-user-agent 2>/dev/null)" & # [Display the current browser identification](https://github.com/ytdl-org/youtube-dl#options)
+export USERAGENT="${USERAGENT:-'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.74 Safari/537.36'}"
+
 export VENV_HOME="${XDG_DATA_HOME}/venv"
