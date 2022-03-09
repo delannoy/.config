@@ -1,0 +1,53 @@
+
+[global]
+
+    require-virtualenv = false
+    # [Requiring an active virtual environment for pip](https://docs.python-guide.org/dev/pip-virtualenv/)
+
+    retries = 10
+    # [Maximum number of retries each connection should attempt (default 5 times)](https://pip.pypa.io/en/stable/cli/pip/#cmdoption-retries)
+
+    timeout = 30
+    # [Set the socket timeout (default 15 seconds)](https://pip.pypa.io/en/stable/cli/pip/#cmdoption-timeout)
+
+
+[install]
+
+    upgrade = true
+    # [Upgrade all specified packages to the newest available version. The handling of dependencies depends on the upgrade-strategy used](https://pip.pypa.io/en/stable/cli/pip_install/#cmdoption-U)
+
+    upgrade-strategy = eager
+    # [Determines how dependency upgrading should be handled (default: only-if-needed)](https://pip.pypa.io/en/stable/cli/pip_install/#cmdoption-upgrade-strategy)
+        # "eager" - dependencies are upgraded regardless of whether the currently installed version satisfies the requirements of the upgraded package(s)
+        # "only-if-needed" - are upgraded only when they do not satisfy the requirements of the upgraded package(s)
+
+    user = true
+    # [Install to the Python user install directory for your platform](https://pip.pypa.io/en/stable/cli/pip_install/#cmdoption-user)
+        # [pip install --user misbehaves inside venv](https://github.com/pypa/pip/issues/5702)
+
+
+[list]
+
+    format = json
+    # [Select the output format among: columns (default), freeze, or json](https://pip.pypa.io/en/stable/cli/pip_list/#cmdoption-format)
+
+    # not-required = true
+    # [List packages that are not dependencies of installed packages](https://pip.pypa.io/en/stable/cli/pip_list/#cmdoption-not-required)
+
+    user = true
+    # [Only output packages installed in user-site](https://pip.pypa.io/en/stable/cli/pip_list/#cmdoption-user)
+
+    verbose = true
+    # [Give more output. Option is additive, and can be used up to 3 times](https://pip.pypa.io/en/stable/cli/pip/#cmdoption-v)
+
+
+[show]
+
+    files = true
+    # [Show the full list of installed files for each package](https://pip.pypa.io/en/stable/cli/pip_show/#cmdoption-f)
+
+
+[freeze]
+
+    user = true
+    # [Only output packages installed in user-site](https://pip.pypa.io/en/stable/cli/pip_freeze/#cmdoption-user)
