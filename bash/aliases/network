@@ -12,7 +12,7 @@ alias rsyncArchive='rsync --verbose --archive --update --human-readable --progre
 #   --recursive         recurse into directories
 #   --links             copy symlinks as symlinks
 #   --perms             preserve permissions
-#   --times             preserve modification times "(you’re much better off using -t)"
+#   --times             preserve modification times "(you're much better off using -t)"
 #   --group             preserve group
 #   --owner             preserve owner (super-user only)
 #   --devices           preserve device files (super-user only)
