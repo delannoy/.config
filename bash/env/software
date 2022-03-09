@@ -21,9 +21,11 @@ export SCREENDIR="${SCREENRC%/*}" && chmod 700 "${SCREENDIR}" # [Socket Director
 export ZDOTDIR="${XDG_CONFIG_HOME}/zsh" # [startup files that zsh will read commands from](https://zsh.sourceforge.io/Intro/intro_3.html)
 
 # export GIT_CONFIG="${XDG_CONFIG_HOME}/git/config" # [This variable has no effect on other Git commands, and is mostly for historical compatibility; there is generally no reason to use it instead of the --file option.](https://git-scm.com/docs/git-config#_environment)
+export KRB5_CONFIG="${XDG_DATA_HOME}/krb/conf"; # [Main Kerberos configuration file.](https://web.mit.edu/kerberos/krb5-1.12/doc/admin/env_variables.html#environment-variables)
+export KRB5_KTNAME="${XDG_DATA_HOME}/krb/keytab"; # [Default keytab file name.](https://web.mit.edu/kerberos/krb5-1.12/doc/admin/env_variables.html#environment-variables)
 export ICEAUTHORITY="${XDG_CACHE_HOME}/ICEauthority" # [If the ICEAUTHORITY environment variable if set, this value is returned. Otherwise, the default authorization file name is $HOME/.ICEauthority.](https://www.x.org/releases/X11R7.7/doc/libICE/ICElib.html#authentication_utility_functions)
 export MATPLOTLIBRC="${XDG_CONFIG_HOME}/matplotlib/matplotlibrc" # [Matplotlib uses matplotlibrc configuration files to customize all kinds of properties](https://matplotlib.org/stable/tutorials/introductory/customizing.html#the-matplotlibrc-file)
-export PIP_CONFIG_FILE="${XDG_CONFIG_HOME}/pip/conf" # [PIP_CONFIG_FILE can be used to specify a configuration file that’s loaded first, and whose values are overridden by the values set in the aforementioned files](https://pip.pypa.io/en/stable/topics/configuration/#pip-config-file)
+export PIP_CONFIG_FILE="${XDG_CONFIG_HOME}/pip/conf" # [PIP_CONFIG_FILE can be used to specify a configuration file that's loaded first, and whose values are overridden by the values set in the aforementioned files](https://pip.pypa.io/en/stable/topics/configuration/#pip-config-file)
 export PYTHONSTARTUP="${XDG_CONFIG_HOME}/python/startup" # [Python commands in that file are executed before the first prompt is displayed in interactive mode](https://docs.python.org/3/using/cmdline.html#envvar-PYTHONSTARTUP)
 export SCREENRC="${XDG_CONFIG_HOME}/screen/conf" # [Alternate user screenrc file](https://www.gnu.org/software/screen/manual/screen.html#Environment)
 export TMUXRC="${XDG_CONFIG_HOME}/tmux/conf" # [XDG reluctantly and half-heartedly "implemented" in version 3.2](https://github.com/tmux/tmux/issues/142)
