@@ -6,13 +6,14 @@
 
 _source(){
     [[ -f "$1" ]] && source "$1";
-    [[ -d "$1" ]] && find "$1/" -type f -not -name '.*' | xargs --max-args=1 source;
+    [[ -d "$1" ]] && find "$1/" -type f -not -name '.*' -print0 | xargs --max-args=1 source;
 }
 
 _hostConfig(){
-    local hostName="$(hostname --long 2>/dev/null || echo "${HOSTNAME}")" # hostName=$(hostname; hostname --domain; hostname --all-fqdns; hostname --alias)
-    [[ "${HOSTSLOCAL[@]}" =~ "${hostName}" ]] && _source "${XDG_CONFIG_HOME}/private/bash/local"
-    [[ "${HOSTSREMOTE[@]}" =~ "${hostName}" ]] && _source "${XDG_CONFIG_HOME}/private/bash/remote"
+    local hostName
+    hostName="$(hostname --long 2>/dev/null || echo "${HOSTNAME}")" # hostName=$(hostname; hostname --domain; hostname --all-fqdns; hostname --alias)
+    [[ "${HOSTSLOCAL[*]}" =~ ${hostName} ]] && _source "${XDG_CONFIG_HOME}/private/bash/local"
+    [[ "${HOSTSREMOTE[*]}" =~ ${hostName} ]] && _source "${XDG_CONFIG_HOME}/private/bash/remote"
     [[ "${hostName}" =~ 'cern.ch'$ ]] && _source "${XDG_CONFIG_HOME}/bash/functions/cern"
     [[ "${hostName}" =~ 'fnal.gov'$ ]] && _source "${XDG_CONFIG_HOME}/bash/functions/fnal"
     [[ "${hostName}" =~ '.cms'$ ]] && _source "${XDG_CONFIG_HOME}/bash/functions/cms"
