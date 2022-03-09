@@ -1,0 +1,9 @@
+# [Variables](https://git-scm.com/docs/git-config#_variables)
+# [git-status - Show the working tree status](https://git-scm.com/docs/git-status)
+
+[status]
+    aheadBehind = true          # [Set to true to enable --ahead-behind and false to enable --no-ahead-behind by default in git-status[1] for non-porcelain status formats](https://git-scm.com/docs/git-config#Documentation/git-config.txt-statusaheadBehind)
+    branch = true               # [Set to true to enable --branch by default in git-status[1]](https://git-scm.com/docs/git-config#Documentation/git-config.txt-statusbranch)
+    short = false               # [Set to true to enable --short by default in git-status[1]](https://git-scm.com/docs/git-config#Documentation/git-config.txt-statusshort)
+    showUntrackedFiles = normal # [By default, git-status[1] and git-commit[1] show files which are not currently tracked by Git. Directories which contain only untracked files, are shown with the directory name only](https://git-scm.com/docs/git-config#Documentation/git-config.txt-statusshowUntrackedFiles)
+    stash = true                # [If set to true, git-status[1] will display the number of entries currently stashed away](https://git-scm.com/docs/git-config#Documentation/git-config.txt-statusshowStash)

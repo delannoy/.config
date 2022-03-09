@@ -1,0 +1,99 @@
+# [color](https://git-scm.com/docs/git-config#Documentation/git-config.txt-color)
+# [Configuring git colors](https://shallowsky.com/blog/programming/gitcolors.html)
+
+[color]
+    ui = auto # [This variable determines the default value for variables such as color.diff and color.grep that control the use of color per command family](https://git-scm.com/docs/git-config#Documentation/git-config.txt-colorui)
+
+[color "branch"]
+    # [color.branch.<slot>](https://git-scm.com/docs/git-config#Documentation/git-config.txt-colorbranchltslotgt)
+    # [branch_colors](https://github.com/git/git/blob/844c3f0b0b5cc45f8aa8bd65c7ad407df7301c39/builtin/branch.c#L43)
+    current = green     # the current branch
+    local = normal      # a local branch
+    remote = red        # a remote-tracking branch in refs/remotes/
+    plain = normal      # other refs
+    upstream = blue     # upstream tracking branch
+    worktree = cyan     # a [git worktree](https://git-scm.com/docs/git-worktree)
+
+[color "diff"]
+    # [color.diff.<slot>](https://git-scm.com/docs/git-config#Documentation/git-config.txt-colordiffltslotgt)
+    # [diff_colors](https://github.com/git/git/blob/4da281e84d87b099ba8d0a255534dc1251be968e/diff.c#L58)
+    commit = yellow                         # commit headers
+    context = normal                        # context text - plain is a historical synonym
+    frag = cyan                             # hunk header
+    func = normal                           # function in hunk header
+    meta = bold                             # metainformation
+    new = green                             # added lines
+    newMoved = cyan                         # added lines
+    old = red                               # removed lines
+    oldMoved = bold magenta                 # deleted lines
+    plain = normal                          # context text - plain is a historical synonym
+    whitespace = normal red                 # highlighting whitespace errors
+    # [--color-moved[=<mode>]](https://git-scm.com/docs/git-diff#Documentation/git-diff.txt---color-movedltmodegt)
+    newMovedAlternative = bold yellow       # Blocks of moved text are detected as in blocks mode. Alternative indicates that a new block was detected.
+    newMovedAlternativeDimmed = dim italic  # Blocks of moved text are detected as in blocks mode. Alternative indicates that a new block was detected. Dimming of uninteresting parts of moved code is performed.
+    newMovedDimmed = dim                    # Blocks of moved text are detected as in blocks mode. Dimming of uninteresting parts of moved code is performed.
+    oldMovedAlternative = bold blue         # Blocks of moved text are detected as in blocks mode. Alternative indicates that a new block was detected.
+    oldMovedAlternativeDimmed = dim italic  # Blocks of moved text are detected as in blocks mode. Alternative indicates that a new block was detected. Dimming of uninteresting parts of moved code is performed.
+    oldMovedDimmed = dim                    # Blocks of moved text are detected as in blocks mode. Dimming of uninteresting parts of moved code is performed.
+    # [--no-dual-color](https://git-scm.com/docs/git-range-diff#Documentation/git-range-diff.txt---no-dual-color)
+    contextBold = bold                      # commit diff lines that are only present in the second commit range are shown in bold
+    contextDimmed = dim                     # commit diff lines that are only present in the first commit range are shown "dimmed"
+    newBold = bold green                    # commit diff lines that are only present in the second commit range are shown in bold
+    newDimmed = green dim                   # commit diff lines that are only present in the first commit range are shown "dimmed"
+    oldBold = bold red                      # commit diff lines that are only present in the second commit range are shown in bold
+    oldDimmed = red dim                     # commit diff lines that are only present in the first commit range are shown "dimmed"
+
+[color "decorate"]
+    # [color.decorate.<slot>](https://git-scm.com/docs/git-config#Documentation/git-config.txt-colordecorateltslotgt)
+    # [decoration_colors](https://github.com/git/git/blob/14228447c9ce664a4e9c31ba10344ec5e4ea4ba5/log-tree.c#L24)
+    branch = bold green      # local branch
+    grafted = bold blue      # grafted commit
+    HEAD = bold cyan         # HEAD
+    remoteBranch = bold red  # remote-tracking branch
+    stash = bold magenta     # stash
+    tag = bold yellow        # tags
+
+[color "grep"]
+    # [color.grep.<slot>](https://git-scm.com/docs/git-config#Documentation/git-config.txt-colorgrepltslotgt)
+    # [grep_opt.colors grep_defaults.colors](https://github.com/git/git/blob/1157618a2ae50ae611ca22ce1833760bc0456156/grep.c#L27)
+    context = normal            # non-matching text in context lines (when using -A, -B, or -C)
+    column = normal             # column number prefix (when using --column)
+    filename = normal           # filename prefix (when not using -h)
+    function = normal           # function name lines (when using -p)
+    lineNumber = normal         # line number prefix (when using -n)
+    match = bold red            # matching text (same as setting matchContext and matchSelected)
+    matchContext = bold red     # matching text in context lines
+    matchSelected = bold red    # matching text in selected lines
+    selected = normal           # non-matching text in selected lines
+    separator = cyan            # separators between fields on a line (:, -, and =) and between hunks (--)
+
+[color "interactive"]
+    # [color.interactive.<slot>](https://git-scm.com/docs/git-config#Documentation/git-config.txt-colorinteractiveltslotgt)
+    # [init_add_i_state.init_color](https://github.com/git/git/blob/bfcc6e2a68b95ee71fc606a2e3917af78f1130f9/add-interactive.c#L43)
+    error = bold red
+    header = bold
+    help = bold red
+    prompt = bold blue
+
+[color "remote"]
+    # [color.remote.<slot>](https://git-scm.com/docs/git-config#Documentation/git-config.txt-colorremoteltslotgt)
+    # [keyword_entry keywords](https://github.com/git/git/blob/5210225f256d01938960d439bff9d809c2ff1809/sideband.c#L16)
+    # [sideband: highlight keywords in remote sideband output](https://github.com/git/git/commit/bf1a11f0a100b080a25233980c14b5ae8f3a7d2d)
+    hint = yellow
+    warning = bold yellow
+    success = bold green
+    error = bold red
+
+[color "status"]
+    # [color.status.<slot>](https://git-scm.com/docs/git-config#Documentation/git-config.txt-colorstatusltslotgt)
+    # [default_wt_status_colors](https://github.com/git/git/blob/8e62a85352e998415934ac24c6b0db3cd37d372e/wt-status.c#L27)
+    added = green       # files which are added but not committed
+    branch = green      # the current branch
+    changed = red       # files which are changed but not added in the index
+    header = normal     # the header text of the status message
+    localBranch = green # local branch when branch and tracking information is displayed in the status short-format
+    nobranch = red      # the color the no branch warning is shown in, defaulting to red
+    remoteBranch = red  # remote branch when branch and tracking information is displayed in the status short-format
+    untracked = red     # files which are not tracked by Git
+    unmerged = red      # files which have unmerged changes
+    updated = green     # files which are added but not committed

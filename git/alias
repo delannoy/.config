@@ -1,0 +1,11 @@
+# [alias.*](https://git-scm.com/docs/git-config#Documentation/git-config.txt-alias)
+
+[alias]
+    br = branch
+    ci = commit --message
+    cfg = config --list --show-origin
+    cm = commit --message
+    co = checkout
+    hist = log --all --graph
+    log = log --all --graph
+    st = status --short --branch --show-stash

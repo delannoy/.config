@@ -1,0 +1,24 @@
+# [CONFIGURATION FILE](https://git-scm.com/docs/git-config#_configuration_file)
+# [Useful git configs and aliases](https://josh.fail/blog/2019/useful-git-configs-and-aliases.html)
+
+[include]
+    # [Includes](https://git-scm.com/docs/git-config#_includes)
+    path = alias
+    path = color
+    path = core
+    path = format
+    path = log
+    path = status
+    path = ../private/user
+
+[http]
+    emptyAuth = true # [Attempt authentication without seeking a username or password. This can be used to attempt GSS-Negotiate authentication without specifying a username in the URL, as libcurl normally requires a username for authentication.](https://git-scm.com/docs/git-config#Documentation/git-config.txt-httpemptyAuth)
+
+[push]
+    default = simple # [Defines the action git push should take if no refspec is given (whether from the command-line, config, or elsewhere).](https://git-scm.com/docs/git-config#Documentation/git-config.txt-pushdefault)
+    # simple - pushes the current branch with the same name on the remote.
+    # If you are working on a centralized workflow (pushing to the same repository you pull from, which is typically origin), then you need to configure an upstream branch with the same name.
+    # This mode is the default since Git 2.0, and is the safest option suited for beginners.
+
+[submodule]
+    recurse = true # [A boolean indicating if commands should enable the --recurse-submodules option by default. Applies to all commands that support this option (checkout, fetch, grep, pull, push, read-tree, reset, restore and switch) except clone and ls-files.](https://git-scm.com/docs/git-config#Documentation/git-config.txt-submodulerecurse)

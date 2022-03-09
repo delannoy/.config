@@ -1,0 +1,13 @@
+# [PRETTY FORMATS](https://git-scm.com/docs/git-log#_pretty_formats)
+
+[format]
+    # [https://stackoverflow.com/a/49941383/13019084]
+    pretty = format:%C(magenta)%h%C(reset)|%C(bold blue)%ad%C(reset)|%C(cyan)%an%C(reset)|%s%C(auto)%d%C(reset)
+    # %C(...)                       color specification, as described under Values in the "CONFIGURATION FILE" section of [git-config[1]](https://git-scm.com/docs/git-config#Documentation/git-config.txt-color).
+    # %C(reset)                     reset color
+    # %<(<N>[,trunc|ltrunc|mtrunc]) make the next placeholder take at least N columns, padding spaces on the right if necessary. Optionally truncate at the beginning (ltrunc), the middle (mtrunc) or the end (trunc) if the output is longer than N columns.
+    # %h                            abbreviated commit hash
+    # %ad                           author date (format respects --date= option)
+    # %an                           author name
+    # %s                            subject
+    # %d                            ref names, like the --decorate option of git-log[1]
