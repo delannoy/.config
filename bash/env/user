@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
 
-(( "${_VERBOSE}" >= 2 )) && [[ -n "${BASH}" ]] && shopt -q login_shell && printf '%s\n' "***$(realpath "${BASH_SOURCE[0]}")***" || return
+if [[ -n "${BASH}" ]] && shopt -q 'login_shell';
+    then (( "${_VERBOSE}" >= 3 )) && printf '%s\n' "***$(realpath "${BASH_SOURCE[0]}")***";
+    else return;
+fi
+
+# add leading underscore to user-defied env vars?
 
 export BASHRC="${XDG_CONFIG_HOME}/bash/bashrc"
 
@@ -21,8 +26,6 @@ export STRFTIME='+%Y.%m.%d-%H.%M.%S.%3N'  # [date(1)](https://man7.org/linux/man
 # %M    minute (00..59)
 # %S    second (00..60)
 # %N    nanoseconds (000000000..999999999)
-
-export FZF_DEFAULT_COMMAND='find -type f -maxdepth 10 -not -path "*.git/*"' # [Default command to use when input is tty](https://github.com/junegunn/fzf#environment-variables)
 
 export GITSTATUSPROMPT='true'
 

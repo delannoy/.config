@@ -1,10 +1,11 @@
 #!/usr/bin/env bash
 
-export _VERBOSE='2'
+export _VERBOSE=2
 
-# [How to check if a shell is login/interactive/batch](https://unix.stackexchange.com/a/26782)
-# [Reliable way for a Bash script to get the full path to itself [duplicate]](https://stackoverflow.com/a/11114547)
-(( "${_VERBOSE}" >= 1 )) && [[ -n "${BASH}" ]] && shopt -q login_shell && printf '%s\n' "***$(realpath "${BASH_SOURCE[0]}")***" || return
+if [[ -n "${BASH}" ]] && shopt -q 'login_shell'; # [How to check if a shell is login/interactive/batch](https://unix.stackexchange.com/a/26782)
+    then (( "${_VERBOSE}" >= 1 )) && printf '%s\n' "***$(realpath "${BASH_SOURCE[0]}")***"; # [Reliable way for a Bash script to get the full path to itself [duplicate]](https://stackoverflow.com/a/11114547)
+    else return;
+fi
 
 source "${HOME}/bash/env/xdg"
 source "${XDG_CONFIG_HOME}/bash/env/env" # find "${XDG_CONFIG_HOME}/bash/env/"* -type f -not -name '.*' -not -name 'xdg' | xargs --max-args=1 source

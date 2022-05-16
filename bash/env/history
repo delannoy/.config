@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 
-(( "${_VERBOSE}" >= 2 )) && [[ -n "${BASH}" ]] && shopt -q login_shell && printf '%s\n' "***$(realpath "${BASH_SOURCE[0]}")***" || return
+if [[ -n "${BASH}" ]] && shopt -q 'login_shell';
+    then (( "${_VERBOSE}" >= 3 )) && printf '%s\n' "***$(realpath "${BASH_SOURCE[0]}")***";
+    else return;
+fi
 
 export HISTFILE="${XDG_CONFIG_HOME}/bash/${HOSTNAME}.history" # [The name of the file in which command history is saved](https://wiki.bash-hackers.org/syntax/shellvars#histfile)
 export HISTFILEBKP="${HISTFILE%/*}}/${HOSTNAME}.bkp.history"

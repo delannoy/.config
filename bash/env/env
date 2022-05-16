@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 
-(( "${_VERBOSE}" >= 1 )) && [[ -n "${BASH}" ]] && shopt -q login_shell && printf '%s\n' "***$(realpath "${BASH_SOURCE[0]}")***" || return
+if [[ -n "${BASH}" ]] && shopt -q 'login_shell';
+    then (( "${_VERBOSE}" >= 2 )) && printf '%s\n' "***$(realpath "${BASH_SOURCE[0]}")***";
+    else return;
+fi
 
 # [Environment Variables](https://mywiki.wooledge.org/Environment)
 # [Environment variables](https://wiki.archlinux.org/title/environment_variables)

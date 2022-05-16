@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+if [[ -n "${BASH}" ]] && [[ $- == *i* ]];
+    then (( "${_VERBOSE}" >= 3 )) && printf '%s\n' "***$(realpath "${BASH_SOURCE[0]}")***";
+    else return;
+fi
+
 alias scp='scp -F "${SSHCONFIG}" -p -r -v'
 # -F ssh_config         Specifies an alternative per-user configuration file for ssh. This option is directly passed to ssh(1)
 # -p                    Preserves modification times, access times, and modes from the original file
@@ -33,6 +38,7 @@ alias rsyncAppend='rsyncArchive --partial --append-verify --timeout=300'
 alias rsyncNoMeta='rsyncArchive --no-perms --no-times --no-group --no-owner'
 # --no-OPTION           turn off an implied OPTION (e.g. --no-D) [https://unix.stackexchange.com/a/102214]
 
+(( "$(grep --count 'XDG_CONFIG_HOME/' "${SSHCONFIG}")" > 0 )) && sed --in-place "s|XDG_CONFIG_HOME|${XDG_CONFIG_HOME}|g" "${SSHCONFIG}"
 alias ssh='ssh -F "${SSHCONFIG}"'
 # -F configfile     Specifies an alternative per-user configuration file. If a configuration file is given on the command line, the system-wide configuration file (/etc/ssh/ssh_config) will be ignored. The default for the per-user configuration file is ~/.ssh/config.
 

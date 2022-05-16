@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 
-(( "${_VERBOSE}" >= 2 )) && [[ -n "${BASH}" ]] && shopt -q login_shell && printf '%s\n' "***$(realpath "${BASH_SOURCE[0]}")***" || return
+if [[ -n "${BASH}" ]] && shopt -q 'login_shell';
+    then (( "${_VERBOSE}" >= 3 )) && printf '%s\n' "***$(realpath "${BASH_SOURCE[0]}")***";
+    else return;
+fi
 
 export EDITOR='/usr/bin/vim' # [The editor program called by sudoedit, vipw, and other such programs when you tell them to edit a file](https://en.wikibooks.org/wiki/Guide_to_Unix/Environment_Variables#EDITOR)
 export VISUAL='/usr/bin/vim' # [This variable is used to specify the "visual" - screen-oriented - editor. Generally you will want to set it to the same value as the EDITOR variable](https://en.wikibooks.org/wiki/Guide_to_Unix/Environment_Variables#VISUAL)

@@ -1,16 +1,21 @@
 #!/usr/bin/env bash
 
-(( "${_VERBOSE}" >= 2 )) && [[ -n "${BASH}" ]] && shopt -q login_shell && printf '%s\n' "***$(realpath "${BASH_SOURCE[0]}")***" || return
+if [[ -n "${BASH}" ]] && shopt -q 'login_shell';
+    then (( "${_VERBOSE}" >= 3 )) && printf '%s\n' "***$(realpath "${BASH_SOURCE[0]}")***";
+    else return;
+fi
 
 # [XDG Base Directory](https://wiki.archlinux.org/title/XDG_Base_Directory#Supported)
-# [https://github.com/avioli/woegjiub-config/blob/edd41628b374de3747165421abd80e5840e23c77/sh/xdg.sh]
 # [Notes on moving various dotfiles](https://github.com/grawity/dotfiles/blob/master/.dotfiles.notes)
+# [https://github.com/avioli/woegjiub-config/blob/edd41628b374de3747165421abd80e5840e23c77/sh/xdg.sh]
+# [https://github.com/rememberYou/dotfiles/blob/master/sh/.config/sh/xdg]
 
 export CURL_HOME="${XDG_CONFIG_HOME}/curl" # [If set, is the first variable curl checks when trying to find its home directory. If not set, it continues to check XDG_CONFIG_HOME.](https://curl.se/docs/manpage.html#CURLHOME)
 export CARGO_HOME="${XDG_CACHE_HOME}/cargo" # [Cargo maintains a local cache of the registry index and of git checkouts of crates](https://doc.rust-lang.org/cargo/reference/environment-variables.html#environment-variables)
 export DOCKER_CONFIG="${XDG_CONFIG_HOME}/docker" # [The location of your client configuration files](https://docs.docker.com/engine/reference/commandline/cli/#environment-variables)
 export GNUPGHOME="${XDG_DATA_HOME}/gnupg" # [If set, directory used instead of "~/.gnupg"](https://www.gnupg.org/documentation/manuals/gnupg/GPG-Configuration.html)
-export GOPATH="${XDG_DATA_HOME}/go" # [The GOPATH environment variable specifies the location of your workspace](https://golang.org/doc/gopath_code#GOPATH)
+export GOBIN="${XDG_DATA_HOME/share/bin}" # [The directory where 'go install' will install a command.](https://pkg.go.dev/cmd/go#hdr-Environment_variables)
+export GOPATH="${XDG_DATA_HOME}/go" # [The GOPATH environment variable lists places to look for Go code.](https://pkg.go.dev/cmd/go#hdr-GOPATH_environment_variable)
 export HTTPIE_CONFIG_DIR="${XDG_CONFIG_HOME}/httpie" # [Config file directory](https://httpie.io/docs/cli#config-file-directory)
 export IPYTHONDIR="${XDG_CONFIG_HOME}/ipython" # [path to a directory, which IPython will use for user data. IPython will create it if it does not exist](https://ipython.org/ipython-doc/3/config/intro.html#envvar-IPYTHONDIR)
 export JULIA_DEPOT_PATH="${XDG_CACHE_HOME}/julia:${JULIA_DEPOT_PATH}" # [The JULIA_DEPOT_PATH environment variable is used to populate the global Julia DEPOT_PATH variable](https://docs.julialang.org/en/v1/manual/environment-variables/#JULIA_DEPOT_PATH)
@@ -31,3 +36,6 @@ export SCREENRC="${XDG_CONFIG_HOME}/screen/conf" # [Alternate user screenrc file
 export TMUXRC="${XDG_CONFIG_HOME}/tmux/conf" # [XDG reluctantly and half-heartedly "implemented" in version 3.2](https://github.com/tmux/tmux/issues/142)
 export WGETRC="${XDG_CONFIG_HOME}/wget/conf" # [Wgetrc Location](https://www.gnu.org/software/wget/manual/html_node/Wgetrc-Location.html)
 export XAUTHORITY="${XDG_RUNTIME_DIR}/Xauthority" # [Specifies the name of the authority file on the local host](https://www.ibm.com/docs/en/zos/2.2.0?topic=motif-x-window-system-environment-variables)
+
+# export GIT_SSH_COMMAND="ssh -F ${XDG_CONFIG_HOME}/ssh/git" # [git fetch and git push will use the specified command instead of ssh when they need to connect to a remote system](https://git-scm.com/docs/git#Documentation/git.txt-codeGITSSHCOMMANDcode)
+export FZF_DEFAULT_COMMAND='find -type f -maxdepth 10 -not -path "*.git/*"' # [Default command to use when input is tty](https://github.com/junegunn/fzf#environment-variables)

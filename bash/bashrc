@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 
-# [Exit if shell is not running BASH or is non-interactive](https://askubuntu.com/a/1070182)
-# [Reliable way for a Bash script to get the full path to itself [duplicate]](https://stackoverflow.com/a/11114547)
-(( "${_VERBOSE}" >= 1 )) && [[ -n "${BASH}" ]] && [[ $- == *i* ]] && printf '%s\n' "***$(realpath "${BASH_SOURCE[0]}")***" || return
+if [[ -n "${BASH}" ]] && [[ $- == *i* ]]; # [Exit if shell is not running BASH or is non-interactive](https://askubuntu.com/a/1070182)
+    then (( "${_VERBOSE}" >= 1 )) && printf '%s\n' "***$(realpath "${BASH_SOURCE[0]}")***"; # [Reliable way for a Bash script to get the full path to itself [duplicate]](https://stackoverflow.com/a/11114547)
+    else return;
+fi
 
 _source(){
     [[ -f "$1" ]] && source "$1";
