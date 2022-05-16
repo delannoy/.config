@@ -7,7 +7,7 @@ if [[ -n "${BASH}" ]] && shopt -q 'login_shell'; # [How to check if a shell is l
     else return;
 fi
 
-source "${HOME}/bash/env/xdg"
+source "${HOME}/.config/bash/env/xdg"
 source "${XDG_CONFIG_HOME}/bash/env/env" # find "${XDG_CONFIG_HOME}/bash/env/"* -type f -not -name '.*' -not -name 'xdg' | xargs --max-args=1 source
 source "${XDG_CONFIG_HOME}/private/bash/env" # find "${XDG_CONFIG_HOME}/private/bash/"* -type f -not -name '.*' | xargs --max-args=1 source
 source "${XDG_CONFIG_HOME}/bash/bashrc"
