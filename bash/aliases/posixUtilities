@@ -12,7 +12,7 @@ alias cp='cp --interactive --preserve="all" --verbose'
 # --preserve[=ATTR_LIST]    preserve the specified attributes (default: mode,ownership,timestamps), if possible additional attributes: context, links, xattr, all
 # --verbose                 explain what is being done
 
-alias date='date "${STRFTIME}"'
+alias date='date "${_STRFTIME}"'
 # [date(1)](https://man7.org/linux/man-pages/man1/date.1.html#DESCRIPTION)
 
 alias df='df --human-readable --print-type --total'
@@ -46,7 +46,7 @@ alias ls='ls --color="auto" --group-directories-first --indicator-style="slash"'
 # --indicator-style=WORD    append indicator with style WORD to entry names: none (default), slash (-p), file-type (--file-type), classify (-F)
 # --indicator-style=slash   append / indicator to directories
 
-alias ll='ls -l --human-readable --time-style="${STRFTIME}"'
+alias ll='ls -l --human-readable --time-style="${_STRFTIME}"'
 # -l                        use a long listing format
 # --human-readable          with -l, print sizes in human readable format (e.g., 1K 234M 2G)
 # --time-style=STYLE        with -l, show times using style STYLE: full-iso, long-iso, iso, locale, or +FORMAT; FORMAT is interpreted like in 'date'

@@ -5,20 +5,10 @@ if [[ -n "${BASH}" ]] && shopt -q 'login_shell';
     else return;
 fi
 
-# add leading underscore to user-defied env vars?
+export _DISTROVERSION="$(source '/etc/os-release' 2>/dev/null && echo "${ID}${VERSION_ID}")" # [https://unix.stackexchange.com/a/6348] [https://unix.stackexchange.com/a/25131]
+export _DISTROVERSION="${_DISTROVERSION:-"$(lsb_release --short --id --release 2>/dev/null | tr -d '\n ')"}" # [https://unix.stackexchange.com/a/6348] [https://unix.stackexchange.com/a/25131]
 
-export BASHRC="${XDG_CONFIG_HOME}/bash/bashrc"
-
-export CURLWO="[%{filename_effective}] [%{size_download} B] [%{time_total} s]\n" # [curl write out](https://everything.curl.dev/usingcurl/verbose/writeout)
-# %{filename_effective} the ultimate filename that curl writes out to. This is only meaningful if curl is told to write to a file with the --remote-name or --output option. It's most useful in combination with the --remote-header-name option.
-# %{size_download}      the total number of bytes that were downloaded.
-# %{time_total}         the total time, in seconds, that the full operation lasted. The time will be displayed with millisecond resolution.
-
-# export DISTROVERSION="$(source '/etc/os-release' 2>/dev/null && echo "${ID}${VERSION_ID}" || lsb_release --short --id --release 2>/dev/null | tr -d '\n ')" # [https://unix.stackexchange.com/a/6348] [https://unix.stackexchange.com/a/25131]
-export DISTROVERSION="$(source '/etc/os-release' 2>/dev/null && echo "${ID}${VERSION_ID}")" # [https://unix.stackexchange.com/a/6348] [https://unix.stackexchange.com/a/25131]
-export DISTROVERSION="${DISTROVERSION:-"$(lsb_release --short --id --release 2>/dev/null | tr -d '\n ')"}" # [https://unix.stackexchange.com/a/6348] [https://unix.stackexchange.com/a/25131]
-
-export STRFTIME='+%Y.%m.%d-%H.%M.%S.%3N'  # [date(1)](https://man7.org/linux/man-pages/man1/date.1.html#DESCRIPTION) # [Command to get time in milliseconds](https://stackoverflow.com/a/18704121)
+export _STRFTIME='+%Y.%m.%d-%H.%M.%S.%3N'  # [date(1)](https://man7.org/linux/man-pages/man1/date.1.html#DESCRIPTION) # [Command to get time in milliseconds](https://stackoverflow.com/a/18704121)
 # %Y    year
 # %m    month (01..12)
 # %d    day of month (e.g., 01)
@@ -27,9 +17,9 @@ export STRFTIME='+%Y.%m.%d-%H.%M.%S.%3N'  # [date(1)](https://man7.org/linux/man
 # %S    second (00..60)
 # %N    nanoseconds (000000000..999999999)
 
-export GITSTATUSPROMPT='true'
+export _GITSTATUSPROMPT='true'
 
-export RSYNCOF='%i %o %b/%7''l %B %L %C %n' # [rsyncd log format](https://download.samba.org/pub/rsync/rsyncd.conf.html#log_format)
+export _RSYNCOF='%i %o %b/%7''l %B %L %C %n' # [rsyncd log format](https://download.samba.org/pub/rsync/rsyncd.conf.html#log_format)
 # An optional numeric field width may also be specified between the percent and the escape letter (e.g. "%-50n %8l %07p").
 # In addition, one or more apostrophes may be specified prior to a numerical escape to indicate that the numerical value should be made more human-readable.
 # The 3 supported levels are the same as for the --human-readable command-line option
@@ -44,9 +34,9 @@ export RSYNCOF='%i %o %b/%7''l %B %L %C %n' # [rsyncd log format](https://downlo
 # %c    the total size of the block checksums received for the basis file (only when sending)
 # %n    the filename (short form; trailing "/" on dir)
 
-export SSHCONFIG="${XDG_CONFIG_HOME}/ssh/config"
+export _SSHCONFIG="${XDG_CONFIG_HOME}/ssh/config"
 
-# export USERAGENT="$(yt-dlp --dump-user-agent 2>/dev/null)" & # [Display the current browser identification](https://github.com/ytdl-org/youtube-dl#options)
-export USERAGENT="${USERAGENT:-'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.74 Safari/537.36'}"
+# export _USERAGENT="$(yt-dlp --dump-user-agent 2>/dev/null)" & # [Display the current browser identification](https://github.com/ytdl-org/youtube-dl#options)
+export _USERAGENT="${_USERAGENT:-'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.74 Safari/537.36'}"
 
-export VENV_HOME="${XDG_DATA_HOME}/venv"
+export _VENV_DIR="${XDG_DATA_HOME}/venv"
