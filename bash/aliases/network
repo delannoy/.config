@@ -38,7 +38,7 @@ alias rsyncAppend='rsyncArchive --partial --append-verify --timeout=300'
 alias rsyncNoMeta='rsyncArchive --no-perms --no-times --no-group --no-owner'
 # --no-OPTION           turn off an implied OPTION (e.g. --no-D) [https://unix.stackexchange.com/a/102214]
 
-(( "$(grep --count 'XDG_CONFIG_HOME/' "${_SSHCONFIG}")" > 0 )) && sed --in-place "s|XDG_CONFIG_HOME|${XDG_CONFIG_HOME}|g" "${_SSHCONFIG}"
+[[ -f "${_SSHCONFIG}" ]] && (( "$(grep --count 'XDG_CONFIG_HOME/' "${_SSHCONFIG}")" > 0 )) && sed --in-place "s|XDG_CONFIG_HOME|${XDG_CONFIG_HOME}|g" "${_SSHCONFIG}"
 alias ssh='ssh -F "${_SSHCONFIG}"'
 # -F configfile     Specifies an alternative per-user configuration file. If a configuration file is given on the command line, the system-wide configuration file (/etc/ssh/ssh_config) will be ignored. The default for the per-user configuration file is ~/.ssh/config.
 
