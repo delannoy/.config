@@ -1,0 +1,70 @@
+#!/usr/bin/env bash
+
+if [[ -n "${BASH}" ]] && [[ $- == *i* ]];
+    then (( "${_VERBOSE}" >= 3 )) && printf '%s\n' "***$(realpath "${BASH_SOURCE[0]}")***";
+    else return;
+fi
+
+curlCookie()(
+    local 'cookieFile' 'URL' 'outFile'
+    _args 'cookieFile' 'URL' 'outFile'
+    curl --progress-bar --user-agent "${_USERAGENT}" --cookie "${cookieFile}" --url "${URL}" --output "${outFile}"
+)
+
+curls()(
+    local 'url' 'outFile'
+    _args 'url' '[outFile]'
+    local curlWO='%{filename_effective}:%{size_download}:%{time_total}'
+        # %{filename_effective} the ultimate filename that curl writes out to. This is only meaningful if curl is told to write to a file with the --remote-name or --output option. It's most useful in combination with the --remote-header-name option.
+        # %{size_download}      the total number of bytes that were downloaded.
+        # %{time_total}         the total time, in seconds, that the full operation lasted. The time will be displayed with millisecond resolution.
+    [[ -n "${outFile}" ]] && outFile="--output ${outFile}" || outFile='--remote-name'
+    curl --progress-bar --create-dirs --location --url "${url}" --output "${outFile}" --write-out "${curlWO}" | awk 'BEGIN{FS=":"} {printf("[%s] [%s MB] [%s sec]\n", $1, $2/10^6, $3)}'
+        # -#, --progress-bar        Make curl display transfer progress as a simple progress bar instead of the standard, more informational, meter.
+        # --create-dirs             When used in conjunction with the -o, --output option, curl will create the necessary local directory hierarchy as needed.
+        # --location                (HTTP) If the server reports that the requested page has moved to a different location, this option will make curl redo the request on the new place.
+        # --write-out <format>      Defines what to display on stdout after a completed and successful operation. The format is a string that may contain plain text mixed with any number of variables,
+        #                           specified as %{variable_name} # [https://ec.haxx.se/usingcurl/usingcurl-verbose/usingcurl-writeout]
+        # -s, --silent              Silent or quiet mode. Don't show progress meter or error messages. Makes Curl mute. It will still output the data you ask for, potentially even to the terminal/stdout unless you redirect it.
+)
+
+ipAddr(){
+    local 'device'
+    _args '[device=eth0]'
+    if [[ "$(ip -json 2>&1 | grep --count 'unknown')" == 0 ]] && [[ -n "$(command -v jq)" ]]; then
+        ip -json addr show dev "${device}" | jq --raw-output '.[].addr_info[] | select(.family=="inet").local'
+    else
+        ip addr show dev "${device}" | awk '/inet /{print $2}'
+    fi
+}
+
+sshdConfig(){
+    sudo apt-get remove  openssh-server -y
+    sudo apt-get install openssh-server -y
+    sudo sed --in-place 's|^PasswordAuthentication.*|PasswordAuthentication yes|g' "$(find /etc/ssh/ -name 'sshd_config')"
+    printf '%s\n%s\n%s\n'                                       \
+           'ChallengeResponseAuthentication yes'                \
+           'PasswordAuthentication          yes'                \
+           'PermitRootLogin                 no'                 | sudo tee '/etc/ssh/sshd'
+    sudo service ssh --full-restart
+}
+
+wgetCookie()(
+    local 'cookieFile' 'URL' 'outFile'
+    _args 'cookieFile' 'URL' 'outFile'
+    wget --quiet --show-progress --no-check-certificate --trust-server-names --user-agent="${_USERAGENT}" --load-cookies="${cookieFile}" --output-document="${outFile}" "${URL}" # 2>&1 | /bin/grep '\-\-\|saved'
+)
+
+wgets(){
+    local 'url' 'outFile'
+    _args 'url' '[outFile]'
+    [[ -n "${outFile}" ]] && outFile="--output-document ${outFile}"
+    if [[ "$(wget --show-progress 2>&1 | grep --count 'unrecognized option')" == 0 ]]; then
+        wget --quiet --show-progress "${outFile}" "${url}"
+        # --quiet               Turn off Wget's output.
+        # --show-progress       Force wget to display the progress bar in any verbosity. Only available wget >= 1.16 [http://savannah.gnu.org/forum/forum.php?forum_id=8133] [https://stackoverflow.com/a/29457649]
+        # --output-document     The documents will not be written to the appropriate files, but all will be concatenated together and written to file.
+    else
+        wget "${outFile}" "${url}"
+    fi
+}
