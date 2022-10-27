@@ -1,0 +1,87 @@
+#!/usr/bin/env bash
+
+if [[ -n "${BASH}" ]] && [[ $- == *i* ]];
+    then (( "${_VERBOSE}" >= 3 )) && printf '%s\n' "***$(realpath "${BASH_SOURCE[0]}")***";
+    else return;
+fi
+
+_parseBranchV2(){ # [https://git-scm.com/docs/git-status#_branch_headers]
+    local header="$1"
+    [[ "${line:0:${#header}}" == "${header}" ]] && gs["${header#*.}"]="${line:$((${#header}+1))}"
+}
+
+_parseBranchV1(){
+    gs['oid']="$(git rev-parse --short HEAD 2>&1)"
+    read -r _ gs[branch] gs[ab] <<< "${line}"
+    if [[ "${gs[branch]}" =~ '...' ]]; then IFS=: read -r gs[head] gs[upstream] <<< "${gs[branch]/.../:}"
+    else gs[head]="${gs[branch]}"; fi
+}
+
+_gitBranch(){
+    if [[ "${_GITPORCELAIN}" == 'v1' ]] && [[ "${line:0:3}" == "## " ]]; then
+        _parseBranchV1;
+    else
+        _parseBranchV2 '# branch.oid';
+        _parseBranchV2 '# branch.head';
+        _parseBranchV2 '# branch.upstream';
+        _parseBranchV2 '# branch.ab';
+    fi
+    [[ "${gs[ab]}" =~ [+]([0-9]+) ]] || [[ "${gs[ab]}" =~ 'ahead '([0-9]+) ]] && gs[+]="${BASH_REMATCH[1]}"
+    [[ "${gs[ab]}" =~ [-]([0-9]+) ]] || [[ "${gs[ab]}" =~ 'behind '([0-9]+) ]] && gs[-]="${BASH_REMATCH[1]}"
+}
+
+_parseState(){ # [https://git-scm.com/docs/git-status#_short_format]
+    [[ "${_GITPORCELAIN}" == 'v1' ]] && { local idx=0; local wtree=1; } || { local idx=2; local wtree=3; }
+    for state in 'A' 'C' 'D' 'M' 'R' 'U'; do
+        [[ "${line:${idx}:1}" == "${state}" ]] && ((gs["${state^}"]+=1)); # [uppercase^](https://wiki.bash-hackers.org/syntax/pe#case_modification)
+        [[ "${line:${wtree}:1}" == "${state}" ]] && ((gs["${state,}"]+=1)); # [lowercase,](https://wiki.bash-hackers.org/syntax/pe#case_modification)
+    done
+}
+
+_gitStatus(){ # [https://git-scm.com/docs/git-status#_changed_tracked_entries]
+    if [[ "${_GITPORCELAIN}" == 'v1' ]] && [[ "${line:0:3}" != "## " ]];
+    then _parseState;
+    else
+        case "${line:0:1}" in
+            '?') ((gs['?']+=1));; # untracked items
+            '!') ((gs['!']+=1));; # ignored items
+            '1') ((gs['changed']+=1)) && _parseState;; # ordinary changed entries
+            '2') ((gs['mvcp']+=1)) && _parseState;; # renamed or copied entries
+            'u') ((gs['unmerged']+=1)) && _parseState;; # unmerged entries
+        esac
+    fi
+}
+
+_gitPS1(){
+    local ps1
+    [[ "${gs[head]}" == '(detached)' ]] && ps1="${TXT[red]}" || ps1="${TXT[green]}"
+    ps1+="${gs[head]}${TXT[reset]}@"
+    [[ "${gs[oid]}" == '(initial)' ]] && ps1+="${TXT[yellow]}${gs[oid]}" || ps1+="${TXT[magenta]}${gs[oid]:0:7}"
+    ps1+="${TXT[cyan]}↓${TXT[reset]}"
+    [[ -n "${gs[upstream]}" ]] && ps1+=":${TXT[red]}${gs[upstream]}${TXT[cyan]}↑${TXT[reset]}"
+    for key in '+' '-'; do (( "${gs[${key}]:-0}" > 0 )) && ps1+=":${TXT[RED]}${gs[${key}]}${key^^}${TXT[reset]}"; done
+    for key in 'A' 'C' 'D' 'M' 'R' 'U'; do [[ -n "${gs[${key}]}" ]] && ps1+=":${TXT[GREEN]}${gs[${key}]}${key}${TXT[reset]}"; done
+    for key in 'a' 'c' 'd' 'm' 'r' 'u'; do [[ -n "${gs[${key}]}" ]] && ps1+=":${TXT[RED]}${gs[${key}]}${key^^}${TXT[reset]}"; done
+    for key in '?' '!'; do [[ -n "${gs[${key}]}" ]] && ps1+=":${TXT[yellow]}${gs[${key}]}${key}${TXT[reset]}"; done
+    printf "%s\n" "${ps1}"
+}
+
+_gitStatusPrompt(){
+    # BASH parser for `git status --branch --porcelain` (supports porcelain v1 and v2)
+    # The first field in the the short-format (staged entries) are indicated in red and the second field (unstaged entries) are indicated in green [https://stackoverflow.com/a/1587952/13019084]
+    # [https://git-scm.com/docs/git-status#_output]
+    unset 'gs'
+    declare -A -g 'gs' # [associative array requires BASH>=4.0](https://wiki.bash-hackers.org/syntax/arrays#associative_bash_4)
+    local gitStatusPorcelain
+    [[ -n "$(command -v 'git.exe')" ]] && local git='git.exe' || local git='git' # [Faster git status under WSL2](https://markentier.tech/posts/2020/10/faster-git-under-wsl2/)
+    if [[ "$(${git} rev-parse --is-inside-work-tree 2>/dev/null)" == 'true' ]]; then
+        gitStatusPorcelain="$(${git} status --porcelain=v2 --branch 2>/dev/null)" # [https://git-scm.com/docs/git-status#_porcelain_format_version_2]
+        [[ -z "${gitStatusPorcelain}" ]] && export _GITPORCELAIN='v1' && gitStatusPorcelain="$(${git} status --porcelain --branch)"; # [https://git-scm.com/docs/git-status#_porcelain_format_version_1]
+        while IFS= read -r line; do # By default, read [removes] all leading and trailing whitespace characters [http://mywiki.wooledge.org/BashFAQ/001#Trimming]
+            _gitBranch
+            _gitStatus
+            # [[ "$(${git} ls-files "$(${git} rev-parse --show-toplevel)" | wc -l)" <= 100 ]] && _gitStatus
+        done <<< "${gitStatusPorcelain}"
+        _gitPS1
+    fi
+}
