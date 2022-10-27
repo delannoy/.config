@@ -1,0 +1,5 @@
+# [Startup File](https://www.gnu.org/software/wget/manual/html_node/Startup-File.html)
+
+# [By default, Wget stores its HSTS database in ~/.wget-hsts. You can use `--hsts-file` to override this. Wget will use the supplied file as the HSTS database. Such file must conform to the correct HSTS database format used by Wget. If Wget cannot parse the provided file, the behaviour is unspecified.](https://www.gnu.org/software/wget/manual/html_node/HTTPS-_0028SSL_002fTLS_0029-Options.html#index-HSTS)
+# [Disable WGET history tracking](https://stackoverflow.com/a/54843736/13019084)
+hsts=0
