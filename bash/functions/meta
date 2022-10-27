@@ -1,0 +1,56 @@
+#!/usr/bin/env bash
+
+if [[ -n "${BASH}" ]] && [[ $- == *i* ]];
+    then (( "${_VERBOSE}" >= 3 )) && printf '%s\n' "***$(realpath "${BASH_SOURCE[0]}")***";
+    else return;
+fi
+
+_Args(){
+    # Metafunction that expects "$FUNCNAME" (name of parent function), the positional parameters passed to the parent function, an ASCII "record separator" delimiter, and the variable names for the parent function's required & optional arguments
+    # Variable names for optional arguments should be indicated by wrapping them in square brackets. A default value for optional arguments may be specified with an equal sign, e.g. '[optionalVariable=defaultValue]'
+    # The passed positional parameters are assigned to the variable names and returned as global variables using `printf -v` (use `local` keyword in parent function to specify local variables)
+    # Optional positional parameters may be skipped with a quoted empty string, ''
+    # If any required parameters are missing, printUsage() is executed (prints the expected positional parameters) and an exit code of 7 is returned
+    local functionName posParam varName sqRegex eqRegex red reset # [https://wiki.bash-hackers.org/commands/builtin/local]
+    functionName="$1"; # [https://wiki.bash-hackers.org/syntax/shellvars#funcname]
+    shift; # [https://wiki.bash-hackers.org/commands/builtin/shift]
+    while (( "$#" > 0 )); do # [https://wiki.bash-hackers.org/scripting/posparams#loops]
+        [[ "$1" == $'\030' ]] && { shift; break; }; # [Octal 34 is the ASCII "file separator" character, and is unlikely to be present in your data](https://unix.stackexchange.com/a/628543) [https://en.wikipedia.org/wiki/Delimiter#ASCII_delimited_text]
+        posParam+=("$1"); # [https://wiki.bash-hackers.org/syntax/arrays#storing_values]
+        shift;
+    done;
+    while (( "$#" > 0 )); do
+        varName+=("$1");
+        shift;
+    done;
+    sqRegex='[[]([[:print:]]+)[]]'; # matches one or more 'printable' character(s) (and groups each match into an array named "$BASH_REMATCH") enclosed in square brackets [https://wiki.bash-hackers.org/syntax/shellvars#bash_rematch]
+    eqRegex='([[:alnum:]_]+)[=]([[:print:]]+)'; # matches and groups one or more 'alphanumeric' or '_' character(s) followed by an '='. Matches and groups the following one or more 'printable' character(s).
+    red="$(tput setaf 01)"; # [https://wiki.bash-hackers.org/scripting/terminalcodes#colors_using_tput]
+    reset="$(tput sgr 0 0)";
+    printUsage(){
+        printf "%s: ${red}%s\n${reset}" "usage" "${functionName} ${varName[*]}"; # [https://wiki.bash-hackers.org/syntax/arrays#getting_values]
+    }
+    optVar(){
+        if [[ "$1" =~ ${eqRegex} ]]; then # if '=' is matched (a default value is provided)...
+            [[ -n "${posParam[i]}" ]] && printf -v "${BASH_REMATCH[1]}" "${posParam[i]}"; # assign variable name (${BASH_REMATCH[1]}) to positional parameter (${posParam[i]}), if provided
+            [[ -z "${posParam[i]}" ]] && printf -v "${BASH_REMATCH[1]}" "${BASH_REMATCH[2]}" # otherwise, assign variable name (${BASH_REMATCH[1]}) to default value (${BASH_REMATCH[2]})
+        elif [[ -n "${posParam[i]}" ]]; then # if '=' is not matched (no default value is provided)...
+            printf -v "$1" "${posParam[i]}"; # assign variable name ($1) to positional parameter (${posParam[i]})
+        fi
+    }
+    for (( i=0; i<${#varName[@]}; i++ )); do
+        # printf "%-30s %s\n" "${varName[i]}" "${posParam[i]}"
+        if [[ "${varName[i]}" =~ ${sqRegex} ]]; then
+            optVar "${BASH_REMATCH[1]}";
+        elif [[ -n "${posParam[i]}" ]]; then
+            printf -v "${varName[i]}" "${posParam[i]}"; # note that `printf -v` doesn't support direct assignment to array indexes for BASH<4.1 [https://wiki.bash-hackers.org/commands/builtin/printf#options]
+        else printUsage && return 7
+        fi
+    done
+}
+
+# Define an alias to pass "$FUNCNAME", positional parameters, and an ASCII "record separator" delimiter to _Args() before passing the variable names.
+# Set a trap on `ERR` signal to force the parent function to break if _Args() returns 7.
+# [https://wiki.bash-hackers.org/commands/builtin/trap] [https://stackoverflow.com/q/19091498] [https://stackoverflow.com/a/23637952/13019084] [https://stackoverflow.com/a/42954517]
+alias _args=$'trap "(( \$? == 7 )) && return 64" ERR; _Args "${FUNCNAME}" "$@" $\'\\030\''
+# alias _args=$'trap "return 1 2>/dev/null" ERR; _Args "${FUNCNAME}" "$@" $\'\\030\''
