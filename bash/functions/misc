@@ -1,0 +1,43 @@
+#!/usr/bin/env bash
+
+if [[ -n "${BASH}" ]] && [[ $- == *i* ]];
+    then (( "${_VERBOSE}" >= 3 )) && printf '%s\n' "***$(realpath "${BASH_SOURCE[0]}")***";
+    else return;
+fi
+
+findLatest(){
+    # find ${@} -maxdepth 0 -type d | sort --version-sort | tail -1
+    # [How can I sort or compare files based on some metadata attribute (newest / oldest modification time, size, etc)?](http://mywiki.wooledge.org/BashFAQ/003)
+    local latest
+    for file in $1; do
+        unset -v latest;
+        [[ "${file}" -nt "${latest}" ]] && latest="${file}";
+    done;
+    echo "${latest}";
+}
+
+mkcd(){
+    local 'dir'
+    _args 'dir'
+    mkdir --parents "${dir}" && cd "${dir}"
+}
+
+padString(){
+    # [How can I add x number of leading spaces in a string using Bash?](https://stackoverflow.com/a/43076506/13019084)
+    local 'pad' 'str'
+    _args 'pad' 'str'
+    printf "%*s%s\n" "${pad}" '' "${str}"
+}
+
+removeDuplicateLines(){
+    # [How to remove duplicate lines inside a text file?](https://unix.stackexchange.com/a/30178)
+    local 'inFile' 'outFile'
+    _args 'inFile' 'outFile'
+    awk '!seen[$0]++' "${inFile}" > "${outFile}"
+}
+
+textBetweenPatterns(){
+    local 'pat1' 'pat2'
+    _args 'pat1' 'pat2'
+    sed --silent --regexp-extended "/${pat1}/,/${pat2}/p"
+}
