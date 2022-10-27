@@ -1,0 +1,56 @@
+#!/usr/bin/env bash
+
+if [[ -n "${BASH}" ]] && [[ $- == *i* ]];
+    then (( "${_VERBOSE}" >= 3 )) && printf '%s\n' "***$(realpath "${BASH_SOURCE[0]}")***";
+    else return;
+fi
+
+export KRB5_CONFIG="${XDG_DATA_HOME}/krb/conf"; # [Main Kerberos configuration file.](https://web.mit.edu/kerberos/krb5-1.12/doc/admin/env_variables.html#environment-variables)
+export KRB5_KTNAME="${XDG_DATA_HOME}/krb/keytab"; # [Default keytab file name.](https://web.mit.edu/kerberos/krb5-1.12/doc/admin/env_variables.html#environment-variables)
+[[ ! -f "${KRB5_CONFIG}" ]] && curls 'http://linux.web.cern.ch/linux/docs/krb5.conf' "${KRB5_CONFIG}"
+
+_keytabCreate(){
+    # [https://twiki.cern.ch/twiki/bin/view/Main/Kerberos]
+    # [https://gist.github.com/OmeGak/9530124]
+    local 'principal'
+    _args 'principal'
+    printf "%s\n" "running 'kinit ${principal}' to obtain encryption types" # [Kerberos ktutil, what kinds of encryption are available?](https://serverfault.com/a/620592)
+    kinit "${principal}" && IFS=, read -r encryp1 encryp2 <<< "$(klist -c -e | awk 'END{print $(NF-1) $(NF)}')" || return 1
+    printf "%s\n" 'Run the follwing commands in the `ktutil` prompt:'
+    printf "%9s%s\n" '' "add_entry -password -p ${principal} -k 1 -e ${encryp1}"
+    [[ "${encryp1}" != "${encryp2}" ]] && printf "%9s%s\n" '' "add_entry -password -p ${principal} -k 1 -e ${encryp2}"
+    printf "%9s%s\n" '' "write_kt ${KRB5_KTNAME}"
+    printf "%9s%s\n" '' 'exit'
+    mkdir --verbose --parents "${KRB5_KTNAME%/*}"
+    # ktutil && chmod 600 "${KRB5_KTNAME}" && klist -t -e -K -k "${KRB5_KTNAME}" && kinit -k -t "${KRB5_KTNAME}" "${principal}"
+    ktutil && klist -t -e -K -k "${KRB5_KTNAME}"
+}
+
+keytabCreate(){
+    export KRB_PRINCIPAL='principal@DOMAIN.COM'
+    local password='pwdLOL'
+    local encryption1 encryption2
+    kinit "${KRB_PRINCIPAL}" <<< "${password}" && IFS=, read -r encryption1 encryption2 <<< "$(klist -e | awk 'END{print $(NF-1) $(NF)}')" && kdestroy
+    if [[ -n "${encryption1}" ]]; then
+        (printf '%s\n%s\n%s\n%s\n%s\n%s\n' \
+            "add_entry -password -p ${KRB_PRINCIPAL} -k 1 -e ${encryption1}" \
+            "${password}" \
+            "add_entry -password -p ${KRB_PRINCIPAL} -k 1 -e ${encryption2}" \
+            "${password}" \
+            "write_kt ${KRB_KTNAME}" \
+            'exit') | ktutil
+    fi
+}
+
+keytabCERN(){
+    ssh -t lxplus "/usr/sbin/cern-get-keytab --user "${USER}" --keytab ~/.keytab"
+    scp lxplus:~/.keytab "${KRB5_KTNAME}" && klist -t -e -K -k "${KRB5_KTNAME}"
+}
+
+krb(){
+    # [https://linux.web.cern.ch/docs/kerberos-access/]
+    local 'principal'
+    _args 'principal'
+    (( "$(klist -k "${KRB5_KTNAME}" 2>/dev/null | grep --count "${principal}")" == 0 )) && keytabCreate "${principal}"
+    [[ ! "$(pgrep --list-full k5start)" =~ ${principal} ]] && k5start -v -b -K 10 -u "${principal}" -f "${KRB5_KTNAME}"
+}
