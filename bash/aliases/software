@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+if [[ -n "${BASH}" ]] && [[ $- == *i* ]];
+    then (( "${_VERBOSE}" >= 3 )) && printf '%s\n' "***$(realpath "${BASH_SOURCE[0]}")***";
+    else return;
+fi
+
+alias cal='ncal -bw'
+# -b        Use oldstyle format for ncal output.
+# -w        Print the number of the week below each week column.
+
+alias tmux='tmux -f "${XDG_CONFIG_HOME}/tmux/tmux.conf"' # [XDG support was reluctantly added for tmux 3.2](https://github.com/tmux/tmux/blob/a5f99e14c6f264e568b860692b89d11f5298a3f2/CHANGES#L145)
+# -f file   Specify an alternative configuration file.
