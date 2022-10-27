@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+
+if [[ -n "${BASH}" ]] && [[ $- == *i* ]];
+    then (( "${_VERBOSE}" >= 3 )) && printf '%s\n' "***$(realpath "${BASH_SOURCE[0]}")***";
+    else return;
+fi
+
+timer(){
+    _args 'time';
+    fractional=$(bc <<< "$time - $time/1"); # amount after decimal point, i.e. bc <<< $time/1 corresponds to int($time)
+    sleep "${fractional}";
+    time=$(bc <<< "$time/1")
+    for ((time=$time; time>0; time--)); do
+        printf "${INFFMT}\r" "...wait ${time} seconds...";
+        sleep 1;
+    done
+}
+
+sleepRandom(){
+    # [Bash: How to generate random float number using $RANDOM](https://unix.stackexchange.com/a/460470)
+    _args 'maxDuration';
+    range=$(bc <<< "32768/${maxDuration}");
+    duration=$(bc --mathlib <<< "scale=4; $RANDOM/${range}");
+    # bc 'scale' parameter corresponds to precision (number of decimal places)
+    # "$RANDOM" generates a number from 0 to 32767
+    timer "${duration}";
+}
