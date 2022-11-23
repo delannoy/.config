@@ -1,0 +1,35 @@
+
+ipython # [IPython (Interactive Python) is a command shell for interactive computing in multiple programming languages, originally developed for the Python programming language](https://github.com/ipython/ipython)
+        # ipython                                           IPython: Productive Interactive Computing
+        # ├── backcall                                      Specifications for callback functions passed in to an API
+        # ├── decorator                                     Decorators for Humans
+        # ├── jedi>=0.16                                    An autocompletion tool for Python that can be used for text editors.
+        # │   └── parso<0.9.0,>=0.8.0                       A Python Parser
+        # ├── matplotlib-inline                             Inline Matplotlib backend for Jupyter
+        # │   └── traitlets                                 Traitlets Python configuration system
+        # │       └── ipython-genutils                      Vestigial utilities from IPython
+        # ├── pexpect>4.3                                   Pexpect allows easy control of interactive console applications.
+        # │   └── ptyprocess>=0.5                           Run a subprocess in a pseudo terminal
+        # ├── pickleshare                                   Tiny 'shelve'-like database with concurrency support
+        # ├── prompt-toolkit!=3.0.0,!=3.0.1,<3.1.0,>=2.0.0  Library for building powerful interactive command lines in Python
+        # │   └── wcwidth                                   Measures the displayed width of unicode strings in a terminal
+        # ├── pygments                                      Pygments is a syntax highlighting package written in Python.
+        # ├── setuptools>=18.5                              Easily download, build, install, upgrade, and uninstall Python packages
+        # └── traitlets>=4.2                                Traitlets Python configuration system
+        #     └── ipython-genutils                          Vestigial utilities from IPython
+
+mypy    # [Optional static typing for Python](https://github.com/python/mypy)
+        # mypy                         Optional static typing for Python
+        # ├── mypy-extensions>=0.4.3   Experimental type system extensions for programs checked with the mypy typechecker.
+        # ├── tomli>=1.1.0             A lil' TOML parser
+        # └── typing-extensions>=3.10  Backported and Experimental Type Hints for Python 3.6+
+
+pip     # [pip is the package installer for Python. You can use pip to install packages from the Python Package Index and other indexes.](https://github.com/pypa/pip)
+
+pipx    # [Install and Run Python Applications in Isolated Environments](https://github.com/pypa/pipx)
+        # pipx                              Install and Run Python Applications in Isolated Environments
+        # ├── argcomplete>=1.9.4            Bash tab completion for argparse
+        # ├── packaging>=20.0               Core utilities for Python packages
+        # │   └── pyparsing!=3.0.5,>=2.0.2  Python parsing module
+        # └── userpath>=1.6.0               Cross-platform tool for adding locations to the user PATH
+        #     └── click                     Composable command line interface toolkit

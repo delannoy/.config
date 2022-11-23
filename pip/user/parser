@@ -1,0 +1,27 @@
+
+cssselect           # [cssselect parses CSS3 Selectors and translate them to XPath 1.0 expressions](https://github.com/scrapy/cssselect)
+                    # cssselect  cssselect parses CSS3 Selectors and translates them to XPath 1.0
+
+dateparser          # [Python parser for human readable dates](https://github.com/scrapinghub/dateparser)
+                    # dateparser                  Date parsing library designed to parse dates from HTML pages
+                    # ├── python-dateutil         Extensions to the standard Python datetime module
+                    # │   └── six>=1.5            Python 2 and 3 compatibility utilities
+                    # ├── pytz                    World timezone definitions, modern and historical
+                    # ├── regex!=2019.02.19       Alternative regular expression module, to replace re.
+                    # └── tzlocal                 tzinfo object for the local timezone
+                    #     └── backports.zoneinfo  Backport of the standard library zoneinfo module
+
+lxml                # [lxml is the most feature-rich and easy-to-use library for processing XML and HTML in the Python language](https://github.com/lxml/lxml)
+                    # lxml    Powerful and Pythonic XML processing library combining libxml2/libxslt with the ElementTree API.
+
+pydantic            # [Data parsing and validation using Python type hints](https://github.com/pydantic/pydantic)
+                    # pydantic                      Data validation and settings management using python type hints
+                    # └── typing-extensions>=4.1.0  Backported and Experimental Type Hints for Python 3.7+
+
+pyyaml              # [A full-featured YAML processing framework for Python](https://github.com/yaml/pyyaml)
+                    # pyyaml  YAML parser and emitter for Python
+
+thefuzz[speedup]    # [Fuzzy String Matching in Python](https://github.com/seatgeek/thefuzz)
+                    # thefuzz[speedup]              Fuzzy string matching in python
+                    # └── python-levenshtein>=0.12  Python extension for computing string edit distances and similarities.
+                    #     └── setuptools            Easily download, build, install, upgrade, and uninstall Python packages
