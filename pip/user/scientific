@@ -1,0 +1,43 @@
+
+awkward         # [Manipulate JSON-like data with NumPy-like idioms.](https://github.com/scikit-hep/awkward)
+                # awkward                           Manipulate JSON-like data with NumPy-like idioms.
+                # ├── importlib-resources           Read resources from Python packages
+                # │   └── zipp>=3.1.0               Backport of pathlib-compatible object wrapper for zip files
+                # ├── numpy>=1.13.1                 NumPy is the fundamental package for array computing with Python.
+                # └── packaging                     Core utilities for Python packages
+                #     └── pyparsing!=3.0.5,>=2.0.2  pyparsing module - Classes and methods to define and execute parsing grammars
+
+hepunits        # [Units and constants in the HEP system of units](https://github.com/scikit-hep/hepunits)
+                # hepunits  Units and constants in the HEP system of units
+
+numpy           # [The fundamental package for scientific computing with Python [https://www.numpy.org/]](https://github.com/numpy/numpy)
+                # numpy   NumPy is the fundamental package for array computing with Python.
+
+pandas          # [Flexible and powerful data analysis / manipulation library for Python, providing labeled data structures similar to R data.frame objects, statistical functions, and much more](https://github.com/pandas-dev/pandas)
+                # pandas                      Powerful data structures for data analysis, time series, and statistics
+                # ├── numpy>=1.17.3           NumPy is the fundamental package for array computing with Python.
+                # ├── python-dateutil>=2.7.3  Extensions to the standard Python datetime module
+                # │   └── six>=1.5            Python 2 and 3 compatibility utilities
+                # └── pytz>=2017.3            World timezone definitions, modern and historical
+
+particle        # [Package to deal with particles, the PDG particle data table, PDGIDs, etc.](https://github.com/scikit-hep/particle)
+                # particle                      Extended PDG particle data and MC identification codes
+                # ├── attrs>=19.2               Classes Without Boilerplate
+                # ├── hepunits>=2.0.0           Units and constants in the HEP system of units
+                # └── importlib-resources>=2.0  Read resources from Python packages
+                #     └── zipp>=3.1.0           Backport of pathlib-compatible object wrapper for zip files
+
+scipy           # [open-source software for mathematics, science, and engineering [https://scipy.org/]](https://github.com/scipy/scipy)
+                # scipy                      SciPy: Scientific Library for Python
+                # └── numpy<1.23.0,>=1.16.5  NumPy is the fundamental package for array computing with Python.
+
+uproot          # [ROOT I/O in pure Python and NumPy](https://github.com/scikit-hep/uproot5)
+                # uproot          ROOT I/O in pure Python and NumPy.
+                # ├── numpy       NumPy is the fundamental package for array computing with Python.
+                # └── setuptools  Easily download, build, install, upgrade, and uninstall Python packages
+
+vector          # [Vector classes and utilities](https://github.com/scikit-hep/vector)
+                # vector                            Vector classes and utilities
+                # ├── numpy>=1.13.3                 NumPy is the fundamental package for array computing with Python.
+                # └── packaging>=19                 Core utilities for Python packages
+                #     └── pyparsing!=3.0.5,>=2.0.2  pyparsing module - Classes and methods to define and execute parsing grammars
