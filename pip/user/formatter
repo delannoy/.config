@@ -8,11 +8,8 @@ black       # [The uncompromising Python code formatter](https://github.com/psf/
             # ├── regex>=2020.1.8         Alternative regular expression module, to replace re.
             # └── tomli<2.0.0,>=0.2.6     A lil' TOML parser
 
-flake8      # [flake8 is a python tool that glues together pycodestyle, pyflakes, mccabe, and third-party plugins to check the style and quality of some python code.](https://github.com/PyCQA/flake8)
-            # flake8                         the modular source code checker: pep8 pyflakes and co
-            # ├── mccabe<0.7.0,>=0.6.0       McCabe checker, plugin for flake8
-            # ├── pycodestyle<2.9.0,>=2.8.0  Python style guide checker
-            # └── pyflakes<2.5.0,>=2.4.0     passive checker of Python programs
+pyflakes    # [A simple program which checks Python source files for errors](https://github.com/PyCQA/pyflakes)
+            # pyflakes  passive checker of Python programs
 
 rich        # [Rich is a Python library for rich text and beautiful formatting in the terminal](https://github.com/willmcgugan/rich)
             # rich                           Render rich text, tables, progress bars, syntax highlighting, markdown and more to the terminal
