@@ -1,0 +1,12 @@
+
+pyarrow     # [Apache Arrow is a multi-language toolbox for accelerated data interchange and in-memory processing](https://github.com/apache/arrow)
+            # pyarrow            Python library for Apache Arrow
+            # └── numpy>=1.16.6  NumPy is the fundamental package for array computing with Python.
+
+tables      # [A Python package to manage extremely large amounts of data](https://github.com/PyTables/PyTables)
+            # tables                            Hierarchical datasets for Python
+            # ├── numexpr>=2.6.2                Fast numerical expression evaluator for NumPy
+            # │   └── numpy>=1.13.3             NumPy is the fundamental package for array computing with Python.
+            # ├── numpy>=1.19.0                 NumPy is the fundamental package for array computing with Python.
+            # └── packaging                     Core utilities for Python packages
+            #     └── pyparsing!=3.0.5,>=2.0.2  pyparsing module - Classes and methods to define and execute parsing grammars
