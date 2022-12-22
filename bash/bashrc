@@ -15,8 +15,8 @@ _hostConfig(){
     hostName="$(hostname --long 2>/dev/null || echo "${HOSTNAME}")" # hostName=$(hostname; hostname --domain; hostname --all-fqdns; hostname --alias)
     [[ "${HOSTSLOCAL[*]}" =~ ${hostName} ]] && _source "${XDG_CONFIG_HOME}/private/bash/local"
     [[ "${HOSTSREMOTE[*]}" =~ ${hostName} ]] && _source "${XDG_CONFIG_HOME}/private/bash/remote"
-    [[ "${hostName}" =~ 'cern.ch'$ ]] && _source "${XDG_CONFIG_HOME}/bash/functions/cern"
-    [[ "${hostName}" =~ 'fnal.gov'$ ]] && _source "${XDG_CONFIG_HOME}/bash/functions/fnal"
+    [[ "${hostName}" =~ '.cern.ch'$ ]] && _source "${XDG_CONFIG_HOME}/bash/functions/cern"
+    [[ "${hostName}" =~ '.fnal.gov'$ ]] && _source "${XDG_CONFIG_HOME}/bash/functions/fnal"
     [[ "${hostName}" =~ '.cms'$ ]] && _source "${XDG_CONFIG_HOME}/bash/functions/cms"
 }
 
@@ -24,19 +24,16 @@ _textFormatting(){
     # [How can I print text in various colors?](https://mywiki.wooledge.org/BashFAQ/037)
     # [Terminal codes (ANSI/VT100) introduction](https://wiki.bash-hackers.org/scripting/terminalcodes)
     # [tput](https://linuxcommand.org/lc3_adv_tput.php#text-effects)
-    # [Wrapping the tput output in \[ \] is recommended by the Bash man page. [...] The wrap will not work with command substitution, in which case the raw \1 \2 must be used](https://wiki.archlinux.org/title/Bash/Prompt_customization#Terminfo_escape_sequences)
-    local SOH='\001' # [https://www.compart.com/en/unicode/U+0001]
-    local STX='\002' # [https://www.compart.com/en/unicode/U+0002]
-    TXT[reset]="${SOH}$(tput sgr0)${STX}" && TXT[r]="${TXT[reset]}"
-    TXT[bold]="${SOH}$(tput bold)${STX}"
-    TXT[ital]="${SOH}$(tput sitm)${STX}"
-    TXT[uline]="${SOH}$(tput smul)${STX}"
-    declare -a colorFG=(black red green yellow blue magenta cyan white BLACK RED GREEN YELLOW BLUE MAGENTA CYAN WHITE)
-    declare -a colorBG=(blackBG redBG greenBG yellowBG blueBG magentaBG cyanBG whiteBG BLACKBG REDBG GREENBG YELLOWBG BLUEBG MAGENTABG CYANBG WHITEBG)
-    local i; for ((i=0; i<=${#colorFG[@]}-1; i++)); do
-        TXT["${colorFG[i]}"]="${SOH}$(tput setaf "${i}")${STX}"
-        TXT["${colorBG[i]}"]="${SOH}$(tput setab "${i}")${STX}"
-    done
+    # [terminfo](https://invisible-island.net/xterm/terminfo-contents.html)
+    declare -A attr=(['reset']='sgr0' ['bold']='bold' ['dim']='dim' ['italic']='sitm' ['underline']='smul' ['blink']='blink' ['invert']='rev' ['hide']='invis' ['strikethrough']='smxx');
+    declare -A attrAlias=(['reset']='clear' ['bold']='bright' ['dim']='faint' ['italic']='italics' ['underline']='uline' ['blink']='flicker' ['invert']='reverse' ['hide']='invisible' ['strikethrough']='strikeout');
+    declare -a fg=(black red green yellow blue magenta cyan white BLACK RED GREEN YELLOW BLUE MAGENTA CYAN WHITE);
+    declare -a bg; for key in "${fg[@]}"; do bg+=("${key}BG"); done
+    local key;
+    for key in "${!attr[@]}"; do TXT[${key}]="$(tput ${attr[${key}]})"; done
+    for key in "${!attrAlias[@]}"; do TXT[${attrAlias[${key}]}]="${TXT[${key}]}"; done
+    for ((key=0; key<=${#fg[@]}-1; key++)); do TXT["${fg[${key}]}"]="$(tput setaf ${key})"; done
+    for ((key=0; key<=${#bg[@]}-1; key++)); do TXT["${bg[${key}]}"]="$(tput setab ${key})"; done
 }
 
 testColor(){
