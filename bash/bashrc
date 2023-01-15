@@ -25,15 +25,13 @@ _textFormatting(){
     # [Terminal codes (ANSI/VT100) introduction](https://wiki.bash-hackers.org/scripting/terminalcodes)
     # [tput](https://linuxcommand.org/lc3_adv_tput.php#text-effects)
     # [terminfo](https://invisible-island.net/xterm/terminfo-contents.html)
-    declare -A attr=(['reset']='sgr0' ['bold']='bold' ['dim']='dim' ['italic']='sitm' ['underline']='smul' ['blink']='blink' ['invert']='rev' ['hide']='invis' ['strikethrough']='smxx');
-    declare -A attrAlias=(['reset']='clear' ['bold']='bright' ['dim']='faint' ['italic']='italics' ['underline']='uline' ['blink']='flicker' ['invert']='reverse' ['hide']='invisible' ['strikethrough']='strikeout');
-    declare -a fg=(black red green yellow blue magenta cyan white BLACK RED GREEN YELLOW BLUE MAGENTA CYAN WHITE);
-    declare -a bg; for key in "${fg[@]}"; do bg+=("${key}BG"); done
+    declare -a fg=('black' 'red' 'green' 'yellow' 'blue' 'magenta' 'cyan' 'white' 'BLACK' 'RED' 'GREEN' 'YELLOW' 'BLUE' 'MAGENTA' 'CYAN' 'WHITE');
+    declare -A attr=(['reset']='sgr0' ['bold']='bold' ['dim']='dim' ['italic']='sitm' ['underline']='smul' ['blink']='blink' ['invert']='rev' ['hide']='invis' ['strikethrough']='smxx' \
+                     ['clear']='sgr0' ['bright']='bold' ['faint']='dim' ['italics']='sitm' ['uline']='smul' ['flicker']='blink' ['reverse']='rev' ['invisible']='invis' ['strikeout']='smxx');
     local key;
-    for key in "${!attr[@]}"; do TXT[${key}]="$(tput ${attr[${key}]})"; done
-    for key in "${!attrAlias[@]}"; do TXT[${attrAlias[${key}]}]="${TXT[${key}]}"; done
-    for ((key=0; key<=${#fg[@]}-1; key++)); do TXT["${fg[${key}]}"]="$(tput setaf ${key})"; done
-    for ((key=0; key<=${#bg[@]}-1; key++)); do TXT["${bg[${key}]}"]="$(tput setab ${key})"; done
+    for ((key=0; key<=${#fg[@]}-1; key++)); do TXT["${fg[${key}]}"]="$(tput setaf ${key})"; done;
+    for ((key=0; key<=${#fg[@]}-1; key++)); do TXT["${fg[${key}]}BG"]="$(tput setab ${key})"; done;
+    for key in "${!attr[@]}"; do TXT[${key}]="$(tput ${attr[${key}]})"; done;
 }
 
 testColor(){
