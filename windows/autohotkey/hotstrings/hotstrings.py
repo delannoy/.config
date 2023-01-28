@@ -25,13 +25,6 @@ class AHK:
         codepoints = codepoints.str[0].apply(lambda i: f'{i:05x}')
         return abbr.mask(cond=abbr.duplicated(), other=(abbr[abbr.duplicated()].str[:34] + '_' + codepoints[abbr.duplicated()]))
 
-    @staticmethod
-    def duplicateHotstringAbbreviations(file_path: pathlib.Path = pathlib.Path().glob('*ahk')) -> pandas.Series[str]:
-        # abbreviations = pandas.Series([line.split(':')[2] for line in open(ahk, mode='r').readlines() if line.startswith('::')] for ahk in pathlib.Path().glob('*ahk')).explode().dropna().reset_index(drop=True)
-        hotstrings = pandas.Series([line for line in open(ahk, mode='r').readlines()] for ahk in file_path).explode().dropna().reset_index(drop=True)
-        abbreviations = hotstrings[hotstrings.str.contains('::')].str.split('::', expand=True)[1]
-        return abbreviations[abbreviations.duplicated()]
-
     @classmethod
     def abbreviation(cls, abbreviations: pandas.Series[str], codepoints: pandas.Series[list[str]], abbr_prefix: bool) -> pandas.DataFrame:
         if abbr_prefix:
@@ -39,6 +32,13 @@ class AHK:
         abbreviations = cls.escapeSequences(abbreviations=abbreviations)
         abbreviations = cls.truncateAbbreviations(abbreviations=abbreviations, codepoints=codepoints)
         return abbreviations
+
+    @staticmethod
+    def duplicateHotstringAbbreviations(file_path: pathlib.Path = pathlib.Path().glob('*ahk')) -> pandas.Series[str]:
+        # abbreviations = pandas.Series([line.split(':')[2] for line in open(ahk, mode='r').readlines() if line.startswith('::')] for ahk in pathlib.Path().glob('*ahk')).explode().dropna().reset_index(drop=True)
+        hotstrings = pandas.Series([line for line in open(ahk, mode='r').readlines()] for ahk in file_path).explode().dropna().reset_index(drop=True)
+        abbreviations = hotstrings[hotstrings.str.contains('::')].str.split('::', expand=True)[1]
+        return '::\\'+abbreviations[abbreviations.duplicated()]+'::'
 
     @classmethod
     def write(cls, data: pandas.DataFrame, file_path: pathlib.Path, abbr_prefix: bool = True):
@@ -136,7 +136,7 @@ class Latex:
     def main(cls):
         data = pandas.concat([cls.matplotlib_tex2uni(), cls.unicode_latex(), cls.arxiv_tex_accents(), cls.w3_xml_entities()], axis=0)
         data = data.drop_duplicates(subset='abbreviation').reset_index(drop=True)
-        data = data.fillna('')
+        data['glyph'] = Unicode.glyph_from_codepoint(data.codepoint)
         AHK.write(data=data, file_path=pathlib.Path('latex.ahk'))
 
 
