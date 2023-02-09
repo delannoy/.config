@@ -112,4 +112,3 @@ set keymap vi-insert
 "\ey": yank-pop
 "\e{": complete-into-braces
 "\e~": complete-username
-

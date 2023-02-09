@@ -1,6 +1,6 @@
 
-mutagen         # [Python module for handling audio metadata [https://mutagen.readthedocs.io]](https://github.com/quodlibet/mutagen)
-                # mutagen  read and write audio tags for many formats
+mutagen     # [Python module for handling audio metadata [https://mutagen.readthedocs.io]](https://github.com/quodlibet/mutagen)
+            # mutagen  read and write audio tags for many formats
 
-pydub           # [Pydub lets you do stuff to audio in a way that isn't stupid](https://github.com/jiaaro/pydub)
-                # pydub   Manipulate audio with an simple and easy high level interface
+pydub       # [Pydub lets you do stuff to audio in a way that isn't stupid](https://github.com/jiaaro/pydub)
+            # pydub   Manipulate audio with an simple and easy high level interface
