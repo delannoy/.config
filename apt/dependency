@@ -15,6 +15,7 @@ python3             # [The Python programming language](https://github.com/pytho
 python3-pip         # [The Python package installer [https://pip.pypa.io/]](https://github.com/pypa/pip)
 # python3-tk        # [It provides a robust and platform independent windowing toolkit, that is available to Python programmers using the tkinter package](https://docs.python.org/3/library/tk.html)
 python3-venv        # [Virtual Python Environment builder](https://github.com/pypa/virtualenv)
+sqlite3             # [SQLite is a C-language library that implements a small, fast, self-contained, high-reliability, full-featured, SQL database engine](https://github.com/sqlite/sqlite)
 tesseract-ocr       # [Tesseract Open Source OCR Engine](https://github.com/tesseract-ocr/tesseract)
 texlive             # [TeX Live is intended to be a straightforward way to get up and running with the TeX document production system](https://www.tug.org/texlive/)
 universal-ctags     # [ctags generates an index (or tag) file of language objects found in source files for programming languages](https://github.com/universal-ctags/ctags)
