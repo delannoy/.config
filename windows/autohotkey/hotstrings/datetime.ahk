@@ -12,7 +12,7 @@
     SendInput(FormatTime(A_NOW, "yyyyMMdd-HHmmss"))
 }
 
-::\d::{
+::\date::{
     SendInput(FormatTime(A_NOW, "yyyy-MM-dd"))
 }
 
