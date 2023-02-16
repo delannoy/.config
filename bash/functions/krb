@@ -7,7 +7,7 @@ fi
 
 export KRB5_CONFIG="${XDG_DATA_HOME}/krb/conf"; # [Main Kerberos configuration file.](https://web.mit.edu/kerberos/krb5-1.12/doc/admin/env_variables.html#environment-variables)
 export KRB5_KTNAME="${XDG_DATA_HOME}/krb/keytab"; # [Default keytab file name.](https://web.mit.edu/kerberos/krb5-1.12/doc/admin/env_variables.html#environment-variables)
-export KRB5_PRINCIPAL='principal@DOMAIN.COM';
+export KRB5_PRINCIPAL='adelanno@CERN.CH';
 
 [[ ! -f "${KRB5_CONFIG}" ]] && curls 'http://linux.web.cern.ch/linux/docs/krb5.conf' "${KRB5_CONFIG}"
 
@@ -46,8 +46,8 @@ keytabCreate(){
 }
 
 keytabCERN(){
-    ssh -t lxplus "/usr/sbin/cern-get-keytab --user "${USER}" --keytab ~/.keytab"
-    scp lxplus:~/.keytab "${KRB5_KTNAME}" && klist -t -e -K -k "${KRB5_KTNAME}"
+    ssh -t lxplus "/usr/sbin/cern-get-keytab --user ${KRB5_PRINCIPAL%@*} --keytab ~/keytab"
+    scp lxplus:~/keytab "${KRB5_KTNAME}" && klist -t -e -K -k "${KRB5_KTNAME}"
 }
 
 krb(){
