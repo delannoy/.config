@@ -29,6 +29,13 @@ padString(){
     printf "%*s%s\n" "${pad}" '' "${str}"
 }
 
+redditDASH(){
+    local 'postID'
+    _args 'postID'
+    jsonPath='.[].data.children[].data.secure_media.reddit_video.fallback_url'
+    jq --raw-output "${jsonPath} | select(. != null)" <(curl --silent --location --user-agent "${_USERAGENT}" "https://www.reddit.com/${postID}.json")
+}
+
 removeDuplicateLines(){
     # [How to remove duplicate lines inside a text file?](https://unix.stackexchange.com/a/30178)
     local 'inFile' 'outFile'
@@ -41,3 +48,10 @@ textBetweenPatterns(){
     _args 'pat1' 'pat2'
     sed --silent --regexp-extended "/${pat1}/,/${pat2}/p"
 }
+
+weather(){
+    local 'city';
+    _args '[city=Geneve]';
+    curl "wttr.in/${city}"; # [wttr.in](https://github.com/chubin/wttr.in)
+}
+
