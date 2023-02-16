@@ -17,6 +17,44 @@ altair          # [declarative statistical visualization library for Python](htt
                 # │   └── pytz>=2017.3            World timezone definitions, modern and historical
                 # └── toolz                       List processing tools and functional utilities
 
+altair_viewer   # [Offline chart viewer for Altair visualizations](https://github.com/altair-viz/altair_viewer)
+                # altair_viewer                           Viewer for Altair and Vega-Lite visualizations.
+                # ├── altair                              Altair: A declarative statistical visualization library for Python.
+                # │   ├── entrypoints                     Discover and load entry points from installed packages.
+                # │   ├── jinja2                          A very fast and expressive template engine.
+                # │   │   └── MarkupSafe>=2.0             Safely add untrusted strings to HTML/XML markup.
+                # │   ├── jsonschema                      An implementation of JSON Schema validation for Python
+                # │   │   ├── attrs>=17.4.0               Classes Without Boilerplate
+                # │   │   ├── pyrsistent>=0.14.0          Persistent/Functional/Immutable data structures
+                # │   │   ├── setuptools                  Easily download, build, install, upgrade, and uninstall Python packages
+                # │   │   └── six>=1.11.0                 Python 2 and 3 compatibility utilities
+                # │   ├── numpy                           NumPy is the fundamental package for array computing with Python.
+                # │   ├── pandas>=0.18                    Powerful data structures for data analysis, time series, and statistics
+                # │   │   ├── numpy>=1.17.3               NumPy is the fundamental package for array computing with Python.
+                # │   │   ├── python-dateutil>=2.7.3      Extensions to the standard Python datetime module
+                # │   │   │   └── six>=1.5                Python 2 and 3 compatibility utilities
+                # │   │   └── pytz>=2017.3                World timezone definitions, modern and historical
+                # │   └── toolz                           List processing tools and functional utilities
+                # └── altair-data-server>=0.4.0           A background data server for Altair charts.
+                #     ├── altair                          Altair: A declarative statistical visualization library for Python.
+                #     │   ├── entrypoints                 Discover and load entry points from installed packages.
+                #     │   ├── jinja2                      A very fast and expressive template engine.
+                #     │   │   └── MarkupSafe>=2.0         Safely add untrusted strings to HTML/XML markup.
+                #     │   ├── jsonschema                  An implementation of JSON Schema validation for Python
+                #     │   │   ├── attrs>=17.4.0           Classes Without Boilerplate
+                #     │   │   ├── pyrsistent>=0.14.0      Persistent/Functional/Immutable data structures
+                #     │   │   ├── setuptools              Easily download, build, install, upgrade, and uninstall Python packages
+                #     │   │   └── six>=1.11.0             Python 2 and 3 compatibility utilities
+                #     │   ├── numpy                       NumPy is the fundamental package for array computing with Python.
+                #     │   ├── pandas>=0.18                Powerful data structures for data analysis, time series, and statistics
+                #     │   │   ├── numpy>=1.17.3           NumPy is the fundamental package for array computing with Python.
+                #     │   │   ├── python-dateutil>=2.7.3  Extensions to the standard Python datetime module
+                #     │   │   │   └── six>=1.5            Python 2 and 3 compatibility utilities
+                #     │   │   └── pytz>=2017.3            World timezone definitions, modern and historical
+                #     │   └── toolz                       List processing tools and functional utilities
+                #     ├── portpicker                      A library to choose unique available network ports.
+                #     └── tornado                         Tornado is a Python web framework and asynchronous networking library, originally developed at FriendFeed.
+
 matplotlib      # [matplotlib: plotting with Python [https://matplotlib.org]](https://github.com/matplotlib/matplotlib)
                 # matplotlib                Python plotting package
                 # ├── cycler>=0.10          Composable style cycles
