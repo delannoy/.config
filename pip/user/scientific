@@ -43,6 +43,10 @@ particle        # [Package to deal with particles, the PDG particle data table, 
                 # └── importlib-resources>=2.0  Read resources from Python packages
                 #     └── zipp>=3.1.0           Backport of pathlib-compatible object wrapper for zip files
 
+polars          # [Fast multi-threaded, hybrid-out-of-core DataFrame library in Rust | Python | Node.js](https://github.com/pola-rs/polars)
+                # polars                        Blazingly fast DataFrame library
+                # └── typing_extensions>=4.0.0  Backported and Experimental Type Hints for Python 3.7+
+
 scipy           # [open-source software for mathematics, science, and engineering [https://scipy.org/]](https://github.com/scipy/scipy)
                 # scipy                      SciPy: Scientific Library for Python
                 # └── numpy<1.23.0,>=1.16.5  NumPy is the fundamental package for array computing with Python.
