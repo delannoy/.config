@@ -3,12 +3,12 @@
 
 [include]
     # [Includes](https://git-scm.com/docs/git-config#_includes)
-    path = alias
-    path = color
-    path = core
-    path = format
-    path = log
-    path = status
+    path = include/alias
+    path = include/color
+    path = include/core
+    path = include/format
+    path = include/log
+    path = include/status
     path = ../private/user
 
 [http]
