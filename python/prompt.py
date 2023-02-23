@@ -24,7 +24,6 @@ def prompt() -> str:
     py = fmt(f'py:{sys.version.split()[0]}')
     os_release = dict(csv.reader(open('/etc/os-release', mode='r'), delimiter='=')) if pathlib.Path('/etc/os-release').exists() else dict() # [How to Parse /etc/os-release](https://dev.to/htv2012/how-to-parse-etc-os-release-3kaj)
     distro = fmt(f"{os_release.get('ID')}:{os_release.get('VERSION_ID')}")
-    print(distro)
     venv = fmt(f"venv:{os.environ.get('VIRTUAL_ENV').split('/')[-1]}") if os.environ.get('VIRTUAL_ENV') else None
 
     ps1 = f'[{now}] [{user}@{host}] [{py}] '
