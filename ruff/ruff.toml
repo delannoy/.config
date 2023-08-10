@@ -1,0 +1,101 @@
+# https://beta.ruff.rs/docs/configuration/#using-rufftoml
+
+# [A list of rule codes or prefixes to enable](https://beta.ruff.rs/docs/settings/#select)
+# https://beta.ruff.rs/docs/rules/ # let @q="\<ESC>^DI\<TAB>'', # []()\<ESC>PT#yt)F[pldF-^pF-xgUw"
+select = [
+    'F', # [pyflakes](https://beta.ruff.rs/docs/rules/#pyflakes-f)
+    # [pycodestyle](https://beta.ruff.rs/docs/rules/#pycodestyle-e-w)
+        'W', # [warning](https://beta.ruff.rs/docs/rules/#warning-w)
+        'E', # [error](https://beta.ruff.rs/docs/rules/#error-e)
+    'C90', # [mccabe](https://beta.ruff.rs/docs/rules/#mccabe-c90)
+    'I', # [isort](https://beta.ruff.rs/docs/rules/#isort-i)
+    'N', # [pep8-naming](https://beta.ruff.rs/docs/rules/#pep8-naming-n)
+    'D', # [pydocstyle](https://beta.ruff.rs/docs/rules/#pydocstyle-d)
+    'UP', # [pyupgrade](https://beta.ruff.rs/docs/rules/#pyupgrade-up)
+    'ERA', # [eradicate](https://beta.ruff.rs/docs/rules/#eradicate-era)
+    'PD', # [pandas-vet](https://beta.ruff.rs/docs/rules/#pandas-vet-pd)
+    'PGH', # [pygrep-hooks](https://beta.ruff.rs/docs/rules/#pygrep-hooks-pgh)
+    'PL', # [pylint](https://beta.ruff.rs/docs/rules/#pylint-pl)
+    'TRY', # [tryceratops](https://beta.ruff.rs/docs/rules/#tryceratops-try)
+    'FLY', # [flynt](https://beta.ruff.rs/docs/rules/#flynt-fly)
+    'NPY', # [numpy-specific-rules](https://beta.ruff.rs/docs/rules/#numpy-specific-rules-npy)
+    'AIR', # [airflow](https://beta.ruff.rs/docs/rules/#airflow-air)
+    'PERF', # [perflint](https://beta.ruff.rs/docs/rules/#perflint-perf)
+    'RUF', # [ruff-specific-rules](https://beta.ruff.rs/docs/rules/#ruff-specific-rules-ruf)
+]
+
+# [A list of rule codes or prefixes to enable, in addition to those specified by select](https://beta.ruff.rs/docs/settings/#extend-select)
+extend-select = [
+    # flake8
+    'YTT', # [flake8-2020](https://beta.ruff.rs/docs/rules/#flake8-2020-ytt)
+    'ANN', # [flake8-annotations](https://beta.ruff.rs/docs/rules/#flake8-annotations-ann)
+    'ASYNC', # [flake8-async](https://beta.ruff.rs/docs/rules/#flake8-async-async)
+    'S', # [flake8-bandit](https://beta.ruff.rs/docs/rules/#flake8-bandit-s)
+    'BLE', # [flake8-blind-except](https://beta.ruff.rs/docs/rules/#flake8-blind-except-ble)
+    'FBT', # [flake8-boolean-trap](https://beta.ruff.rs/docs/rules/#flake8-boolean-trap-fbt)
+    'B', # [flake8-bugbear](https://beta.ruff.rs/docs/rules/#flake8-bugbear-b)
+    'A', # [flake8-builtins](https://beta.ruff.rs/docs/rules/#flake8-builtins-a)
+    'C', # [flake8-commas](https://beta.ruff.rs/docs/rules/#flake8-commas-com)
+    'CPY', # [flake8-copyright](https://beta.ruff.rs/docs/rules/#flake8-copyright-cpy)
+    'C4', # [flake8-comprehensions](https://beta.ruff.rs/docs/rules/#flake8-comprehensions-c4)
+    'DTZ', # [flake8-datetimez](https://beta.ruff.rs/docs/rules/#flake8-datetimez-dtz)
+    'T10', # [flake8-debugger](https://beta.ruff.rs/docs/rules/#flake8-debugger-t10)
+    'DJ', # [flake8-django](https://beta.ruff.rs/docs/rules/#flake8-django-dj)
+    'EM', # [flake8-errmsg](https://beta.ruff.rs/docs/rules/#flake8-errmsg-em)
+    'EXE', # [flake8-executable](https://beta.ruff.rs/docs/rules/#flake8-executable-exe)
+    'FA', # [flake8-future-annotations](https://beta.ruff.rs/docs/rules/#flake8-future-annotations-fa)
+    'ISC', # [flake8-implicit-str-concat](https://beta.ruff.rs/docs/rules/#flake8-implicit-str-concat-isc)
+    'ICN', # [flake8-import-conventions](https://beta.ruff.rs/docs/rules/#flake8-import-conventions-icn)
+    'G', # [flake8-logging-format](https://beta.ruff.rs/docs/rules/#flake8-logging-format-g)
+    'INP', # [flake8-no-pep420](https://beta.ruff.rs/docs/rules/#flake8-no-pep420-inp)
+    'PIE', # [flake8-pie](https://beta.ruff.rs/docs/rules/#flake8-pie-pie)
+    'T20', # [flake8-print](https://beta.ruff.rs/docs/rules/#flake8-print-t20)
+    'PYI', # [flake8-pyi](https://beta.ruff.rs/docs/rules/#flake8-pyi-pyi)
+    'PT', # [flake8-pytest-style](https://beta.ruff.rs/docs/rules/#flake8-pytest-style-pt)
+    'Q', # [flake8-quotes](https://beta.ruff.rs/docs/rules/#flake8-quotes-q)
+    'RSE', # [flake8-raise](https://beta.ruff.rs/docs/rules/#flake8-raise-rse)
+    'RET', # [flake8-return](https://beta.ruff.rs/docs/rules/#flake8-return-ret)
+    'SLF', # [flake8-self](https://beta.ruff.rs/docs/rules/#flake8-self-slf)
+    'SLOT', # [flake8-slots](https://beta.ruff.rs/docs/rules/#flake8-slots-slot)
+    'SIM', # [flake8-simplify](https://beta.ruff.rs/docs/rules/#flake8-simplify-sim)
+    'TID', # [flake8-tidy-imports](https://beta.ruff.rs/docs/rules/#flake8-tidy-imports-tid)
+    'TCH', # [flake8-type-checking](https://beta.ruff.rs/docs/rules/#flake8-type-checking-tch)
+    'INT', # [flake8-gettext](https://beta.ruff.rs/docs/rules/#flake8-gettext-int)
+    'ARG', # [flake8-unused-arguments](https://beta.ruff.rs/docs/rules/#flake8-unused-arguments-arg)
+    'PTH', # [flake8-use-pathlib](https://beta.ruff.rs/docs/rules/#flake8-use-pathlib-pth)
+    'TD', # [flake8-todos](https://beta.ruff.rs/docs/rules/#flake8-todos-td)
+    'FIX', # [flake8-fixme](https://beta.ruff.rs/docs/rules/#flake8-fixme-fix)
+]
+
+# [A list of rule codes or prefixes to ignore](https://beta.ruff.rs/docs/settings/#ignore)
+ignore = [
+    'D203', # [Checks for docstrings on class definitions that are not preceded by a blank line](https://beta.ruff.rs/docs/rules/one-blank-line-before-class/)
+    'D213', # [Checks for docstring summary lines that are not positioned on the second physical line of the docstring](https://beta.ruff.rs/docs/rules/multi-line-summary-second-line/)
+    'D300', # [Checks for docstrings that use `'''triple single quotes'''` instead of `"""triple double quotes"""`](https://beta.ruff.rs/docs/rules/triple-single-quotes/)
+    'N802', # [Checks for functions names that do not follow the `snake_case` naming convention](https://beta.ruff.rs/docs/rules/invalid-function-name/)
+]
+
+# [A list of rule codes or prefixes to consider autofixable](https://beta.ruff.rs/docs/settings/#fixable)
+fixable = ['ALL']
+# [A list of rule codes or prefixes to consider non-autofix-able](https://beta.ruff.rs/docs/settings/#unfixable)
+unfixable = []
+
+# [A list of file patterns to exclude from linting](https://beta.ruff.rs/docs/settings/#exclude)
+exclude = ['.bzr', '.direnv', '.eggs', '.git', '.git-rewrite', '.hg', '.mypy_cache', '.nox', '.pants.d', '.pytype', '.ruff_cache', '.svn', '.tox', '.venv', '__pypackages__', '_build', 'buck-out', 'build', 'dist', 'node_modules', 'venv']
+# [A list of mappings from file pattern to rule codes or prefixes to exclude, when considering any matching files](https://beta.ruff.rs/docs/settings/#per-file-ignores)
+per-file-ignores = {}
+
+# [The line length to use when enforcing long-lines violations (like `E501`)](https://beta.ruff.rs/docs/settings/#line-length)
+line-length = 160
+
+# [A regular expression used to identify "dummy" variables, or those which should be ignored when enforcing (e.g.) unused-variable rules](https://beta.ruff.rs/docs/settings/#dummy-variable-rgx)
+dummy-variable-rgx = '^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$' # Allow unused variables when underscore-prefixed.
+
+# [The minimum Python version to target, e.g., when considering automatic code upgrades, like rewriting type annotations](https://beta.ruff.rs/docs/settings/#target-version)
+target-version = 'py38'
+
+
+[flake8-quotes] # https://beta.ruff.rs/docs/settings/#flake8-quotes
+docstring-quotes = 'single' # [Quote style to prefer for docstrings (either "single" or "double")](https://beta.ruff.rs/docs/settings/#flake8-quotes-docstring-quotes)
+inline-quotes = 'single' # [Quote style to prefer for inline strings (either "single" or "double")](https://beta.ruff.rs/docs/settings/#flake8-quotes-inline-quotes)
+multiline-quotes = 'single' # [Quote style to prefer for multiline strings (either "single" or "double")](https://beta.ruff.rs/docs/settings/#flake8-quotes-multiline-quotes)
