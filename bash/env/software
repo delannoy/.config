@@ -22,6 +22,8 @@ export JULIA_DEPOT_PATH="${XDG_CACHE_HOME}/julia:${JULIA_DEPOT_PATH}" # [The JUL
 export JUPYTER_CONFIG_DIR="${XDG_CONFIG_HOME}/jupyter" # [use a particular directory, other than the default, for Jupyter config files](https://jupyter.readthedocs.io/en/latest/use/jupyter-directories.html#envvar-JUPYTER_CONFIG_DIR)
 export PARALLEL_HOME="${XDG_CONFIG_HOME}/parallel" # [Dir where GNU parallel stores config files, semaphores, and caches information between invocations](https://www.gnu.org/software/parallel/parallel.html#environment-variables)
 export PYENV_ROOT="${XDG_CACHE_HOME}/pyenv" # [Defines the directory under which Python versions and shims reside](https://github.com/pyenv/pyenv#environment-variables)
+export RUFF_CACHE_DIR="${XDG_CACHE_HOME}/ruff" # [A path to the cache directory](https://beta.ruff.rs/docs/settings/#cache-dir)
+export RUSTUP_HOME="${XDG_CONFIG_HOME}/rustup" # [RUSTUP_HOME (default: ~/.rustup or %USERPROFILE%/.rustup) Sets the root rustup folder, used for storing installed toolchains and configuration options.](https://rust-lang.github.io/rustup/environment-variables.html#environment-variables)
 export SCREENDIR="${SCREENRC%/*}" && [[ -d "${SCREENDIR}" ]] && chmod 700 "${SCREENDIR}" # [Socket Directory. If screen is not running setuid-root, the user can specify any mode 700 directory in the environment variable $SCREENDIR](https://www.gnu.org/software/screen/manual/html_node/Socket-Directory.html)
 export ZDOTDIR="${XDG_CONFIG_HOME}/zsh" # [startup files that zsh will read commands from](https://zsh.sourceforge.io/Intro/intro_3.html)
 
