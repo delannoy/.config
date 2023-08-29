@@ -21,7 +21,5 @@ pydantic            # [Data parsing and validation using Python type hints](http
 pyyaml              # [A full-featured YAML processing framework for Python](https://github.com/yaml/pyyaml)
                     # pyyaml  YAML parser and emitter for Python
 
-thefuzz[speedup]    # [Fuzzy String Matching in Python](https://github.com/seatgeek/thefuzz)
-                    # thefuzz[speedup]              Fuzzy string matching in python
-                    # └── python-levenshtein>=0.12  Python extension for computing string edit distances and similarities.
-                    #     └── setuptools            Easily download, build, install, upgrade, and uninstall Python packages
+rapidfuzz           # [Rapid fuzzy string matching in Python using various string metrics](https://github.com/maxbachmann/RapidFuzz/)
+                    # rapidfuzz  rapid fuzzy string matching
