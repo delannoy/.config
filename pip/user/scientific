@@ -7,22 +7,6 @@ awkward         # [Manipulate JSON-like data with NumPy-like idioms.](https://gi
                 # └── packaging                     Core utilities for Python packages
                 #     └── pyparsing!=3.0.5,>=2.0.2  pyparsing module - Classes and methods to define and execute parsing grammars
 
-awkward-pandas  # [Awkward Pandas extension array](https://github.com/intake/awkward-pandas)
-                # awkward-pandas                    Awkward Array Pandas Extension
-                # ├── awkward>=2.0.0                Manipulate JSON-like data with NumPy-like idioms.
-                # │   ├── awkward-cpp==2            CPU kernels and compiled extensions for Awkward Array
-                # │   │   └── numpy>=1.13.1         NumPy is the fundamental package for array computing with Python.
-                # │   ├── importlib-resources       Read resources from Python packages
-                # │   │   └── zipp>=3.1.0           Backport of pathlib-compatible object wrapper for zip files
-                # │   ├── numpy>=1.14.5             NumPy is the fundamental package for array computing with Python.
-                # │   ├── packaging                 Core utilities for Python packages
-                # │   └── typing-extensions>=4.1.0  Backported and Experimental Type Hints for Python 3.7+
-                # └── pandas>=1.2                   Powerful data structures for data analysis, time series, and statistics
-                #     ├── numpy>=1.20.3             NumPy is the fundamental package for array computing with Python.
-                #     ├── python-dateutil>=2.8.1    Extensions to the standard Python datetime module
-                #     │   └── six>=1.5              Python 2 and 3 compatibility utilities
-                #     └── pytz>=2020.1              World timezone definitions, modern and historical
-
 hepunits        # [Units and constants in the HEP system of units](https://github.com/scikit-hep/hepunits)
                 # hepunits  Units and constants in the HEP system of units
 
@@ -43,6 +27,11 @@ particle        # [Package to deal with particles, the PDG particle data table, 
                 # └── importlib-resources>=2.0  Read resources from Python packages
                 #     └── zipp>=3.1.0           Backport of pathlib-compatible object wrapper for zip files
 
+patsy		# [Describing statistical models in Python using symbolic formulas](https://github.com/pydata/patsy)
+		# patsy           A Python package for describing statistical models and for building design matrices.
+		# ├── numpy>=1.4  Fundamental package for array computing in Python
+		# └── six         Python 2 and 3 compatibility utilities
+
 polars          # [Fast multi-threaded, hybrid-out-of-core DataFrame library in Rust | Python | Node.js](https://github.com/pola-rs/polars)
                 # polars                        Blazingly fast DataFrame library
                 # └── typing_extensions>=4.0.0  Backported and Experimental Type Hints for Python 3.7+
@@ -50,6 +39,9 @@ polars          # [Fast multi-threaded, hybrid-out-of-core DataFrame library in 
 scipy           # [open-source software for mathematics, science, and engineering [https://scipy.org/]](https://github.com/scipy/scipy)
                 # scipy                      SciPy: Scientific Library for Python
                 # └── numpy<1.23.0,>=1.16.5  NumPy is the fundamental package for array computing with Python.
+
+sympy           # Computer algebra system (CAS) in Python
+                # └── mpmath>=0.19  Python library for arbitrary-precision floating-point arithmetic
 
 uproot          # [ROOT I/O in pure Python and NumPy](https://github.com/scikit-hep/uproot5)
                 # uproot          ROOT I/O in pure Python and NumPy.
