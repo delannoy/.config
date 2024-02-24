@@ -1,0 +1,111 @@
+
+scikit-hep  # [community-driven and community-oriented project with the aim of providing Particle Physics at large with an ecosystem for data analysis in Python](https://github.com/scikit-hep/scikit-hep)
+            # scikit-hep                          Metapackage of Scikit-HEP project libraries for Particle Physics.
+            # ├── awkward0~=0.15                  Manipulate arrays of complex data structures as easily as Numpy.
+            # │   └── numpy>=1.13.1               NumPy is the fundamental package for array computing with Python.
+            # ├── awkward~=1.4.0                  Manipulate JSON-like data with NumPy-like idioms.
+            # │   ├── numpy>=1.13.1               NumPy is the fundamental package for array computing with Python.
+            # │   └── setuptools                  Easily download, build, install, upgrade, and uninstall Python packages
+            # ├── boost-histogram~=1.1.0          The Boost::Histogram Python wrapper.
+            # │   └── numpy>=1.13.3               NumPy is the fundamental package for array computing with Python.
+            # ├── decaylanguage~=0.11.0           A language to describe, manipulate and convert particle decays
+            # │   ├── attrs>=19.2                 Classes Without Boilerplate
+            # │   ├── graphviz                    Simple Python interface for Graphviz
+            # │   ├── lark-parser<0.8.6,>=0.8.0   a modern parsing library
+            # │   ├── numpy>=1.12                 NumPy is the fundamental package for array computing with Python.
+            # │   ├── pandas>=0.22                Powerful data structures for data analysis, time series, and statistics
+            # │   │   ├── numpy>=1.17.3           NumPy is the fundamental package for array computing with Python.
+            # │   │   ├── python-dateutil>=2.7.3  Extensions to the standard Python datetime module
+            # │   │   │   └── six>=1.5            Python 2 and 3 compatibility utilities
+            # │   │   └── pytz>=2017.3            World timezone definitions, modern and historical
+            # │   ├── particle==0.15.*            Extended PDG particle data and MC identification codes
+            # │   │   ├── attrs>=19.2             Classes Without Boilerplate
+            # │   │   └── hepunits>=2.0.0         Units and constants in the HEP system of units
+            # │   ├── plumbum>=1.6.9              Plumbum: shell combinators library
+            # │   └── six>=1.11                   Python 2 and 3 compatibility utilities
+            # ├── hepstats~=0.5.0                 statistics tools and utilities
+            # │   ├── asdf                        Python implementation of the ASDF Standard
+            # │   │   ├── importlib-resources>=3  Read resources from Python packages
+            # │   │   │   └── zipp>=3.1.0         Backport of pathlib-compatible object wrapper for zip files
+            # │   │   ├── jmespath>=0.6.2         JSON Matching Expressions
+            # │   │   ├── jsonschema<4,>=3.0.2    An implementation of JSON Schema validation for Python
+            # │   │   │   ├── attrs>=17.4.0       Classes Without Boilerplate
+            # │   │   │   ├── pyrsistent>=0.14.0  Persistent/Functional/Immutable data structures
+            # │   │   │   ├── setuptools          Easily download, build, install, upgrade, and uninstall Python packages
+            # │   │   │   └── six>=1.11.0         Python 2 and 3 compatibility utilities
+            # │   │   ├── numpy>=1.10             NumPy is the fundamental package for array computing with Python.
+            # │   │   ├── packaging>=16.0         Core utilities for Python packages
+            # │   │   │   └── pyparsing>=2.0.2    Python parsing module
+            # │   │   ├── pyyaml>=3.10            YAML parser and emitter for Python
+            # │   │   └── semantic-version>=2.8   A library implementing the 'SemVer' scheme.
+            # │   ├── numpy                       NumPy is the fundamental package for array computing with Python.
+            # │   ├── pandas                      Powerful data structures for data analysis, time series, and statistics
+            # │   │   ├── numpy>=1.17.3           NumPy is the fundamental package for array computing with Python.
+            # │   │   ├── python-dateutil>=2.7.3  Extensions to the standard Python datetime module
+            # │   │   │   └── six>=1.5            Python 2 and 3 compatibility utilities
+            # │   │   └── pytz>=2017.3            World timezone definitions, modern and historical
+            # │   ├── scipy                       SciPy: Scientific Library for Python
+            # │   │   └── numpy<1.23.0,>=1.16.5   NumPy is the fundamental package for array computing with Python.
+            # │   └── tqdm                        Fast, Extensible Progress Meter
+            # ├── hepunits~=2.1.0                 Units and constants in the HEP system of units
+            # ├── histoprint~=2.1.0               Pretty print of NumPy (and other) histograms to the console
+            # │   ├── click>=7.0.0                Composable command line interface toolkit
+            # │   └── numpy                       NumPy is the fundamental package for array computing with Python.
+            # ├── hist~=2.4.0                     Hist classes and utilities
+            # │   ├── boost-histogram~=1.1.0      The Boost::Histogram Python wrapper.
+            # │   │   └── numpy>=1.13.3           NumPy is the fundamental package for array computing with Python.
+            # │   ├── histoprint>=1.6             Pretty print of NumPy (and other) histograms to the console
+            # │   │   ├── click>=7.0.0            Composable command line interface toolkit
+            # │   │   └── numpy                   NumPy is the fundamental package for array computing with Python.
+            # │   └── numpy>=1.13.3               NumPy is the fundamental package for array computing with Python.
+            # ├── iminuit~=2.7.0                  Jupyter-friendly Python frontend for MINUIT2 in C++
+            # │   └── numpy                       NumPy is the fundamental package for array computing with Python.
+            # ├── matplotlib>2.0.0                Python plotting package
+            # │   ├── cycler>=0.10                Composable style cycles
+            # │   │   └── six                     Python 2 and 3 compatibility utilities
+            # │   ├── kiwisolver>=1.0.1           A fast implementation of the Cassowary constraint solver
+            # │   ├── numpy>=1.16                 NumPy is the fundamental package for array computing with Python.
+            # │   ├── pillow>=6.2.0               Python Imaging Library (Fork)
+            # │   ├── pyparsing>=2.2.1            Python parsing module
+            # │   └── python-dateutil>=2.7        Extensions to the standard Python datetime module
+            # │       └── six>=1.5                Python 2 and 3 compatibility utilities
+            # ├── mplhep~=0.3.0                   Matplotlib styles for HEP
+            # │   ├── matplotlib>=3.4             Python plotting package
+            # │   │   ├── cycler>=0.10            Composable style cycles
+            # │   │   │   └── six                 Python 2 and 3 compatibility utilities
+            # │   │   ├── kiwisolver>=1.0.1       A fast implementation of the Cassowary constraint solver
+            # │   │   ├── numpy>=1.16             NumPy is the fundamental package for array computing with Python.
+            # │   │   ├── pillow>=6.2.0           Python Imaging Library (Fork)
+            # │   │   ├── pyparsing>=2.2.1        Python parsing module
+            # │   │   └── python-dateutil>=2.7    Extensions to the standard Python datetime module
+            # │   │       └── six>=1.5            Python 2 and 3 compatibility utilities
+            # │   ├── mplhep-data                 Font (Data) sub-package for mplhep
+            # │   ├── numpy>=1.16.0               NumPy is the fundamental package for array computing with Python.
+            # │   ├── packaging                   Core utilities for Python packages
+            # │   │   └── pyparsing>=2.0.2        Python parsing module
+            # │   └── uhi>=0.2.0                  Unified Histogram Interface: tools to help library authors work with histograms
+            # │       └── numpy>=1.13.3           NumPy is the fundamental package for array computing with Python.
+            # ├── numpy>=1.13.1                   NumPy is the fundamental package for array computing with Python.
+            # ├── particle~=0.15.0                Extended PDG particle data and MC identification codes
+            # │   ├── attrs>=19.2                 Classes Without Boilerplate
+            # │   └── hepunits>=2.0.0             Units and constants in the HEP system of units
+            # ├── uproot3-methods~=0.10.0         Pythonic mix-ins for ROOT classes.
+            # │   ├── awkward0                    Manipulate arrays of complex data structures as easily as Numpy.
+            # │   │   └── numpy>=1.13.1           NumPy is the fundamental package for array computing with Python.
+            # │   └── numpy>=1.13.1               NumPy is the fundamental package for array computing with Python.
+            # ├── uproot3~=3.14.0                 ROOT I/O in pure Python and Numpy.
+            # │   ├── awkward0                    Manipulate arrays of complex data structures as easily as Numpy.
+            # │   │   └── numpy>=1.13.1           NumPy is the fundamental package for array computing with Python.
+            # │   ├── cachetools                  Extensible memoizing collections and decorators
+            # │   ├── numpy>=1.13.1               NumPy is the fundamental package for array computing with Python.
+            # │   └── uproot3-methods             Pythonic mix-ins for ROOT classes.
+            # │       ├── awkward0                Manipulate arrays of complex data structures as easily as Numpy.
+            # │       │   └── numpy>=1.13.1       NumPy is the fundamental package for array computing with Python.
+            # │       └── numpy>=1.13.1           NumPy is the fundamental package for array computing with Python.
+            # ├── uproot~=4.0.0                   ROOT I/O in pure Python and NumPy.
+            # │   ├── numpy                       NumPy is the fundamental package for array computing with Python.
+            # │   └── setuptools                  Easily download, build, install, upgrade, and uninstall Python packages
+            # └── vector~=0.8.0                   Vector classes and utilities
+            #     ├── numpy>=1.13.3               NumPy is the fundamental package for array computing with Python.
+            #     └── packaging>=19.0             Core utilities for Python packages
+            #         └── pyparsing>=2.0.2        Python parsing module

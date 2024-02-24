@@ -1,0 +1,46 @@
+
+uproot-browser  # [A TUI viewer for ROOT files](https://github.com/Scikit-HEP/uproot-browser)
+                # uproot-browser                             Tools to inspect ROOT files with uproot
+                # ├── awkward>=1                             Manipulate JSON-like data with NumPy-like idioms.
+                # │   ├── awkward-cpp==7                     CPU kernels and compiled extensions for Awkward Array
+                # │   │   └── numpy>=1.14.5                  Fundamental package for array computing in Python
+                # │   ├── importlib-resources                Read resources from Python packages
+                # │   │   └── zipp>=3.1.0                    Backport of pathlib-compatible object wrapper for zip files
+                # │   ├── numpy>=1.14.5                      Fundamental package for array computing in Python
+                # │   ├── packaging                          Core utilities for Python packages
+                # │   └── typing-extensions>=4.1.0           Backported and Experimental Type Hints for Python 3.7+
+                # ├── click>=8                               Composable command line interface toolkit
+                # ├── hist>=2.4                              Hist classes and utilities
+                # │   ├── boost-histogram~=1.3.1             The Boost::Histogram Python wrapper.
+                # │   │   └── numpy>=1.13.3                  Fundamental package for array computing in Python
+                # │   ├── histoprint>=2.2.0                  Pretty print of NumPy (and other) histograms to the console
+                # │   │   ├── click>=7.0.0                   Composable command line interface toolkit
+                # │   │   ├── numpy                          Fundamental package for array computing in Python
+                # │   │   └── uhi>=0.2.1                     Unified Histogram Interface: tools to help library authors work with histograms
+                # │   │       └── numpy>=1.13.3              Fundamental package for array computing in Python
+                # │   └── numpy>=1.14.5                      Fundamental package for array computing in Python
+                # ├── lz4                                    LZ4 Bindings for Python
+                # ├── numpy>=1.13.3                          Fundamental package for array computing in Python
+                # ├── plotext>=5.2.2                         plotext plots directly on terminal
+                # ├── rich>=12.0.0                           Render rich text, tables, progress bars, syntax highlighting, markdown and more to the terminal
+                # │   ├── markdown-it-py<3.0.0,>=2.1.0       Python port of markdown-it. Markdown parsing, done right!
+                # │   │   └── mdurl~=0.1                     Markdown URL utilities
+                # │   ├── pygments<3.0.0,>=2.6.0             Pygments is a syntax highlighting package written in Python.
+                # │   └── typing-extensions<5.0,>=4.0.0      Backported and Experimental Type Hints for Python 3.7+
+                # ├── textual<0.2.0,>=0.1.17                 Text User Interface using Rich
+                # │   ├── rich<13.0.0,>=12.3.0               Render rich text, tables, progress bars, syntax highlighting, markdown and more to the terminal
+                # │   │   ├── commonmark<0.10.0,>=0.9.0      Python parser for the CommonMark Markdown spec
+                # │   │   ├── pygments<3.0.0,>=2.6.0         Pygments is a syntax highlighting package written in Python.
+                # │   │   └── typing-extensions<5.0,>=4.0.0  Backported and Experimental Type Hints for Python 3.7+
+                # │   └── typing-extensions<5.0,>=4.0.0      Backported and Experimental Type Hints for Python 3.7+
+                # └── uproot>=4.2.1                          ROOT I/O in pure Python and NumPy.
+                #     ├── awkward>=2.0.0                     Manipulate JSON-like data with NumPy-like idioms.
+                #     │   ├── awkward-cpp==7                 CPU kernels and compiled extensions for Awkward Array
+                #     │   │   └── numpy>=1.14.5              Fundamental package for array computing in Python
+                #     │   ├── importlib-resources            Read resources from Python packages
+                #     │   │   └── zipp>=3.1.0                Backport of pathlib-compatible object wrapper for zip files
+                #     │   ├── numpy>=1.14.5                  Fundamental package for array computing in Python
+                #     │   ├── packaging                      Core utilities for Python packages
+                #     │   └── typing-extensions>=4.1.0       Backported and Experimental Type Hints for Python 3.7+
+                #     ├── numpy                              Fundamental package for array computing in Python
+                #     └── packaging                          Core utilities for Python packages

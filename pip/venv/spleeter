@@ -1,0 +1,136 @@
+
+spleeter    # [Spleeter is Deezer source separation library with pretrained models written in Python and uses Tensorflow](https://github.com/deezer/spleeter)
+            # spleeter                                           The Deezer source separation library with pretrained models based on tensorflow.
+            # ├── ffmpeg-python==0.2.0                           Python bindings for FFmpeg - with complex filtering support
+            # │   └── future                                     Clean single-source support for Python 3 and 2
+            # ├── httpx[http2]<0.17.0,>=0.16.1                   The next generation HTTP client.
+            # │   ├── certifi                                    Python package for providing Mozilla's CA Bundle.
+            # │   ├── h2==3.*                                    HTTP/2 State-Machine based protocol implementation
+            # │   │   ├── hpack<4,>=3.0                          Pure-Python HPACK header compression
+            # │   │   └── hyperframe<6,>=5.2.0                   HTTP/2 framing layer for Python
+            # │   ├── httpcore==0.12.*                           A minimal low-level HTTP client.
+            # │   │   ├── h11==0.*                               A pure-Python, bring-your-own-I/O implementation of HTTP/1.1
+            # │   │   └── sniffio==1.*                           Sniff out which async library your code is running under
+            # │   ├── rfc3986[idna2008]<2,>=1.3                  Validating URI References per RFC 3986
+            # │   │   └── idna                                   Internationalized Domain Names in Applications (IDNA)
+            # │   └── sniffio                                    Sniff out which async library your code is running under
+            # ├── librosa==0.8.0                                 Python module for audio and music processing
+            # │   ├── audioread>=2.0.0                           multi-library, cross-platform audio decoding
+            # │   ├── decorator>=3.0.0                           Decorators for Humans
+            # │   ├── joblib>=0.14                               Lightweight pipelining with Python functions
+            # │   ├── numba>=0.43.0                              compiling Python code using LLVM
+            # │   │   ├── llvmlite<0.38,>=0.37.0rc1              lightweight wrapper around basic LLVM functionality
+            # │   │   ├── numpy<1.21,>=1.17                      NumPy is the fundamental package for array computing with Python.
+            # │   │   └── setuptools                             Easily download, build, install, upgrade, and uninstall Python packages
+            # │   ├── numpy>=1.15.0                              NumPy is the fundamental package for array computing with Python.
+            # │   ├── pooch>=1.0                                 Pooch manages your Python library's sample data files: it automatically downloads and stores them in a local directory, with support for versioning and corruption checks.
+            # │   │   ├── appdirs                                A small Python module for determining appropriate platform-specific dirs, e.g. a "user data dir".
+            # │   │   ├── packaging                              Core utilities for Python packages
+            # │   │   │   └── pyparsing>=2.0.2                   Python parsing module
+            # │   │   └── requests                               Python HTTP for Humans.
+            # │   │       ├── certifi>=2017.4.17                 Python package for providing Mozilla's CA Bundle.
+            # │   │       ├── charset-normalizer~=2.0.0          The Real First Universal Charset Detector. Open, modern and actively maintained alternative to Chardet.
+            # │   │       ├── idna<4,>=2.5                       Internationalized Domain Names in Applications (IDNA)
+            # │   │       └── urllib3<1.27,>=1.21.1              HTTP library with thread-safe connection pooling, file post, and more.
+            # │   ├── resampy>=0.2.2                             Efficient signal resampling
+            # │   │   ├── numba>=0.32                            compiling Python code using LLVM
+            # │   │   │   ├── llvmlite<0.38,>=0.37.0rc1          lightweight wrapper around basic LLVM functionality
+            # │   │   │   ├── numpy<1.21,>=1.17                  NumPy is the fundamental package for array computing with Python.
+            # │   │   │   └── setuptools                         Easily download, build, install, upgrade, and uninstall Python packages
+            # │   │   ├── numpy>=1.10                            NumPy is the fundamental package for array computing with Python.
+            # │   │   ├── scipy>=0.13                            SciPy: Scientific Library for Python
+            # │   │   │   └── numpy<1.23.0,>=1.16.5              NumPy is the fundamental package for array computing with Python.
+            # │   │   └── six>=1.3                               Python 2 and 3 compatibility utilities
+            # │   ├── scikit-learn!=0.19.0,>=0.14.0              A set of python modules for machine learning and data mining
+            # │   │   ├── joblib>=0.11                           Lightweight pipelining with Python functions
+            # │   │   ├── numpy>=1.13.3                          NumPy is the fundamental package for array computing with Python.
+            # │   │   ├── scipy>=0.19.1                          SciPy: Scientific Library for Python
+            # │   │   │   └── numpy<1.23.0,>=1.16.5              NumPy is the fundamental package for array computing with Python.
+            # │   │   └── threadpoolctl>=2.0.0                   threadpoolctl
+            # │   ├── scipy>=1.0.0                               SciPy: Scientific Library for Python
+            # │   │   └── numpy<1.23.0,>=1.16.5                  NumPy is the fundamental package for array computing with Python.
+            # │   └── soundfile>=0.9.0                           An audio library based on libsndfile, CFFI and NumPy
+            # │       └── cffi>=1.0                              Foreign Function Interface for Python calling C code.
+            # │           └── pycparser                          C parser in Python
+            # ├── norbert==0.2.1                                 Painless Wiener Filters
+            # │   └── scipy                                      SciPy: Scientific Library for Python
+            # │       └── numpy<1.23.0,>=1.16.5                  NumPy is the fundamental package for array computing with Python.
+            # ├── numpy<1.19.0,>=1.16.0                          NumPy is the fundamental package for array computing with Python.
+            # ├── pandas==1.1.2                                  Powerful data structures for data analysis, time series, and statistics
+            # │   ├── numpy>=1.15.4                              NumPy is the fundamental package for array computing with Python.
+            # │   ├── python-dateutil>=2.7.3                     Extensions to the standard Python datetime module
+            # │   │   └── six>=1.5                               Python 2 and 3 compatibility utilities
+            # │   └── pytz>=2017.2                               World timezone definitions, modern and historical
+            # ├── tensorflow==2.3.0                              TensorFlow is an open source machine learning framework for everyone.
+            # │   ├── absl-py>=0.7.0                             Abseil Python Common Libraries, see https://github.com/abseil/abseil-py.
+            # │   │   └── six                                    Python 2 and 3 compatibility utilities
+            # │   ├── astunparse==1.6.3                          An AST unparser for Python
+            # │   │   ├── six<2.0,>=1.6.1                        Python 2 and 3 compatibility utilities
+            # │   │   └── wheel<1.0,>=0.23.0                     A built-package format for Python
+            # │   ├── gast==0.3.3                                Python AST that abstracts the underlying Python version
+            # │   ├── google-pasta>=0.1.8                        pasta is an AST-based Python refactoring library
+            # │   │   └── six                                    Python 2 and 3 compatibility utilities
+            # │   ├── grpcio>=1.8.6                              HTTP/2-based RPC framework
+            # │   │   └── six>=1.5.2                             Python 2 and 3 compatibility utilities
+            # │   ├── h5py<2.11.0,>=2.10.0                       Read and write HDF5 files from Python
+            # │   │   ├── numpy>=1.7                             NumPy is the fundamental package for array computing with Python.
+            # │   │   └── six                                    Python 2 and 3 compatibility utilities
+            # │   ├── keras-preprocessing<1.2,>=1.1.1            Easy data preprocessing and data augmentation for deep learning models
+            # │   │   ├── numpy>=1.9.1                           NumPy is the fundamental package for array computing with Python.
+            # │   │   └── six>=1.9.0                             Python 2 and 3 compatibility utilities
+            # │   ├── numpy<1.19.0,>=1.16.0                      NumPy is the fundamental package for array computing with Python.
+            # │   ├── opt-einsum>=2.3.2                          Optimizing numpys einsum function
+            # │   │   └── numpy>=1.7                             NumPy is the fundamental package for array computing with Python.
+            # │   ├── protobuf>=3.9.2                            Protocol Buffers
+            # │   │   └── six>=1.9                               Python 2 and 3 compatibility utilities
+            # │   ├── scipy==1.4.1                               SciPy: Scientific Library for Python
+            # │   │   └── numpy>=1.13.3                          NumPy is the fundamental package for array computing with Python.
+            # │   ├── six>=1.12.0                                Python 2 and 3 compatibility utilities
+            # │   ├── tensorboard<3,>=2.3.0                      TensorBoard lets you watch Tensors Flow
+            # │   │   ├── absl-py>=0.4                           Abseil Python Common Libraries, see https://github.com/abseil/abseil-py.
+            # │   │   │   └── six                                Python 2 and 3 compatibility utilities
+            # │   │   ├── google-auth-oauthlib<0.5,>=0.4.1       Google Authentication Library
+            # │   │   │   ├── google-auth>=1.0.0                 Google Authentication Library
+            # │   │   │   │   ├── cachetools<5.0,>=2.0.0         Extensible memoizing collections and decorators
+            # │   │   │   │   ├── pyasn1-modules>=0.2.1          A collection of ASN.1-based protocols modules.
+            # │   │   │   │   │   └── pyasn1<0.5.0,>=0.4.6       ASN.1 types and codecs
+            # │   │   │   │   ├── rsa<5,>=3.1.4                  Pure-Python RSA implementation
+            # │   │   │   │   │   └── pyasn1>=0.1.3              ASN.1 types and codecs
+            # │   │   │   │   └── setuptools>=40.3.0             Easily download, build, install, upgrade, and uninstall Python packages
+            # │   │   │   └── requests-oauthlib>=0.7.0           OAuthlib authentication support for Requests.
+            # │   │   │       ├── oauthlib>=3.0.0                A generic, spec-compliant, thorough implementation of the OAuth request-signing logic
+            # │   │   │       └── requests>=2.0.0                Python HTTP for Humans.
+            # │   │   │           ├── certifi>=2017.4.17         Python package for providing Mozilla's CA Bundle.
+            # │   │   │           ├── charset-normalizer~=2.0.0  The Real First Universal Charset Detector. Open, modern and actively maintained alternative to Chardet.
+            # │   │   │           ├── idna<4,>=2.5               Internationalized Domain Names in Applications (IDNA)
+            # │   │   │           └── urllib3<1.27,>=1.21.1      HTTP library with thread-safe connection pooling, file post, and more.
+            # │   │   ├── google-auth<2,>=1.6.3                  Google Authentication Library
+            # │   │   │   ├── cachetools<5.0,>=2.0.0             Extensible memoizing collections and decorators
+            # │   │   │   ├── pyasn1-modules>=0.2.1              A collection of ASN.1-based protocols modules.
+            # │   │   │   │   └── pyasn1<0.5.0,>=0.4.6           ASN.1 types and codecs
+            # │   │   │   ├── rsa<5,>=3.1.4                      Pure-Python RSA implementation
+            # │   │   │   │   └── pyasn1>=0.1.3                  ASN.1 types and codecs
+            # │   │   │   ├── setuptools>=40.3.0                 Easily download, build, install, upgrade, and uninstall Python packages
+            # │   │   │   └── six>=1.9.0                         Python 2 and 3 compatibility utilities
+            # │   │   ├── grpcio>=1.24.3                         HTTP/2-based RPC framework
+            # │   │   │   └── six>=1.5.2                         Python 2 and 3 compatibility utilities
+            # │   │   ├── markdown>=2.6.8                        Python implementation of Markdown.
+            # │   │   ├── numpy>=1.12.0                          NumPy is the fundamental package for array computing with Python.
+            # │   │   ├── protobuf>=3.6.0                        Protocol Buffers
+            # │   │   │   └── six>=1.9                           Python 2 and 3 compatibility utilities
+            # │   │   ├── requests<3,>=2.21.0                    Python HTTP for Humans.
+            # │   │   │   ├── certifi>=2017.4.17                 Python package for providing Mozilla's CA Bundle.
+            # │   │   │   ├── charset-normalizer~=2.0.0          The Real First Universal Charset Detector. Open, modern and actively maintained alternative to Chardet.
+            # │   │   │   ├── idna<4,>=2.5                       Internationalized Domain Names in Applications (IDNA)
+            # │   │   │   └── urllib3<1.27,>=1.21.1              HTTP library with thread-safe connection pooling, file post, and more.
+            # │   │   ├── setuptools>=41.0.0                     Easily download, build, install, upgrade, and uninstall Python packages
+            # │   │   ├── tensorboard-data-server<0.7.0,>=0.6.0  Fast data loading for TensorBoard
+            # │   │   ├── tensorboard-plugin-wit>=1.6.0          What-If Tool TensorBoard plugin.
+            # │   │   ├── werkzeug>=0.11.15                      The comprehensive WSGI web application library.
+            # │   │   └── wheel>=0.26                            A built-package format for Python
+            # │   ├── tensorflow-estimator<2.4.0,>=2.3.0         TensorFlow Estimator.
+            # │   ├── termcolor>=1.1.0                           ANSII Color formatting for output in terminal.
+            # │   ├── wheel>=0.26                                A built-package format for Python
+            # │   └── wrapt>=1.11.1                              Module for decorators, wrappers and monkey patching.
+            # └── typer<0.4.0,>=0.3.2                            Typer, build great CLIs. Easy to code. Based on Python type hints.
+            #     └── click<7.2.0,>=7.1.1                        Composable command line interface toolkit

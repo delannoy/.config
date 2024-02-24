@@ -1,0 +1,25 @@
+
+deemix  # [deemix is a deezer downloader built from the ashes of Deezloader Remix. The base library (or core) can be used as a stand alone CLI app or implemented in an UI using the API](https://git.rip/RemixDev/deemix)
+        # deemix                                 A barebone deezer downloader library
+        # ├── click                              Composable command line interface toolkit
+        # ├── deezer-py>=1.1.2                   A wrapper for all Deezer's APIs
+        # │   └── requests                       Python HTTP for Humans.
+        # │       ├── certifi>=2017.4.17         Python package for providing Mozilla's CA Bundle.
+        # │       ├── charset-normalizer~=2.0.0  The Real First Universal Charset Detector. Open, modern and actively maintained alternative to Chardet.
+        # │       ├── idna<4,>=2.5               Internationalized Domain Names in Applications (IDNA)
+        # │       └── urllib3<1.27,>=1.21.1      HTTP library with thread-safe connection pooling, file post, and more.
+        # ├── mutagen                            read and write audio tags for many formats
+        # ├── pycryptodomex                      Cryptographic library for Python
+        # ├── requests                           Python HTTP for Humans.
+        # │   ├── certifi>=2017.4.17             Python package for providing Mozilla's CA Bundle.
+        # │   ├── charset-normalizer~=2.0.0      The Real First Universal Charset Detector. Open, modern and actively maintained alternative to Chardet.
+        # │   ├── idna<4,>=2.5                   Internationalized Domain Names in Applications (IDNA)
+        # │   └── urllib3<1.27,>=1.21.1          HTTP library with thread-safe connection pooling, file post, and more.
+        # └── spotipy>=2.11.0                    A light weight Python library for the Spotify Web API
+        #     ├── requests>=2.25.0               Python HTTP for Humans.
+        #     │   ├── certifi>=2017.4.17         Python package for providing Mozilla's CA Bundle.
+        #     │   ├── charset-normalizer~=2.0.0  The Real First Universal Charset Detector. Open, modern and actively maintained alternative to Chardet.
+        #     │   ├── idna<4,>=2.5               Internationalized Domain Names in Applications (IDNA)
+        #     │   └── urllib3<1.27,>=1.21.1      HTTP library with thread-safe connection pooling, file post, and more.
+        #     ├── six>=1.15.0                    Python 2 and 3 compatibility utilities
+        #     └── urllib3>=1.26.0                HTTP library with thread-safe connection pooling, file post, and more.

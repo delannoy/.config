@@ -1,0 +1,39 @@
+
+ocrmypdf        # [OCRmyPDF adds an OCR text layer to scanned PDF files, allowing them to be searched [https://ocrmypdf.readthedocs.io/en/latest/]](https://github.com/ocrmypdf/OCRmyPDF)
+                # ocrmypdf                               OCRmyPDF adds an OCR text layer to scanned PDF files, allowing them to be searched
+                # ├── Pillow>=8.2.0                      Python Imaging Library (Fork)
+                # ├── deprecation>=2.1.0                 A library to handle automated deprecations
+                # │   └── packaging                      Core utilities for Python packages
+                # ├── img2pdf>=0.3.0                     Convert images to PDF via direct JPEG inclusion.
+                # │   ├── Pillow                         Python Imaging Library (Fork)
+                # │   └── pikepdf                        Read and write PDFs with Python, powered by qpdf
+                # │       ├── Deprecated                 Python @deprecated decorator to deprecate old python classes, functions or methods.
+                # │       │   └── wrapt<2,>=1.10         Module for decorators, wrappers and monkey patching.
+                # │       ├── Pillow>=10.0.1             Python Imaging Library (Fork)
+                # │       ├── lxml<5,>=4.8               Powerful and Pythonic XML processing library combining libxml2/libxslt with the ElementTree API.
+                # │       └── packaging                  Core utilities for Python packages
+                # ├── importlib-resources>=5             Read resources from Python packages
+                # │   └── zipp>=3.1.0                    Backport of pathlib-compatible object wrapper for zip files
+                # ├── packaging>=20                      Core utilities for Python packages
+                # ├── pdfminer.six>=20201018             PDF parser and analyzer
+                # │   ├── charset-normalizer>=2.0.0      The Real First Universal Charset Detector. Open, modern and actively maintained alternative to Chardet.
+                # │   └── cryptography>=36.0.0           cryptography is a package which provides cryptographic recipes and primitives to Python developers.
+                # │       └── cffi>=1.12                 Foreign Function Interface for Python calling C code.
+                # │           └── pycparser              C parser in Python
+                # ├── pikepdf>=5.0.1                     Read and write PDFs with Python, powered by qpdf
+                # │   ├── Deprecated                     Python @deprecated decorator to deprecate old python classes, functions or methods.
+                # │   │   └── wrapt<2,>=1.10             Module for decorators, wrappers and monkey patching.
+                # │   ├── Pillow>=10.0.1                 Python Imaging Library (Fork)
+                # │   ├── lxml<5,>=4.8                   Powerful and Pythonic XML processing library combining libxml2/libxslt with the ElementTree API.
+                # │   └── packaging                      Core utilities for Python packages
+                # ├── pluggy>=0.13.0                     plugin and hook calling mechanisms for python
+                # ├── reportlab>=3.5.66                  The Reportlab Toolkit
+                # │   ├── chardet                        Universal encoding detector for Python 3
+                # │   └── pillow>=9.0.0                  Python Imaging Library (Fork)
+                # ├── rich>=13                           Render rich text, tables, progress bars, syntax highlighting, markdown and more to the terminal
+                # │   ├── markdown-it-py>=2.2.0          Python port of markdown-it. Markdown parsing, done right!
+                # │   │   └── mdurl~=0.1                 Markdown URL utilities
+                # │   ├── pygments<3.0.0,>=2.13.0        Pygments is a syntax highlighting package written in Python.
+                # │   └── typing-extensions<5.0,>=4.0.0  Backported and Experimental Type Hints for Python 3.8+
+                # ├── tqdm>=4                            Fast, Extensible Progress Meter
+                # └── typing-extensions>=4               Backported and Experimental Type Hints for Python 3.8+

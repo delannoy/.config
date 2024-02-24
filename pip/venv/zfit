@@ -1,0 +1,76 @@
+
+zfit    # [https://github.com/zfit/zfitModel manipulation and fitting library based on TensorFlow and optimised for simple and direct manipulation of probability density functions. Its main focus is on scalability, parallelisation and user friendly experience.](https://github.com/zfit/zfit)
+        # zfit                                    scalable pythonic model fitting for high energy physics
+        # ├── boost-histogram                     The Boost::Histogram Python wrapper.
+        # │   └── numpy>=1.13.3                   Fundamental package for array computing in Python
+        # ├── colorama                            Cross-platform colored terminal text.
+        # ├── colored                             Simple library for color and formatting to terminal
+        # ├── colorlog                            Add colours to the output of Python's logging module.
+        # ├── deprecated                          Python @deprecated decorator to deprecate old python classes, functions or methods.
+        # │   └── wrapt<2,>=1.10                  Module for decorators, wrappers and monkey patching.
+        # ├── dotmap                              ordered, dynamically-expandable dot-access dictionary
+        # ├── hist                                Hist classes and utilities
+        # │   ├── boost-histogram~=1.3.1          The Boost::Histogram Python wrapper.
+        # │   │   └── numpy>=1.13.3               Fundamental package for array computing in Python
+        # │   ├── histoprint>=2.2.0               Pretty print of NumPy (and other) histograms to the console
+        # │   │   ├── click>=7.0.0                Composable command line interface toolkit
+        # │   │   ├── numpy                       Fundamental package for array computing in Python
+        # │   │   └── uhi>=0.2.1                  Unified Histogram Interface: tools to help library authors work with histograms
+        # │   │       └── numpy>=1.13.3           Fundamental package for array computing in Python
+        # │   └── numpy>=1.14.5                   Fundamental package for array computing in Python
+        # ├── iminuit>=2.3                        Jupyter-friendly Python frontend for MINUIT2 in C++
+        # │   └── numpy                           Fundamental package for array computing in Python
+        # ├── jacobi                              Compute numerical derivatives.
+        # │   └── numpy>=1.10                     Fundamental package for array computing in Python
+        # ├── numdifftools                        Solves automatic numerical differentiation problems in one or more variables.
+        # │   ├── numpy>=1.9                      Fundamental package for array computing in Python
+        # │   └── scipy>=0.8                      Fundamental algorithms for scientific computing in Python
+        # │       └── numpy<1.26.0,>=1.18.5       Fundamental package for array computing in Python
+        # ├── numpy>=1.16                         Fundamental package for array computing in Python
+        # ├── ordered-set                         An OrderedSet is a custom MutableSet that remembers its order, so that every
+        # ├── pandas                              Powerful data structures for data analysis, time series, and statistics
+        # │   ├── numpy>=1.20.3                   Fundamental package for array computing in Python
+        # │   ├── python-dateutil>=2.8.1          Extensions to the standard Python datetime module
+        # │   │   └── six>=1.5                    Python 2 and 3 compatibility utilities
+        # │   └── pytz>=2020.1                    World timezone definitions, modern and historical
+        # ├── pydantic                            Data validation and settings management using python type hints
+        # │   └── typing-extensions>=4.1.0        Backported and Experimental Type Hints for Python 3.7+
+        # ├── scipy>=1.2                          Fundamental algorithms for scientific computing in Python
+        # │   └── numpy<1.26.0,>=1.18.5           Fundamental package for array computing in Python
+        # ├── tabulate                            Pretty-print tabular data
+        # ├── tensorflow-addons                   TensorFlow Addons.
+        # │   ├── packaging                       Core utilities for Python packages
+        # │   └── typeguard>=2.7                  Run-time type checker for Python
+        # ├── tensorflow-probability<0.20,>=0.18  Probabilistic modeling and statistical inference in TensorFlow
+        # │   ├── absl-py                         Abseil Python Common Libraries, see https://github.com/abseil/abseil-py.
+        # │   ├── cloudpickle>=1.3                Extended pickling support for Python objects
+        # │   ├── decorator                       Decorators for Humans
+        # │   ├── dm-tree                         Tree is a library for working with nested data structures.
+        # │   ├── gast>=0.3.2                     Python AST that abstracts the underlying Python version
+        # │   ├── numpy>=1.13.3                   Fundamental package for array computing in Python
+        # │   └── six>=1.10.0                     Python 2 and 3 compatibility utilities
+        # ├── tensorflow<2.12,>=2.10              Python AST that abstracts the underlying Python version
+        # ├── texttable                           module to create simple ASCII tables
+        # ├── tf-quant-finance>=v0.0.1-dev24      High-performance TensorFlow library for quantitative finance.
+        # │   ├── attrs>=18.2.0                   Classes Without Boilerplate
+        # │   ├── numpy>=1.21                     Fundamental package for array computing in Python
+        # │   ├── protobuf
+        # │   └── tensorflow-probability>=0.12.1  Probabilistic modeling and statistical inference in TensorFlow
+        # │       ├── absl-py                     Abseil Python Common Libraries, see https://github.com/abseil/abseil-py.
+        # │       ├── cloudpickle>=1.3            Extended pickling support for Python objects
+        # │       ├── decorator                   Decorators for Humans
+        # │       ├── dm-tree                     Tree is a library for working with nested data structures.
+        # │       ├── gast>=0.3.2                 Python AST that abstracts the underlying Python version
+        # │       ├── numpy>=1.13.3               Fundamental package for array computing in Python
+        # │       └── six>=1.10.0                 Python 2 and 3 compatibility utilities
+        # ├── uhi                                 Unified Histogram Interface: tools to help library authors work with histograms
+        # │   └── numpy>=1.13.3                   Fundamental package for array computing in Python
+        # ├── uproot<5,>=4                        ROOT I/O in pure Python and NumPy.
+        # │   ├── numpy                           Fundamental package for array computing in Python
+        # │   └── setuptools                      Easily download, build, install, upgrade, and uninstall Python packages
+        # ├── xxhash                              Python binding for xxHash
+        # └── zfit-interface                      zfit model fitting interface for HEP
+        #     ├── numpy                           Fundamental package for array computing in Python
+        #     ├── typing-extensions               Backported and Experimental Type Hints for Python 3.7+
+        #     └── uhi                             Unified Histogram Interface: tools to help library authors work with histograms
+        #         └── numpy>=1.13.3               Fundamental package for array computing in Python

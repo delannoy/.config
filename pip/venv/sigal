@@ -1,0 +1,11 @@
+
+sigal   # [Sigal is yet another simple static gallery generator. It's written in Python and it allows to build a static gallery of images](https://github.com/saimn/sigal)
+        # sigal                    Simple static gallery generator
+        # ├── Jinja2               A very fast and expressive template engine.
+        # │   └── MarkupSafe>=2.0  Safely add untrusted strings to HTML/XML markup.
+        # ├── Markdown             Python implementation of Markdown.
+        # ├── Pillow>=4.0.0        Python Imaging Library (Fork)
+        # ├── blinker              Fast, simple object-to-object and broadcast signaling
+        # ├── click                Composable command line interface toolkit
+        # ├── natsort              Simple yet flexible natural sorting in Python.
+        # └── pilkit               A collection of utilities and processors for the Python Imaging Libary.

@@ -1,0 +1,89 @@
+
+coffea  # [Basic tools and wrappers for enabling not-too-alien syntax when running columnar Collider HEP analysis.](https://github.com/CoffeaTeam/coffea)
+        # coffea                                    Tools for doing Collider HEP style analysis with columnar operations
+        # ├── awkward<2,>=1.5.1                     Manipulate JSON-like data with NumPy-like idioms.
+        # │   ├── numpy>=1.13.1                     NumPy is the fundamental package for array computing with Python.
+        # │   └── setuptools                        Easily download, build, install, upgrade, and uninstall Python packages
+        # ├── cachetools                            Extensible memoizing collections and decorators
+        # ├── cloudpickle>=1.2.3                    Extended pickling support for Python objects
+        # ├── correctionlib>=2.0.0                  A generic correction library
+        # │   ├── numpy>=1.13.3                     NumPy is the fundamental package for array computing with Python.
+        # │   ├── pydantic>=1.7.3                   Data validation and settings management using python 3.6 type hinting
+        # │   │   └── typing-extensions>=3.7.4.3    Backported and Experimental Type Hints for Python 3.6+
+        # │   └── rich                              Render rich text, tables, progress bars, syntax highlighting, markdown and more to the terminal
+        # │       ├── colorama<0.5.0,>=0.4.0        Cross-platform colored terminal text.
+        # │       ├── commonmark<0.10.0,>=0.9.0     Python parser for the CommonMark Markdown spec
+        # │       └── pygments<3.0.0,>=2.6.0        Pygments is a syntax highlighting package written in Python.
+        # ├── fsspec                                File-system specification
+        # ├── hist>=2                               Hist classes and utilities
+        # │   ├── boost-histogram~=1.3.1            The Boost::Histogram Python wrapper.
+        # │   │   └── numpy>=1.13.3                 NumPy is the fundamental package for array computing with Python.
+        # │   ├── histoprint>=2.2.0                 Pretty print of NumPy (and other) histograms to the console
+        # │   │   ├── click>=7.0.0                  Composable command line interface toolkit
+        # │   │   ├── numpy                         NumPy is the fundamental package for array computing with Python.
+        # │   │   └── uhi>=0.2.1                    Unified Histogram Interface: tools to help library authors work with histograms
+        # │   │       └── numpy>=1.13.3             NumPy is the fundamental package for array computing with Python.
+        # │   └── numpy>=1.14.5                     NumPy is the fundamental package for array computing with Python.
+        # ├── lz4                                   LZ4 Bindings for Python
+        # ├── matplotlib>=3                         Python plotting package
+        # │   ├── cycler>=0.10                      Composable style cycles
+        # │   ├── fonttools>=4.22.0                 Tools to manipulate font files
+        # │   ├── kiwisolver>=1.0.1                 A fast implementation of the Cassowary constraint solver
+        # │   ├── numpy>=1.17                       NumPy is the fundamental package for array computing with Python.
+        # │   ├── packaging>=20.0                   Core utilities for Python packages
+        # │   │   └── pyparsing!=3.0.5,>=2.0.2      Python parsing module
+        # │   ├── pillow>=6.2.0                     Python Imaging Library (Fork)
+        # │   ├── pyparsing>=2.2.1                  Python parsing module
+        # │   └── python-dateutil>=2.7              Extensions to the standard Python datetime module
+        # │       └── six>=1.5                      Python 2 and 3 compatibility utilities
+        # ├── mplhep>=0.1.18                        Matplotlib styles for HEP
+        # │   ├── matplotlib>=3.4                   Python plotting package
+        # │   │   ├── cycler>=0.10                  Composable style cycles
+        # │   │   ├── fonttools>=4.22.0             Tools to manipulate font files
+        # │   │   ├── kiwisolver>=1.0.1             A fast implementation of the Cassowary constraint solver
+        # │   │   ├── numpy>=1.17                   NumPy is the fundamental package for array computing with Python.
+        # │   │   ├── packaging>=20.0               Core utilities for Python packages
+        # │   │   │   └── pyparsing!=3.0.5,>=2.0.2  Python parsing module
+        # │   │   ├── pillow>=6.2.0                 Python Imaging Library (Fork)
+        # │   │   ├── pyparsing>=2.2.1              Python parsing module
+        # │   │   └── python-dateutil>=2.7          Extensions to the standard Python datetime module
+        # │   │       └── six>=1.5                  Python 2 and 3 compatibility utilities
+        # │   ├── mplhep-data                       Font (Data) sub-package for mplhep
+        # │   ├── numpy>=1.16.0                     NumPy is the fundamental package for array computing with Python.
+        # │   ├── packaging                         Core utilities for Python packages
+        # │   │   └── pyparsing!=3.0.5,>=2.0.2      Python parsing module
+        # │   └── uhi>=0.2.0                        Unified Histogram Interface: tools to help library authors work with histograms
+        # │       └── numpy>=1.13.3                 NumPy is the fundamental package for array computing with Python.
+        # ├── numba>=0.50.0                         compiling Python code using LLVM
+        # │   ├── llvmlite<0.39,>=0.38.0rc1         lightweight wrapper around basic LLVM functionality
+        # │   ├── numpy<1.22,>=1.18                 NumPy is the fundamental package for array computing with Python.
+        # │   └── setuptools                        Easily download, build, install, upgrade, and uninstall Python packages
+        # ├── numpy>=1.16.0                         NumPy is the fundamental package for array computing with Python.
+        # ├── packaging                             Core utilities for Python packages
+        # │   └── pyparsing!=3.0.5,>=2.0.2          Python parsing module
+        # ├── pandas                                Powerful data structures for data analysis, time series, and statistics
+        # │   ├── numpy>=1.18.5                     NumPy is the fundamental package for array computing with Python.
+        # │   ├── python-dateutil>=2.8.1            Extensions to the standard Python datetime module
+        # │   │   └── six>=1.5                      Python 2 and 3 compatibility utilities
+        # │   └── pytz>=2020.1                      World timezone definitions, modern and historical
+        # ├── pyarrow>=1.0.0                        Python library for Apache Arrow
+        # │   └── numpy>=1.16.6                     NumPy is the fundamental package for array computing with Python.
+        # ├── scipy>=1.1.0                          SciPy: Scientific Library for Python
+        # │   └── numpy<1.25.0,>=1.17.3             NumPy is the fundamental package for array computing with Python.
+        # ├── tqdm>=4.27.0                          Fast, Extensible Progress Meter
+        # ├── uproot3-methods>=0.10.0               Pythonic mix-ins for ROOT classes.
+        # │   ├── awkward0                          Manipulate arrays of complex data structures as easily as Numpy.
+        # │   │   └── numpy>=1.13.1                 NumPy is the fundamental package for array computing with Python.
+        # │   └── numpy>=1.13.1                     NumPy is the fundamental package for array computing with Python.
+        # ├── uproot3>=3.14.1                       ROOT I/O in pure Python and Numpy.
+        # │   ├── awkward0                          Manipulate arrays of complex data structures as easily as Numpy.
+        # │   │   └── numpy>=1.13.1                 NumPy is the fundamental package for array computing with Python.
+        # │   ├── cachetools                        Extensible memoizing collections and decorators
+        # │   ├── numpy>=1.13.1                     NumPy is the fundamental package for array computing with Python.
+        # │   └── uproot3-methods                   Pythonic mix-ins for ROOT classes.
+        # │       ├── awkward0                      Manipulate arrays of complex data structures as easily as Numpy.
+        # │       │   └── numpy>=1.13.1             NumPy is the fundamental package for array computing with Python.
+        # │       └── numpy>=1.13.1                 NumPy is the fundamental package for array computing with Python.
+        # └── uproot>=4.1.6                         ROOT I/O in pure Python and NumPy.
+        #     ├── numpy                             NumPy is the fundamental package for array computing with Python.
+        #     └── setuptools                        Easily download, build, install, upgrade, and uninstall Python packages

@@ -1,0 +1,12 @@
+
+modin   # [Modin is a drop-in replacement for pandas. Modin lets you instantly speed up your workflows by scaling pandas so it uses all of your cores. Modin works especially well on larger datasets](https://github.com/modin-project/modin)
+        # modin                             Modin: Make your pandas code run faster by changing one line of code.
+        # ├── fsspec                        File-system specification
+        # ├── numpy>=1.18.5                 NumPy is the fundamental package for array computing with Python.
+        # ├── packaging                     Core utilities for Python packages
+        # │   └── pyparsing!=3.0.5,>=2.0.2  pyparsing module - Classes and methods to define and execute parsing grammars
+        # └── pandas==1.4.2                 Powerful data structures for data analysis, time series, and statistics
+        #     ├── numpy>=1.18.5             NumPy is the fundamental package for array computing with Python.
+        #     ├── python-dateutil>=2.8.1    Extensions to the standard Python datetime module
+        #     │   └── six>=1.5              Python 2 and 3 compatibility utilities
+        #     └── pytz>=2020.1              World timezone definitions, modern and historical
