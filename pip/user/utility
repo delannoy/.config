@@ -1,0 +1,68 @@
+
+img2pdf         # [Lossless conversion of raster images to PDF](https://gitlab.mister-muffin.de/josch/img2pdf)
+                # img2pdf                     Convert images to PDF via direct JPEG inclusion.
+                # ├── Pillow                  Python Imaging Library (Fork)
+                # └── pikepdf                 Read and write PDFs with Python, powered by qpdf
+                #     ├── Deprecated          Python @deprecated decorator to deprecate old python classes, functions or methods.
+                #     │   └── wrapt<2,>=1.10  Module for decorators, wrappers and monkey patching.
+                #     ├── Pillow>=10.0.1      Python Imaging Library (Fork)
+                #     ├── lxml<5,>=4.8        Powerful and Pythonic XML processing library combining libxml2/libxslt with the ElementTree API.
+                #     └── packaging           Core utilities for Python packages
+
+pyrosimple      # [An overhauled fork of the pyrocore tools for rTorrent](https://github.com/kannibalox/pyrosimple)
+                # pyrosimple                             A stripped-down version of the pyrocore tools for working with rTorrent
+                # ├── Jinja2<4.0.0,>=3.1.0               A very fast and expressive template engine.
+                # │   └── MarkupSafe>=2.0                Safely add untrusted strings to HTML/XML markup.
+                # ├── bencode.py<5.0.0,>=4.0.0           Simple bencode parser (for Python 2, Python 3 and PyPy)
+                # ├── importlib-resources<6.0.0,>=5.4.0  Read resources from Python packages
+                # │   └── zipp>=3.1.0                    Backport of pathlib-compatible object wrapper for zip files
+                # ├── parsimonious<0.11.0,>=0.10.0       (Soon to be) the fastest pure-Python PEG parser I could muster
+                # │   └── regex>=2022.3.15               Alternative regular expression module, to replace re.
+                # ├── prometheus-client<0.17.0,>=0.16.0  Python client for the Prometheus monitoring system.
+                # ├── prompt-toolkit<4.0.0,>=3.0.30      Library for building powerful interactive command lines in Python
+                # │   └── wcwidth                        Measures the displayed width of unicode strings in a terminal
+                # ├── python-box<8.0.0,>=7.0.0           Advanced Python dictionaries with dot notation access
+                # ├── python-daemon<4.0.0,>=3.0.1        Library to implement a well-behaved Unix daemon process.
+                # │   ├── docutils                       Docutils -- Python Documentation Utilities
+                # │   ├── lockfile>=0.10                 Platform-independent file locking module
+                # │   └── setuptools>=62.4.0             Easily download, build, install, upgrade, and uninstall Python packages
+                # ├── requests<3.0.0,>=2.28.1            Python HTTP for Humans.
+                # │   ├── certifi>=2017.4.17             Python package for providing Mozilla's CA Bundle.
+                # │   ├── charset-normalizer<4,>=2       The Real First Universal Charset Detector. Open, modern and actively maintained alternative to Chardet.
+                # │   ├── idna<4,>=2.5                   Internationalized Domain Names in Applications (IDNA)
+                # │   └── urllib3<3,>=1.21.1             HTTP library with thread-safe connection pooling, file post, and more.
+                # ├── shtab<2.0.0,>=1.5.5                Automagic shell tab completion for Python CLI applications
+                # ├── tomli-w<2.0.0,>=1.0.0              A lil' TOML writer
+                # └── tomli<3.0.0,>=2.0.1                A lil' TOML parser
+
+speedtest-cli   # [Command line interface for testing internet bandwidth using speedtest.net](https://github.com/sivel/speedtest-cli)
+                # speedtest-cli  Command line interface for testing internet bandwidth using speedtest.net
+
+torrent_parser  # [A .torrent file parser and creator for both Python 2 and 3](https://github.com/7sDream/torrent_parser)
+                # torrent_parser  A .torrent file parser and creator for both Python 2 and 3
+
+typer[all]      # [Typer, build great CLIs. Easy to code. Based on Python type hints.](https://github.com/tiangolo/typer)
+                # typer[all]                             Typer, build great CLIs. Easy to code. Based on Python type hints.
+                # ├── click<9.0.0,>=7.1.1                Composable command line interface toolkit
+                # ├── colorama<0.5.0,>=0.4.3             Cross-platform colored terminal text.
+                # ├── rich<14.0.0,>=10.11.0              Render rich text, tables, progress bars, syntax highlighting, markdown and more to the terminal
+                # │   ├── markdown-it-py>=2.2.0          Python port of markdown-it. Markdown parsing, done right!
+                # │   │   └── mdurl~=0.1                 Markdown URL utilities
+                # │   ├── pygments<3.0.0,>=2.13.0        Pygments is a syntax highlighting package written in Python.
+                # │   └── typing-extensions<5.0,>=4.0.0  Backported and Experimental Type Hints for Python 3.8+
+                # ├── shellingham<2.0.0,>=1.3.0          Tool to Detect Surrounding Shell
+                # └── typing-extensions>=3.7.4.3         Backported and Experimental Type Hints for Python 3.8+
+
+yt-dlp          # [A youtube-dl fork with additional features and fixes](https://github.com/yt-dlp/yt-dlp)
+                # yt-dlp                            A youtube-dl fork with additional features and patches
+                # ├── brotli                        Python bindings for the Brotli compression library
+                # ├── certifi                       Python package for providing Mozilla's CA Bundle.
+                # ├── mutagen                       read and write audio tags for many formats
+                # ├── pycryptodomex                 Cryptographic library for Python
+                # ├── requests<3,>=2.31.0           Python HTTP for Humans.
+                # │   ├── certifi>=2017.4.17        Python package for providing Mozilla's CA Bundle.
+                # │   ├── charset-normalizer<4,>=2  The Real First Universal Charset Detector. Open, modern and actively maintained alternative to Chardet.
+                # │   ├── idna<4,>=2.5              Internationalized Domain Names in Applications (IDNA)
+                # │   └── urllib3<3,>=1.21.1        HTTP library with thread-safe connection pooling, file post, and more.
+                # ├── urllib3<3,>=1.26.17           HTTP library with thread-safe connection pooling, file post, and more.
+                # └── websockets>=12.0              An implementation of the WebSocket Protocol (RFC 6455 & 7692)
