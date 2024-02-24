@@ -1,0 +1,43 @@
+
+httpie      # [HTTPie (pronounced aitch-tee-tee-pie) is a command-line HTTP client. Its goal is to make CLI interaction with web services as human-friendly as possible](https://github.com/httpie/httpie)
+            # httpie                                 HTTPie: modern, user-friendly command-line HTTP client for the API era.
+            # ├── Pygments>=2.5.2                    Pygments is a syntax highlighting package written in Python.
+            # ├── charset-normalizer>=2.0.0          The Real First Universal Charset Detector. Open, modern and actively maintained alternative to Chardet.
+            # ├── defusedxml>=0.6.0                  XML bomb protection for Python stdlib modules
+            # ├── multidict>=4.7.0                   multidict implementation
+            # ├── pip                                The PyPA recommended tool for installing Python packages.
+            # ├── requests-toolbelt>=0.9.1           A utility belt for advanced users of python-requests
+            # │   └── requests<3.0.0,>=2.0.1         Python HTTP for Humans.
+            # │       ├── certifi>=2017.4.17         Python package for providing Mozilla's CA Bundle.
+            # │       ├── charset-normalizer<4,>=2   The Real First Universal Charset Detector. Open, modern and actively maintained alternative to Chardet.
+            # │       ├── idna<4,>=2.5               Internationalized Domain Names in Applications (IDNA)
+            # │       └── urllib3<3,>=1.21.1         HTTP library with thread-safe connection pooling, file post, and more.
+            # ├── requests[socks]>=2.22.0            Python HTTP for Humans.
+            # │   ├── PySocks!=1.5.7,>=1.5.6         A Python SOCKS client module. See https://github.com/Anorov/PySocks for more information.
+            # │   ├── certifi>=2017.4.17             Python package for providing Mozilla's CA Bundle.
+            # │   ├── charset-normalizer<4,>=2       The Real First Universal Charset Detector. Open, modern and actively maintained alternative to Chardet.
+            # │   ├── idna<4,>=2.5                   Internationalized Domain Names in Applications (IDNA)
+            # │   └── urllib3<3,>=1.21.1             HTTP library with thread-safe connection pooling, file post, and more.
+            # ├── rich>=9.10.0                       Render rich text, tables, progress bars, syntax highlighting, markdown and more to the terminal
+            # │   ├── markdown-it-py>=2.2.0          Python port of markdown-it. Markdown parsing, done right!
+            # │   │   └── mdurl~=0.1                 Markdown URL utilities
+            # │   ├── pygments<3.0.0,>=2.13.0        Pygments is a syntax highlighting package written in Python.
+            # │   └── typing-extensions<5.0,>=4.0.0  Backported and Experimental Type Hints for Python 3.8+
+            # └── setuptools                         Easily download, build, install, upgrade, and uninstall Python packages
+
+httpx       # [A next generation HTTP client for Python. 🦋](https://github.com/encode/httpx/)
+            # httpx                           The next generation HTTP client.
+            # ├── anyio                       High level compatibility layer for multiple asynchronous event loop implementations
+            # │   ├── exceptiongroup>=1.0.2   Backport of PEP 654 (exception groups)
+            # │   ├── idna>=2.8               Internationalized Domain Names in Applications (IDNA)
+            # │   ├── sniffio>=1.1            Sniff out which async library your code is running under
+            # │   └── typing-extensions>=4.1  Backported and Experimental Type Hints for Python 3.8+
+            # ├── certifi                     Python package for providing Mozilla's CA Bundle.
+            # ├── httpcore==1.*               A minimal low-level HTTP client.
+            # │   ├── certifi                 Python package for providing Mozilla's CA Bundle.
+            # │   └── h11<0.15,>=0.13         A pure-Python, bring-your-own-I/O implementation of HTTP/1.1
+            # ├── idna                        Internationalized Domain Names in Applications (IDNA)
+            # └── sniffio                     Sniff out which async library your code is running under
+
+mureq       # [Single-file alternative to python-requests](https://github.com/slingamn/mureq)
+            # mureq   Single-file alternative to python-requests
