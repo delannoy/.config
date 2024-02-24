@@ -11,6 +11,9 @@ alias scp='scp -F "${_SSHCONFIG}" -p -r -v'
 # -r                    Recursively copy entire directories. Note that scp follows symbolic links encountered in the tree traversal
 # -v                    Verbose mode. Causes scp and ssh(1) to print debugging messages about their progress.  This is helpful in debugging connection, authentication, and configuration problems.
 
+alias rsyncBackup='rsync --archive --info=progress2'
+# [How can I view a progress bar when running rsync?](https://askubuntu.com/a/907717)
+
 alias rsyncArchive='rsync --verbose --archive --update --human-readable --progress --out-format="${_RSYNCOF}"'
 # --verbose             increase verbosity
 # --archive             archive mode (equals --recursive --links --perms --times --group --owner --devices --specials)
