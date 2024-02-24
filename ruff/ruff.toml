@@ -69,9 +69,11 @@ extend-select = [
 
 # [A list of rule codes or prefixes to ignore](https://beta.ruff.rs/docs/settings/#ignore)
 ignore = [
+    'ANN101', # [Checks that instance method self arguments have type annotations](https://beta.ruff.rs/docs/rules/missing-type-self/)
     'D203', # [Checks for docstrings on class definitions that are not preceded by a blank line](https://beta.ruff.rs/docs/rules/one-blank-line-before-class/)
     'D213', # [Checks for docstring summary lines that are not positioned on the second physical line of the docstring](https://beta.ruff.rs/docs/rules/multi-line-summary-second-line/)
     'D300', # [Checks for docstrings that use `'''triple single quotes'''` instead of `"""triple double quotes"""`](https://beta.ruff.rs/docs/rules/triple-single-quotes/)
+    'E501', # [Checks for lines that exceed the specified maximum character length](https://beta.ruff.rs/docs/rules/line-too-long/)
     'N802', # [Checks for functions names that do not follow the `snake_case` naming convention](https://beta.ruff.rs/docs/rules/invalid-function-name/)
 ]
 
