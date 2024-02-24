@@ -1,4 +1,14 @@
 
+aiometer    # [A Python concurrency scheduling library, compatible with asyncio and trio](https://github.com/florimondmanca/aiometer)
+            # aiometer                A Python concurrency scheduling library, compatible with asyncio and trio
+            # └── anyio~=3.2          High level compatibility layer for multiple asynchronous event loop implementations
+            #     ├── exceptiongroup  Backport of PEP 654 (exception groups)
+            #     ├── idna>=2.8       Internationalized Domain Names in Applications (IDNA)
+            #     └── sniffio>=1.1    Sniff out which async library your code is running under
+
+duckdb      # [DuckDB is an in-process SQL OLAP Database Management System](https://github.com/duckdb/duckdb)
+            # duckdb  DuckDB embedded database
+
 pyarrow     # [Apache Arrow is a multi-language toolbox for accelerated data interchange and in-memory processing](https://github.com/apache/arrow)
             # pyarrow            Python library for Apache Arrow
             # └── numpy>=1.16.6  NumPy is the fundamental package for array computing with Python.
