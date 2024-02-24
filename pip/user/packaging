@@ -1,60 +1,29 @@
 
-johnnydep               # [Pretty-print a dependency tree for a Python distribution](https://github.com/wimglenn/johnnydep)
-                        # johnnydep                 Display dependency tree of Python distribution
-                        # ├── anytree               Powerful and Lightweight Python Tree Data Structure..
-                        # │   └── six>=1.9.0        Python 2 and 3 compatibility utilities
-                        # ├── cachetools            Extensible memoizing collections and decorators
-                        # ├── colorama              Cross-platform colored terminal text.
-                        # ├── distlib               Distribution utilities
-                        # ├── oyaml                 Ordered YAML: drop-in replacement for PyYAML which preserves dict ordering
-                        # │   └── pyyaml            YAML parser and emitter for Python
-                        # ├── packaging>=17         Core utilities for Python packages
-                        # │   └── pyparsing>=2.0.2  Python parsing module
-                        # ├── pip                   The PyPA recommended tool for installing Python packages.
-                        # ├── pkginfo>=1.4.2        Query metadatdata from sdists / bdists / installed packages.
-                        # ├── setuptools>=38.3      Easily download, build, install, upgrade, and uninstall Python packages
-                        # ├── structlog             Structured Logging for Python
-                        # ├── tabulate              Pretty-print tabular data
-                        # ├── toml                  Python Library for Tom's Obvious, Minimal Language
-                        # ├── wheel>=0.32.0         A built-package format for Python
-                        # └── wimpy                 Anti-copy-pasta
+johnnydep       # [Pretty-print a dependency tree for a Python distribution](https://github.com/wimglenn/johnnydep)
+                # johnnydep               Display dependency tree of Python distribution
+                # ├── anytree             Powerful and Lightweight Python Tree Data Structure with various plugins
+                # │   └── six             Python 2 and 3 compatibility utilities
+                # ├── cachetools          Extensible memoizing collections and decorators
+                # ├── importlib-metadata  Read metadata from Python packages
+                # │   └── zipp>=0.5       Backport of pathlib-compatible object wrapper for zip files
+                # ├── oyaml               Ordered YAML: drop-in replacement for PyYAML which preserves dict ordering
+                # │   └── pyyaml          YAML parser and emitter for Python
+                # ├── packaging!=22,>=17  Core utilities for Python packages
+                # ├── pip                 The PyPA recommended tool for installing Python packages.
+                # ├── structlog           Structured Logging for Python
+                # ├── tabulate            Pretty-print tabular data
+                # ├── toml                Python Library for Tom's Obvious, Minimal Language
+                # ├── wheel>=0.32.0       A built-package format for Python
+                # └── wimpy               Anti-copy-pasta
 
-meta-package-manager    # [📦 one CLI for all package managers](https://github.com/kdeldycke/meta-package-manager)
-                        # meta-package-manager                       📦 one CLI for all package managers
-                        # ├── boltons<22.0.0,>=21.0.0                When they're not builtins, they're boltons.
-                        # ├── click-extra<2.0.0,>=1.6.2              🌈 Extra colorization and configuration file for Click.
-                        # │   ├── boltons<22.0.0,>=21.0.0            When they're not builtins, they're boltons.
-                        # │   ├── cli-helpers<3.0.0,>=2.2.0          Helpers for building command-line apps
-                        # │   │   ├── configobj>=5.0.5               Config file reading, writing and validation.
-                        # │   │   │   └── six                        Python 2 and 3 compatibility utilities
-                        # │   │   └── tabulate[widechars]>=0.8.2     Pretty-print tabular data
-                        # │   │       └── wcwidth                    Measures the displayed width of unicode strings in a terminal
-                        # │   ├── click-log<0.4.0,>=0.3.2            Logging integration for Click
-                        # │   │   └── click                          Composable command line interface toolkit
-                        # │   ├── click<9.0.0,>=8.0.4                Composable command line interface toolkit
-                        # │   ├── cloup<0.14.0,>=0.13.0              Adds features to Click: option groups, constraints, subcommand sections and help themes.
-                        # │   │   ├── click<9.0,>=7.1                Composable command line interface toolkit
-                        # │   │   └── typing-extensions              Backported and Experimental Type Hints for Python 3.6+
-                        # │   ├── pyyaml<7.0.0,>=6.0.0               YAML parser and emitter for Python
-                        # │   ├── requests<3.0.0,>=2.27.1            Python HTTP for Humans.
-                        # │   │   ├── certifi>=2017.4.17             Python package for providing Mozilla's CA Bundle.
-                        # │   │   ├── charset-normalizer~=2.0.0      The Real First Universal Charset Detector. Open, modern and actively maintained alternative to Chardet.
-                        # │   │   ├── idna<4,>=2.5                   Internationalized Domain Names in Applications (IDNA)
-                        # │   │   └── urllib3<1.27,>=1.21.1          HTTP library with thread-safe connection pooling, file post, and more.
-                        # │   ├── tabulate[widechars]<0.9.0,>=0.8.9  Pretty-print tabular data
-                        # │   │   └── wcwidth                        Measures the displayed width of unicode strings in a terminal
-                        # │   └── tomli<3.0.0,>=2.0.0                A lil' TOML parser
-                        # ├── click<9.0.0,>=8.0.2                    Composable command line interface toolkit
-                        # ├── tomli<3.0.0,>=2.0.1                    A lil' TOML parser
-                        # └── tomli_w<2.0.0,>=1.0.0                  A lil' TOML writer
+pip             # [pip is the package installer for Python. You can use pip to install packages from the Python Package Index and other indexes.](https://github.com/pypa/pip)
+                # pip     The PyPA recommended tool for installing Python packages.
 
-pip                     # [pip is the package installer for Python. You can use pip to install packages from the Python Package Index and other indexes.](https://github.com/pypa/pip)
-                        # pip     The PyPA recommended tool for installing Python packages.
-
-pipx                    # [Install and Run Python Applications in Isolated Environments](https://github.com/pypa/pipx)
-                        # pipx                              Install and Run Python Applications in Isolated Environments
-                        # ├── argcomplete>=1.9.4            Bash tab completion for argparse
-                        # ├── packaging>=20.0               Core utilities for Python packages
-                        # │   └── pyparsing!=3.0.5,>=2.0.2  Python parsing module
-                        # └── userpath>=1.6.0               Cross-platform tool for adding locations to the user PATH
-                        #     └── click                     Composable command line interface toolkit
+pipx            # [Install and Run Python Applications in Isolated Environments](https://github.com/pypa/pipx)
+                # pipx                       Install and Run Python Applications in Isolated Environments
+                # ├── argcomplete>=1.9.4     Bash tab completion for argparse
+                # ├── packaging>=20          Core utilities for Python packages
+                # ├── platformdirs>=2.1      A small Python package for determining appropriate platform-specific dirs, e.g. a "user data dir".
+                # ├── tomli                  A lil' TOML parser
+                # └── userpath!=1.9.0,>=1.6  Cross-platform tool for adding locations to the user PATH
+                #     └── click              Composable command line interface toolkit

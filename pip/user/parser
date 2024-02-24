@@ -3,20 +3,24 @@ cssselect           # [cssselect parses CSS3 Selectors and translate them to XPa
                     # cssselect  cssselect parses CSS3 Selectors and translates them to XPath 1.0
 
 dateparser          # [Python parser for human readable dates](https://github.com/scrapinghub/dateparser)
-                    # dateparser                  Date parsing library designed to parse dates from HTML pages
-                    # ├── python-dateutil         Extensions to the standard Python datetime module
-                    # │   └── six>=1.5            Python 2 and 3 compatibility utilities
-                    # ├── pytz                    World timezone definitions, modern and historical
-                    # ├── regex!=2019.02.19       Alternative regular expression module, to replace re.
-                    # └── tzlocal                 tzinfo object for the local timezone
-                    #     └── backports.zoneinfo  Backport of the standard library zoneinfo module
+                    # dateparser                         Date parsing library designed to parse dates from HTML pages
+                    # ├── python-dateutil                Extensions to the standard Python datetime module
+                    # │   └── six>=1.5                   Python 2 and 3 compatibility utilities
+                    # ├── pytz                           World timezone definitions, modern and historical
+                    # ├── regex!=2019.02.19,!=2021.8.27  Alternative regular expression module, to replace re.
+                    # └── tzlocal                        tzinfo object for the local timezone
+                    #     └── backports.zoneinfo         Backport of the standard library zoneinfo module
 
 lxml                # [lxml is the most feature-rich and easy-to-use library for processing XML and HTML in the Python language](https://github.com/lxml/lxml)
                     # lxml    Powerful and Pythonic XML processing library combining libxml2/libxslt with the ElementTree API.
 
 pydantic            # [Data parsing and validation using Python type hints](https://github.com/pydantic/pydantic)
-                    # pydantic                      Data validation and settings management using python type hints
-                    # └── typing-extensions>=4.1.0  Backported and Experimental Type Hints for Python 3.7+
+                    # pydantic                                  Data validation using Python type hints
+                    # ├── annotated-types>=0.4.0                Reusable constraint types to use with typing.Annotated
+                    # │   └── typing-extensions>=4.0.0          Backported and Experimental Type Hints for Python 3.8+
+                    # ├── pydantic-core==2.16.3
+                    # │   └── typing-extensions!=4.7.0,>=4.6.0  Backported and Experimental Type Hints for Python 3.8+
+                    # └── typing-extensions>=4.6.1              Backported and Experimental Type Hints for Python 3.8+
 
 pyyaml              # [A full-featured YAML processing framework for Python](https://github.com/yaml/pyyaml)
                     # pyyaml  YAML parser and emitter for Python

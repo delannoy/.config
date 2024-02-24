@@ -1,31 +1,35 @@
 
 ipython # [IPython (Interactive Python) is a command shell for interactive computing in multiple programming languages, originally developed for the Python programming language](https://github.com/ipython/ipython)
-        # ipython                                           IPython: Productive Interactive Computing
-        # ├── backcall                                      Specifications for callback functions passed in to an API
-        # ├── decorator                                     Decorators for Humans
-        # ├── jedi>=0.16                                    An autocompletion tool for Python that can be used for text editors.
-        # │   └── parso<0.9.0,>=0.8.0                       A Python Parser
-        # ├── matplotlib-inline                             Inline Matplotlib backend for Jupyter
-        # │   └── traitlets                                 Traitlets Python configuration system
-        # │       └── ipython-genutils                      Vestigial utilities from IPython
-        # ├── pexpect>4.3                                   Pexpect allows easy control of interactive console applications.
-        # │   └── ptyprocess>=0.5                           Run a subprocess in a pseudo terminal
-        # ├── pickleshare                                   Tiny 'shelve'-like database with concurrency support
-        # ├── prompt-toolkit!=3.0.0,!=3.0.1,<3.1.0,>=2.0.0  Library for building powerful interactive command lines in Python
-        # │   └── wcwidth                                   Measures the displayed width of unicode strings in a terminal
-        # ├── pygments                                      Pygments is a syntax highlighting package written in Python.
-        # ├── setuptools>=18.5                              Easily download, build, install, upgrade, and uninstall Python packages
-        # └── traitlets>=4.2                                Traitlets Python configuration system
-        #     └── ipython-genutils                          Vestigial utilities from IPython
+        # ipython                                     IPython: Productive Interactive Computing
+        # ├── backcall                                Specifications for callback functions passed in to an API
+        # ├── decorator                               Decorators for Humans
+        # ├── jedi>=0.16                              An autocompletion tool for Python that can be used for text editors.
+        # │   └── parso<0.9.0,>=0.8.3                 A Python Parser
+        # ├── matplotlib-inline                       Inline Matplotlib backend for Jupyter
+        # │   └── traitlets                           Traitlets Python configuration system
+        # ├── pexpect>4.3                             Pexpect allows easy control of interactive console applications.
+        # │   └── ptyprocess>=0.5                     Run a subprocess in a pseudo terminal
+        # ├── pickleshare                             Tiny 'shelve'-like database with concurrency support
+        # ├── prompt-toolkit!=3.0.37,<3.1.0,>=3.0.30  Library for building powerful interactive command lines in Python
+        # │   └── wcwidth                             Measures the displayed width of unicode strings in a terminal
+        # ├── pygments>=2.4.0                         Pygments is a syntax highlighting package written in Python.
+        # ├── stack-data                              Extract data from python stack frames and tracebacks for informative displays
+        # │   ├── asttokens>=2.1.0                    Annotate AST trees with source code positions
+        # │   │   └── six>=1.12.0                     Python 2 and 3 compatibility utilities
+        # │   ├── executing>=1.2.0                    Get the currently executing AST node of a frame, and other information
+        # │   └── pure-eval                           Safely evaluate AST nodes without side effects
+        # ├── traitlets>=5                            Traitlets Python configuration system
+        # └── typing-extensions                       Backported and Experimental Type Hints for Python 3.8+
 
 mypy    # [Optional static typing for Python](https://github.com/python/mypy)
-        # mypy                         Optional static typing for Python
-        # ├── mypy-extensions>=0.4.3   Experimental type system extensions for programs checked with the mypy typechecker.
-        # ├── tomli>=1.1.0             A lil' TOML parser
-        # └── typing-extensions>=3.10  Backported and Experimental Type Hints for Python 3.6+
+        # mypy                          Optional static typing for Python
+        # ├── mypy-extensions>=1.0.0    Type system extensions for programs checked with the mypy type checker.
+        # ├── tomli>=1.1.0              A lil' TOML parser
+        # └── typing-extensions>=4.1.0  Backported and Experimental Type Hints for Python 3.8+
 
 numba   # [A Just-In-Time Compiler for Numerical Functions in Python](https://github.com/numba/numba)
-        # numba                          compiling Python code using LLVM
-        # ├── llvmlite<0.37,>=0.36.0rc1  lightweight wrapper around basic LLVM functionality
-        # ├── numpy>=1.15                NumPy is the fundamental package for array computing with Python.
-        # └── setuptools                 Easily download, build, install, upgrade, and uninstall Python packages
+        # numba                           compiling Python code using LLVM
+        # ├── importlib-metadata          Read metadata from Python packages
+        # │   └── zipp>=0.5               Backport of pathlib-compatible object wrapper for zip files
+        # ├── llvmlite<0.42,>=0.41.0dev0  lightweight wrapper around basic LLVM functionality
+        # └── numpy<1.27,>=1.22           Fundamental package for array computing in Python
