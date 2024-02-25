@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+if [[ -n "${BASH}" ]] && [[ $- == *i* ]];
+    then (( "${_VERBOSE}" >= 3 )) && printf '%s\n' "***$(realpath "${BASH_SOURCE[0]}")***";
+    else return;
+fi
+
+go.installPackagesDryRun(){
+    mkdir -p "${HOME}/tmp/go/"
+    for pkg in $(awk '!/^#/ {print $1}' "${XDG_CONFIG_HOME}/go/get" | xargs); do
+        echo "${pkg}";
+        go install -n "github.com/${pkg}@latest" > "${HOME}/tmp/go/${pkg//\//_}" 2>&1;
+    done;
+}
+
+go.installPackages(){
+    awk '!/^#/ {print $1}' "${XDG_CONFIG_HOME}/go/get" | xargs --max-lines=1 --replace={} -- go install github.com/{}@latest
+}
+
+go.upgrade(){
+    # [How to update all Go packages to the latest version](https://gosamples.dev/update-all-packages/)
+    awk '!/^#/ {print $1}' "${XDG_CONFIG_HOME}/go/get" | xargs --max-lines=1 -- go get -u
+}
