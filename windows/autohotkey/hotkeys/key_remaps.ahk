@@ -1,4 +1,9 @@
 
+; minimize active window
+; ^`::SendInput("``")
+; $`::WinMinimize("A")
+; XButton1::WinMinimize("A")
+
 ; disable caps lock
 CAPSLOCK::SHIFT
 #CAPSLOCK::CAPSLOCK
