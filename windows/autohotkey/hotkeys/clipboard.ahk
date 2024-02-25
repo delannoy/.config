@@ -6,8 +6,20 @@
     }
 }
 
+^+v::{
+    ; CTRL+SHIFT+V: paste public Dropbox link from corresponding file path in clipboard
+    if InStr(A_CLIPBOARD, "dropbox\public", "Off"){
+        clipboard := A_CLIPBOARD
+        clipboard := StrReplace(clipboard, "A:\Dropbox\Public\", "")
+        clipboard := StrReplace(clipboard, "\", "/")
+        clipboard := StrReplace(clipboard, " ", "%20")
+        clipboard := "https://adelannoy.com/" . clipboard
+        SendInput(clipboard)
+    }
+}
+
 +!INS::{
-    ; convert space and [illegal/reserved filename characters](https://learn.microsoft.com/en-us/windows/win32/fileio/naming-a-file) in cliboard to [URL percent encoding](http://www.w3schools.com/tags/ref_urlencode.asp)
+    ; SHIFT+ALT+INS: convert space and [illegal/reserved filename characters](https://learn.microsoft.com/en-us/windows/win32/fileio/naming-a-file) in cliboard to [URL percent encoding](http://www.w3schools.com/tags/ref_urlencode.asp)
     clipboard := A_CLIPBOARD
     clipboard := StrReplace(clipboard, " ", "%20")
     clipboard := StrReplace(clipboard, "<", "%3C")
