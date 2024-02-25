@@ -26,6 +26,59 @@ pandas          # [Flexible and powerful data analysis / manipulation library fo
                 # ├── pytz>=2020.1            World timezone definitions, modern and historical
                 # └── tzdata>=2022.1          Provider of IANA time zone data
 
+pandas[computation,compression,feather,hdf5,performance,plot,xml]
+                # pandas[compression,computation,feather,hdf5,performance,plot,xml]  Powerful data structures for data analysis, time series, and statistics
+                # ├── bottleneck>=1.3.6                                              Fast NumPy array functions written in C
+                # │   └── numpy                                                      Fundamental package for array computing in Python
+                # ├── lxml>=4.9.2                                                    Powerful and Pythonic XML processing library combining libxml2/libxslt with the ElementTree API.
+                # ├── matplotlib>=3.6.3                                              Python plotting package
+                # │   ├── contourpy>=1.0.1                                           Python library for calculating contours of 2D quadrilateral grids
+                # │   │   └── numpy<2.0,>=1.20                                       Fundamental package for array computing in Python
+                # │   ├── cycler>=0.10                                               Composable style cycles
+                # │   ├── fonttools>=4.22.0                                          Tools to manipulate font files
+                # │   ├── kiwisolver>=1.3.1                                          A fast implementation of the Cassowary constraint solver
+                # │   ├── numpy<2,>=1.21                                             Fundamental package for array computing in Python
+                # │   ├── packaging>=20.0                                            Core utilities for Python packages
+                # │   ├── pillow>=8                                                  Python Imaging Library (Fork)
+                # │   ├── pyparsing>=2.3.1                                           pyparsing module - Classes and methods to define and execute parsing grammars
+                # │   └── python-dateutil>=2.7                                       Extensions to the standard Python datetime module
+                # │       └── six>=1.5                                               Python 2 and 3 compatibility utilities
+                # ├── numba>=0.56.4                                                  compiling Python code using LLVM
+                # │   ├── llvmlite<0.43,>=0.42.0dev0                                 lightweight wrapper around basic LLVM functionality
+                # │   └── numpy<1.27,>=1.22                                          Fundamental package for array computing in Python
+                # ├── numexpr>=2.8.4                                                 Fast numerical expression evaluator for NumPy
+                # │   └── numpy>=1.13.3                                              Fundamental package for array computing in Python
+                # ├── numpy<2,>=1.22.4                                               Fundamental package for array computing in Python
+                # ├── pyarrow>=10.0.1                                                Python library for Apache Arrow
+                # │   └── numpy<2,>=1.16.6                                           Fundamental package for array computing in Python
+                # ├── python-dateutil>=2.8.2                                         Extensions to the standard Python datetime module
+                # │   └── six>=1.5                                                   Python 2 and 3 compatibility utilities
+                # ├── pytz>=2020.1                                                   World timezone definitions, modern and historical
+                # ├── scipy>=1.10.0                                                  Fundamental algorithms for scientific computing in Python
+                # │   └── numpy<1.29.0,>=1.22.4                                      Fundamental package for array computing in Python
+                # ├── tables>=3.8.0                                                  Hierarchical datasets for Python
+                # │   ├── blosc2>=2.3.0                                              Python wrapper for the C-Blosc2 library
+                # │   │   ├── msgpack                                                MessagePack serializer
+                # │   │   ├── ndindex>=1.4                                           A Python library for manipulating indices of ndarrays.
+                # │   │   ├── numpy>=1.20.3                                          Fundamental package for array computing in Python
+                # │   │   └── py-cpuinfo                                             Get CPU info with pure Python
+                # │   ├── numexpr>=2.6.2                                             Fast numerical expression evaluator for NumPy
+                # │   │   └── numpy>=1.13.3                                          Fundamental package for array computing in Python
+                # │   ├── numpy>=1.19.0                                              Fundamental package for array computing in Python
+                # │   ├── packaging                                                  Core utilities for Python packages
+                # │   └── py-cpuinfo                                                 Get CPU info with pure Python
+                # ├── tzdata>=2022.7                                                 Provider of IANA time zone data
+                # ├── xarray>=2022.12.0                                              N-D labeled arrays and datasets in Python
+                # │   ├── numpy>=1.23                                                Fundamental package for array computing in Python
+                # │   ├── packaging>=22                                              Core utilities for Python packages
+                # │   └── pandas>=1.5                                                Powerful data structures for data analysis, time series, and statistics
+                # │       ├── numpy<2,>=1.22.4                                       Fundamental package for array computing in Python
+                # │       ├── python-dateutil>=2.8.2                                 Extensions to the standard Python datetime module
+                # │       │   └── six>=1.5                                           Python 2 and 3 compatibility utilities
+                # │       ├── pytz>=2020.1                                           World timezone definitions, modern and historical
+                # │       └── tzdata>=2022.7                                         Provider of IANA time zone data
+                # └── zstandard>=0.19.0                                              Zstandard bindings for Python
+
 particle        # [Package to deal with particles, the PDG particle data table, PDGIDs, etc.](https://github.com/scikit-hep/particle)
                 # particle                      Extended PDG particle data and MC identification codes
                 # ├── attrs>=19.2               Classes Without Boilerplate
@@ -34,10 +87,10 @@ particle        # [Package to deal with particles, the PDG particle data table, 
                 # │   └── zipp>=3.1.0           Backport of pathlib-compatible object wrapper for zip files
                 # └── typing-extensions>=4.5    Backported and Experimental Type Hints for Python 3.8+
 
-patsy		# [Describing statistical models in Python using symbolic formulas](https://github.com/pydata/patsy)
-		# patsy           A Python package for describing statistical models and for building design matrices.
-		# ├── numpy>=1.4  Fundamental package for array computing in Python
-		# └── six         Python 2 and 3 compatibility utilities
+patsy       # [Describing statistical models in Python using symbolic formulas](https://github.com/pydata/patsy)
+                # patsy           A Python package for describing statistical models and for building design matrices.
+                # ├── numpy>=1.4  Fundamental package for array computing in Python
+                # └── six         Python 2 and 3 compatibility utilities
 
 polars          # [Fast multi-threaded, hybrid-out-of-core DataFrame library in Rust | Python | Node.js](https://github.com/pola-rs/polars)
                 # polars  Blazingly fast DataFrame library
