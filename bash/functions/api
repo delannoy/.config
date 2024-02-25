@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+
+thesaurus(){
+    # https://dictionaryapi.com/products/api-collegiate-thesaurus (registration required to get an api-key)
+    local 'term';
+    _args 'term';
+    jq '.synonyms' <(curl -s "https://api.api-ninjas.com/v1/thesaurus?word=${term}")
+}
+
+musicbrainz(){
+    local entity query jqFilter limit offset format;
+    _args entity query [jqFilter] [limit] [offset=0] [format='json'];
+    local url="https://musicbrainz.org/ws/2/${entity}?query=${query}&limit=${limit}&offset=${offset}&fmt=${format}";
+    echo "${url}"
+    jq --raw-output "${jqFilter:=.}" <(curl -s "${url}")
+}
+# musicbrainz release-group arid:"a630b133-bcc4-4796-9a0e-685c68b1e6ab" '."release-groups"[].title'
+
+redditDASH(){
+    local 'postID'
+    _args 'postID'
+    jsonPath='.[].data.children[].data.secure_media.reddit_video.fallback_url'
+    jq --raw-output "${jsonPath} | select(. != null)" <(curl --silent --location --user-agent "${_USERAGENT}" "https://www.reddit.com/${postID}.json")
+}
+
+weather(){
+    local 'city';
+    _args '[city=Geneve]';
+    curl "wttr.in/${city}"; # [wttr.in](https://github.com/chubin/wttr.in)
+}
