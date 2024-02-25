@@ -6,30 +6,14 @@ if [[ -n "${BASH}" ]] && [[ $- == *i* ]];
 fi
 
 bareShell(){
-    # [https://wiki.bash-hackers.org/scripting/bashbehaviour] [https://stackoverflow.com/a/21391035]
+    # [https://wiki.bash-hackers.org/scripting/bashbehaviour] [How to start a shell without any user configuration?](https://stackoverflow.com/a/21391035)
     env --ignore-environment bash --noprofile --norc;
     # --ignore-environment  start with an empty environment
     # --noprofile           Do not read either the system-wide startup file /etc/profile or any of the personal initialization files ~/.bash_profile, ~/.bash_login, or ~/.profile
     # --norc                Do not read and execute the system wide initialization file /etc/bash.bashrc and the personal initialization file ~/.bashrc if the shell is interactive
 }
 
-inspectDefinedFunctions(){
-    # [https://wiki.bash-hackers.org/commands/builtin/declare#options]
-    declare -f;
-}
-
-inspectDefinedFunctionNames(){
-    # [https://wiki.bash-hackers.org/commands/builtin/declare#options]
-    declare -F | cut --delimiter=' ' --fields=3;
-}
-
-inspectDefinedVariables()(
-    # [list all variables declared in the current shell, and their values](https://stackoverflow.com/a/1305273/13019084)
-    set -o posix;
-    set;
-)
-
-inspectFunction(){
+debug.function(){
     # [How can I find where certain bash function is defined?](https://askubuntu.com/a/1146305)
     local 'function';
     _args 'function';
@@ -39,7 +23,23 @@ inspectFunction(){
     declare -f "${function}";
 }
 
-inspectInvokedCommands(){
+debug.functions(){
+    # [https://wiki.bash-hackers.org/commands/builtin/declare#options]
+    declare -f;
+}
+
+debug.functionNames(){
+    # [https://wiki.bash-hackers.org/commands/builtin/declare#options]
+    declare -F | cut --delimiter=' ' --fields=3;
+}
+
+debug.variables()(
+    # [list all variables declared in the current shell, and their values](https://stackoverflow.com/a/1305273/13019084)
+    set -o posix;
+    set;
+)
+
+debug.invokedCommands(){
     # [https://unix.stackexchange.com/a/631291]
     bash -l -i -x -c exit 2>&1;
     # -l                    Make bash act as if it had been invoked as a login shell
@@ -48,7 +48,7 @@ inspectInvokedCommands(){
     # -c                    If the -c option is present, then commands are read from the first non-option argument command_string
 }
 
-inspectInvokedFiles(){
+debug.invokedFiles(){
     # [list files which the shell opened or tried to open](https://unix.stackexchange.com/a/334389)
     strace bash -l -i -x -c exit 2>&1 | grep "^openat";
     # -l                    Make bash act as if it had been invoked as a login shell

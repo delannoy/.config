@@ -11,11 +11,11 @@ export KRB5_PRINCIPAL='adelanno@CERN.CH';
 
 [[ ! -f "${KRB5_CONFIG}" ]] && curls 'http://linux.web.cern.ch/linux/docs/krb5.conf' "${KRB5_CONFIG}"
 
-krbEncryptions(){
+krb.encryptions(){
     klist -c -e | awk 'BEGIN{FS=":"}; /Etype/{gsub(/ /,""); print $NF}';
 }
 
-_keytabCreate(){
+krb._keytabCreate(){
     # [https://twiki.cern.ch/twiki/bin/view/Main/Kerberos]
     # [https://gist.github.com/OmeGak/9530124]
     local encryptions;
@@ -31,7 +31,7 @@ _keytabCreate(){
     ktutil && klist -t -e -K -k "${KRB5_KTNAME}"
 }
 
-keytabCreate(){
+krb.keytabCreate(){
     local password='pwdLOL';
     local encryptions;
     declare -a command;
@@ -45,7 +45,7 @@ keytabCreate(){
     (printf "%s\n" "${command[@]}") | ktutil;
 }
 
-keytabCERN(){
+krb.keytabCERN(){
     ssh -t lxplus "/usr/sbin/cern-get-keytab --user ${KRB5_PRINCIPAL%@*} --keytab ~/keytab"
     scp lxplus:~/keytab "${KRB5_KTNAME}" && klist -t -e -K -k "${KRB5_KTNAME}"
 }
