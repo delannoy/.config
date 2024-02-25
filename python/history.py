@@ -15,9 +15,9 @@ def history():
     atexit.register(readline.write_history_file, histFile)
 
 def historyBKP():
-    '''Append most recent history item to `_PYHISTFILEBKP` if different from the last line'''
-    histFileBkp = os.environ.get('_PYHISTFILEBKP', f'{pathlib.Path.home()}/.python_history_bkp')
+    '''Append most recent history item to `histFileBKP` if different from the last line'''
+    histFileBKP = os.environ.get('_PYHISTFILEBKP', f'{pathlib.Path.home()}/.python_history_bkp')
     lastItemHist = readline.get_history_item(readline.get_current_history_length()).strip()
     lastItemHistBkp = os.popen('tail -1 "${_PYHISTFILEBKP}" 2>/dev/null').read().strip()
     if lastItemHist != lastItemHistBkp:
-        readline.append_history_file(1, histFileBkp) # [readline.append_history_file()](https://docs.python.org/3/library/readline.html#readline.append_history_file)
+        readline.append_history_file(1, histFileBKP) # [readline.append_history_file()](https://docs.python.org/3/library/readline.html#readline.append_history_file)
