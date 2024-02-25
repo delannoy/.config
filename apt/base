@@ -4,6 +4,7 @@ gawk        # [The awk utility interprets a special-purpose programming language
 git         # [Git is a fast, scalable, distributed revision control system with an unusually rich command set that provides both high-level operations and full access to internals](https://github.com/git/git)
 iptables    # [iptables is the userspace command line program used to configure the Linux 2.4.x and later packet filtering ruleset](https://git.netfilter.org/iptables/)
 less        # [Less is a free, open-source file pager](https://github.com/gwsw/less)
+parallel    # [GNU parallel is a shell tool for executing jobs in parallel using one or more computers](https://www.gnu.org/software/parallel/)
 rsync       # [rsync is an open source utility that provides fast incremental file transfer](https://git.samba.org/rsync.git)
 screen      # [Screen is a full-screen window manager that multiplexes a physical terminal between several processes, typically interactive shells](https://www.gnu.org/software/screen/)
 ssh         # [OpenSSH is the premier connectivity tool for remote login with the SSH protocol](https://www.openssh.com/)
