@@ -5,7 +5,9 @@ import itertools
 import logging
 import pathlib
 import unicodedata
+import urllib.request
 
+import lxml.html
 import pandas
 
 logging.basicConfig(format='%(levelname)s: %(message)s', level=logging.INFO)
@@ -48,8 +50,8 @@ class AHK:
         return {f'{s0}&{s1}': pandas.Series(list(abbreviations[s0] & abbreviations[s1])) for (s0, s1) in itertools.combinations(abbreviations.keys(), r=2) if abbreviations[s0] & abbreviations[s1]}
 
     @classmethod
-    def write(cls, data: pandas.DataFrame, file_path: pathlib.Path, abbr_prefix: bool = True):
-        '''Write Autohoteky script to file.'''
+    def write(cls, data: pandas.DataFrame, file_path: pathlib.Path, abbr_prefix: bool = True, options: str = '?CO'):
+        '''Write Autohotkey script to file.'''
         unicodedata = Unicode.unicodedata()
         data['glyph'] = data.glyph.str.replace(pat='[\n]', repl='', regex=True) # remove literal newline characters
         data['abbreviation'] = cls.abbreviation(abbreviations=data.abbreviation, codepoints=data.codepoint, abbr_prefix=abbr_prefix)
@@ -57,10 +59,26 @@ class AHK:
         data['description'] = data.description.mask(cond=data.description.isna(), other=data.codepoint.apply(lambda i: str.join(', ', [unicodedata.get(_, '') for _ in i])))
         data['codepoint'] = '{' + Unicode.hex_from_codepoint(data.codepoint, sep='}{') + '}'
         data = ('::' + data.abbreviation + '::' + data.codepoint + ' ; <' + data.glyph + '> (' + data.description + ')')
-        data = '#Hotstring ?CO\n\n' + data.str.cat(sep='\n')
+        data = f"#Hotstring {options}\n\n" + data.str.cat(sep='\n')
         with open(file_path, mode='w') as ahk:
             ahk.write(data)
         logging.info(file_path)
+
+
+class Autocorrect:
+
+    @staticmethod
+    def main():
+        url = 'https://en.wikipedia.org/wiki/Wikipedia:Lists_of_common_misspellings/For_machines'
+        eTree = lxml.html.fromstring(urllib.request.urlopen(url).read().decode('utf-8'))
+        data = pandas.Series(item for item in eTree.cssselect('pre')[0].text.split('\n') if item)
+        data = data.str.extract(pat='(?P<misspelling>.*)->(?P<correct_spelling>.*)', expand=True)
+        data['correct_spelling'] = data['correct_spelling'].str.replace(', ', '/')
+        data = ':*:' + data['misspelling'] + '::' + data['correct_spelling']
+        data = '\n#Hotstring C\n\n' + data.str.cat(sep='\n')
+        with open('autocorrect.ahk', mode='w') as ahk:
+            ahk.write(data)
+        logging.info('autocorrect.ahk')
 
 
 class Emoticons:
@@ -113,7 +131,7 @@ class Latex:
 
     @staticmethod
     def matplotlib_tex2uni() -> pandas.DataFrame:
-        # [AskLaTeX: TeX → unicode mapping?](https://www.reddit.com/r/LaTeX/comments/bp3oh/asklatex_tex_unicode_mapping/c0nw4u9/)
+        '''[AskLaTeX: TeX → unicode mapping?](https://www.reddit.com/r/LaTeX/comments/bp3oh/asklatex_tex_unicode_mapping/c0nw4u9/)'''
         import matplotlib._mathtext_data
         assert pandas.Series(matplotlib._mathtext_data.tex2uni.values()).dtype == int
         data = pandas.DataFrame({'abbreviation': f'\\{abbreviation}', 'codepoint': [codepoint], 'glyph': chr(codepoint)} for abbreviation, codepoint in matplotlib._mathtext_data.tex2uni.items())
@@ -121,7 +139,7 @@ class Latex:
 
     @staticmethod
     def unicode_latex() -> pandas.DataFrame:
-        # [Mappings between unicode symbols and LaTeX commands](https://github.com/ViktorQvarfordt/unicode-latex)
+        '''[Mappings between unicode symbols and LaTeX commands](https://github.com/ViktorQvarfordt/unicode-latex)'''
         data = pandas.read_json('https://raw.githubusercontent.com/ViktorQvarfordt/unicode-latex/master/latex-unicode.json', orient='index').reset_index().rename(columns={'index': 'abbreviation', 0: 'glyph'})
         data['codepoint'] = Unicode.codepoint_from_glyph(data.glyph)
         return data.sort_values('codepoint', ignore_index=True)
@@ -138,7 +156,7 @@ class Latex:
 
     @staticmethod
     def arxiv_tex_accents() -> pandas.DataFrame:
-        ''' [arXiv.org: Entering Accented Characters](https://arxiv.org/edit-user/tex-accents.php)'''
+        '''[arXiv.org: Entering Accented Characters](https://arxiv.org/edit-user/tex-accents.php)'''
         data = pandas.concat(pandas.read_html('https://arxiv.org/edit-user/tex-accents.php'), axis=0)
         data = pandas.concat([data[col] for col in data], axis=0).dropna()
         data = data.str.split(expand=True).rename(columns={0: 'glyph', 1: 'abbreviation'})
@@ -157,8 +175,7 @@ class Latex:
         '''[This document contains guidelines on the use of the Unicode Standard in conjunction with markup languages such as XML.](https://www.w3.org/TR/unicode-xml/)'''
         # [https://github.com/phfaist/pylatexenc/blob/main/tools/unicode.xml]
         # [Map between LaTeX commands and Unicode points](https://stackoverflow.com/a/2356160/13019084)
-        url = 'https://www.w3.org/Math/characters/unicode.xml'
-        url = 'math_characters_unicode.xml'
+        url = 'math_characters_unicode.xml' if pathlib.Path('math_characters_unicode.xml').exists() else 'https://www.w3.org/Math/characters/unicode.xml'
         data = pandas.read_xml(url).dropna(axis=0, how='all').replace(['none', 'unassigned'], None).dropna(axis=1, how='all')
         data['codepoint'] = data.dec.str.split('-').apply(lambda row: [int(_) for _ in row]) # [Splitting a string into list and converting the items to int](https://stackoverflow.com/a/52907147/13019084)
         return cls.w3_melt(data=data)
@@ -166,8 +183,7 @@ class Latex:
     @classmethod
     def w3_xml_entities(cls) -> pandas.DataFrame:
         '''[unicode.xml master file detailing all Unicode characters with names in various entity sets and applications, TeX equivalents and other data](https://www.w3.org/TR/xml-entity-names/)'''
-        url = 'https://www.w3.org/2003/entities/2007xml/unicode.xml'
-        url = 'entities_unicode.xml'
+        url = 'entities_unicode.xml' if pathlib.Path('entities_unicode.xml').exists() else 'https://www.w3.org/2003/entities/2007xml/unicode.xml'
         data = pandas.read_xml(url, xpath='./charlist/*').replace(['none', 'unassigned'], None).dropna(axis=1, how='all')
         data['codepoint'] = data.dec.str.split('-').apply(lambda row: [int(_) for _ in row]) # [Splitting a string into list and converting the items to int](https://stackoverflow.com/a/52907147/13019084)
         return cls.w3_melt(data=data)
@@ -225,6 +241,7 @@ class Unicode:
 
 
 def main():
+    Autocorrect.main()
     HTML.main()
     Julia.main()
     Latex.main()
