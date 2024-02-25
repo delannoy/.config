@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+
+if [[ -n "${BASH}" ]] && [[ $- == *i* ]]; # [Exit if shell is not running BASH or is non-interactive](https://askubuntu.com/a/1070182)
+    then (( "${_VERBOSE}" >= 3 )) && printf '%s\n' "***$(realpath "${BASH_SOURCE[0]}")***"; # [Reliable way for a Bash script to get the full path to itself [duplicate]](https://stackoverflow.com/a/11114547)
+    else return;
+fi
+
+apt.depends(){
+    # [How can I determine why apt-get will install a package?](https://askubuntu.com/a/447972)
+    # [How to check package dependencies with apt-rdepends](https://www.techrepublic.com/article/how-to-check-package-dependencies-with-apt-rdepends/)
+    apt-rdepends --dotty "${1}" > "${XDG_CONFIG_HOME}/apt/dependencies/${1}.dot"
+    dot -Tpng < "${XDG_CONFIG_HOME}/apt/dependencies/${1}.dot" > "${XDG_CONFIG_HOME}/apt/dependencies/${1}.png"
+}
+
+apt.installAll(){
+    # while read -r ppa; do sudo add-apt-repository --update --yes "${ppa%%#*}"; done < "${XDG_CONFIG_HOME}/apt/ppa"
+    awk '!/^#/ {print $1}' "${XDG_CONFIG_HOME}/apt/"{base,dependency,user} | xargs -- sudo apt install --yes
+}
+
+apt.search(){
+    # [https://manpages.ubuntu.com/manpages/focal/man8/apt-cache.8.html]
+    apt search --names-only "$1"
+}
+
+apt.upgrade(){
+    sudo apt update && sudo apt full-upgrade --auto-remove --purge --yes && sudo apt autoclean
+}
+
+apt.randomizedUpgrade(){
+    ((RANDOM % 997)) || { aptUpgrade; }
+}
+
+apt.unstable(){
+    # [DebianUnstable](https://wiki.debian.org/DebianUnstable)
+    # [Configuring Apt Sources](https://wiki.debian.org/SourcesList#Example_sources.list)
+    printf '%s\n%s' 'deb http://deb.debian.org/debian/ unstable main' 'deb-src http://deb.debian.org/debian/ unstable main' | sudo tee /etc/apt/sources.list
+}
