@@ -1,0 +1,57 @@
+#!/usr/bin/env bash
+
+if [[ -n "${BASH}" ]] && [[ $- == *i* ]];
+    then (( "${_VERBOSE}" >= 3 )) && printf '%s\n' "***$(realpath "${BASH_SOURCE[0]}")***";
+    else return;
+fi
+
+pip.list(){
+    python3 -m pip list --verbose --user
+}
+
+pip.showAll(){
+    # python3 -m pip show "$(python3 -m pip freeze --all | awk 'BEGIN{FS="=="} {printf("%s ", $1)}')";
+    python3 -m pip list --user --format=json | jq --raw-output '.[].name' | xargs -- python3 -m pip show
+}
+
+pip.upgradeAll(){
+    # python3 -m pip upgrade "$(python3 -m pip freeze --all | awk 'BEGIN{FS="=="} {printf("%s ", $1)}')";
+    python3 -m pip list --user --format=json | jq --raw-output '.[].name' | xargs --max-lines=1 -- python3 -m pip install --user --upgrade --upgrade-strategy='eager'
+}
+
+pip.upgradeOutdated(){
+    # [Upgrade all packages in Python using pip](https://www.studytonight.com/python-howtos/upgrade-all-packages-in-python-using-pip)
+    python3 -m pip list --user --outdated --format=json | jq --raw-output '.[].name' | xargs --max-lines=1 -- python3 -m pip install --user --upgrade --upgrade-strategy='eager'
+}
+
+pip.installUser(){
+    python3 -m pip install --user --upgrade --upgrade-strategy='eager' \
+    --requirement="${XDG_CONFIG_HOME}/pip/user/packaging" \
+    --requirement="${XDG_CONFIG_HOME}/pip/user/audio" \
+    --requirement="${XDG_CONFIG_HOME}/pip/user/formatter" \
+    --requirement="${XDG_CONFIG_HOME}/pip/user/io" \
+    --requirement="${XDG_CONFIG_HOME}/pip/user/network" \
+    --requirement="${XDG_CONFIG_HOME}/pip/user/parser" \
+    --requirement="${XDG_CONFIG_HOME}/pip/user/scientific" \
+    --requirement="${XDG_CONFIG_HOME}/pip/user/system" \
+    --requirement="${XDG_CONFIG_HOME}/pip/user/utility" \
+    --requirement="${XDG_CONFIG_HOME}/pip/user/visualization";
+}
+
+pip.dependencies(){
+    awk '!/^[# ]/ {print $1}' $(find pip/user/* -not -path *optional) | xargs
+}
+
+pypi.dependencies(){
+    # [How to list dependencies for a python library without installing? [duplicate]](https://stackoverflow.com/a/50424967/13019084)
+    local 'package';
+    _args 'package';
+    jq --raw-output '.info.requires_dist[]' <(curl --silent "https://pypi.org/pypi/${package}/json");
+}
+
+pypi.search(){
+    # [JSON API for PyPi - how to list packages?](https://stackoverflow.com/a/23860244/13019084)
+    local 'package';
+    _args 'package';
+    pup "a[href*=${package}] text{}" -f <(curl --silent 'https://pypi.org/simple/');
+}
