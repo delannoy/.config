@@ -27,3 +27,6 @@ pipx            # [Install and Run Python Applications in Isolated Environments]
                 # ├── tomli                  A lil' TOML parser
                 # └── userpath!=1.9.0,>=1.6  Cross-platform tool for adding locations to the user PATH
                 #     └── click              Composable command line interface toolkit
+
+uv              # [An extremely fast Python package installer and resolver, written in Rust.](https://github.com/astral-sh/uv)
+                # uv      An extremely fast Python package installer and resolver, written in Rust.
