@@ -5,6 +5,7 @@ htop        # [htop is a cross-platform interactive process viewer](https://gith
 kdeconnect  # [Multi-platform app that allows your devices to communicate](https://github.com/KDE/kdeconnect-kde)
 mediainfo   # [Convenient unified display of the most relevant technical and tag data for video and audio files. [https://MediaArea.net/MediaInfo]](https://github.com/MediaArea/MediaInfo)
 nload       # [Real-time network traffic monitor](https://github.com/rolandriegel/nload)
+nomacs      # [nomacs is a free image viewer for windows, linux, and mac systems](https://github.com/nomacs/nomacs)
 pdfgrep     # [pdfgrep is a tool to search text in PDF files. It works similarly to grep. See [pdfgrep.org] for details](https://gitlab.com/pdfgrep/pdfgrep)
 rmlint      # [Extremely fast tool to remove duplicates and other lint from your filesystem](https://github.com/sahib/rmlint)
 sshfs       # [A network filesystem client to connect to SSH servers](https://github.com/libfuse/sshfs)
