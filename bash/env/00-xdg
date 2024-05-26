@@ -1,9 +1,6 @@
 #!/usr/bin/env bash
 
-if [[ -n "${BASH}" ]] && shopt -q 'login_shell';
-    then (( "${_VERBOSE}" >= 3 )) && printf '%s\n' "***$(realpath "${BASH_SOURCE[0]}")***";
-    else return;
-fi
+_log 'DEBUG' "$(realpath "${BASH_SOURCE[0]}")";
 
 # [XDG Base Directory Specification](https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html#variables)
 # [XDG Base Directory](https://wiki.archlinux.org/index.php/XDG_Base_Directory)
@@ -14,4 +11,4 @@ export XDG_CONFIG_HOME="${HOME}/.config" # contains user-specific configuration 
 export XDG_DATA_DIRS='/usr/local/share/:/usr/share/' # preference-ordered set of base directories to search for data files in addition to the $XDG_DATA_HOME
 export XDG_DATA_HOME="${HOME}/.local/share" # contains user-specific data files [$XDG_DATA_HOME is considered more important than any of the base directories defined by $XDG_DATA_DIRS]
 export XDG_STATE_HOME="${HOME}/.local/state" # contains user-specific state files that should persist between (application) restarts
-export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-"/tmp/${USER}/runtime"}" && mkdir --parents "${XDG_RUNTIME_DIR}" && chmod 700 "${XDG_RUNTIME_DIR}" # contains user-specific non-essential runtime files and other file objects (such as sockets, named pipes, ...) # [Good default for XDG_RUNTIME_DIR?](https://serverfault.com/a/727994)
+export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-"/run/user/${UID}"}" # contains user-specific non-essential runtime files and other file objects (such as sockets, named pipes, ...)
