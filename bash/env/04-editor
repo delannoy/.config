@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-_log 'DEBUG' "$(realpath "${BASH_SOURCE[0]}")";
+log 'DEBUG' "$(realpath "${BASH_SOURCE[0]}")";
 
 export EDITOR='/usr/bin/vim'; # [The editor program called by sudoedit, vipw, and other such programs when you tell them to edit a file](https://en.wikibooks.org/wiki/Guide_to_Unix/Environment_Variables#EDITOR)
 

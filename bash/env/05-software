@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-_log 'DEBUG' "$(realpath "${BASH_SOURCE[0]}")";
+log 'DEBUG' "$(realpath "${BASH_SOURCE[0]}")";
 
 # [XDG Base Directory](https://wiki.archlinux.org/title/XDG_Base_Directory#Supported)
 # [Notes on moving various dotfiles](https://github.com/grawity/dotfiles/blob/master/.dotfiles.notes)

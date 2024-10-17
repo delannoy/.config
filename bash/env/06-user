@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
-_log 'DEBUG' "$(realpath "${BASH_SOURCE[0]}")";
+log 'DEBUG' "$(realpath "${BASH_SOURCE[0]}")";
 
-export _DISTROVERSION="$(source '/etc/os-release' 2>/dev/null && echo "${ID}${VERSION_ID}" || lsb_release --short --id --release 2>/dev/null | tr -d '\n')"; # [https://unix.stackexchange.com/a/6348] [https://unix.stackexchange.com/a/25131]
+export DISTRO_VERSION="$(source '/etc/os-release' 2>/dev/null && echo "${ID}${VERSION_ID}" || lsb_release --short --id --release 2>/dev/null | tr -d '\n')"; # [https://unix.stackexchange.com/a/6348] [https://unix.stackexchange.com/a/25131]
 
-export _STRFTIME='+%Y.%m.%d-%H.%M.%S.%3N'; # [date(1)](https://man7.org/linux/man-pages/man1/date.1.html#DESCRIPTION) # [Command to get time in milliseconds](https://stackoverflow.com/a/18704121)
+export STRFTIME='+%Y.%m.%d-%H.%M.%S.%3N'; # [date(1)](https://man7.org/linux/man-pages/man1/date.1.html#DESCRIPTION) # [Command to get time in milliseconds](https://stackoverflow.com/a/18704121)
 # %Y    year
 # %m    month (01..12)
 # %d    day of month (e.g., 01)
@@ -13,9 +13,9 @@ export _STRFTIME='+%Y.%m.%d-%H.%M.%S.%3N'; # [date(1)](https://man7.org/linux/ma
 # %S    second (00..60)
 # %N    nanoseconds (000000000..999999999)
 
-export _GITSTATUSPROMPT='true';
+export GIT_STATUS_PROMPT='true';
 
-export _RSYNCOF='%i %o %b/%7''l %B %L %C %n'; # [rsyncd log format](https://download.samba.org/pub/rsync/rsyncd.conf.html#log_format)
+export RSYNCOF='%i %o %b/%7''l %B %L %C %n'; # [rsyncd log format](https://download.samba.org/pub/rsync/rsyncd.conf.html#log_format)
 # An optional numeric field width may also be specified between the percent and the escape letter (e.g. "%-50n %8l %07p").
 # In addition, one or more apostrophes may be specified prior to a numerical escape to indicate that the numerical value should be made more human-readable.
 # The 3 supported levels are the same as for the --human-readable command-line option
@@ -32,6 +32,6 @@ export _RSYNCOF='%i %o %b/%7''l %B %L %C %n'; # [rsyncd log format](https://down
 
 # export _SSHCONFIG="${XDG_CONFIG_HOME}/ssh/config";
 
-export _USERAGENT="$(command -v 'yt-dlp' >/dev/null && yt-dlp --dump-user-agent || echo 'firefox')"; # [Display the current browser identification](https://github.com/ytdl-org/youtube-dl#options)
+export USER_AGENT='mozilla'; # https://stackoverflow.com/a/29546832/13019084 # export USER_AGENT="$(command -v 'yt-dlp' >/dev/null && yt-dlp --dump-user-agent || echo 'mozilla')"; # [Display the current browser identification](https://github.com/ytdl-org/youtube-dl#options)
 
-export _VENV_DIR="${XDG_DATA_HOME}/venv";
+export VENV_DIR="${XDG_DATA_HOME}/venv";
