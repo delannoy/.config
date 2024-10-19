@@ -1,9 +1,6 @@
 #!/usr/bin/env bash
 
-if [[ -n "${BASH}" ]] && [[ $- == *i* ]];
-    then (( "${_VERBOSE}" >= 3 )) && printf '%s\n' "***$(realpath "${BASH_SOURCE[0]}")***";
-    else return;
-fi
+log 'DEBUG' "$(realpath "${BASH_SOURCE[0]}")";
 
 alias cal='ncal -bw'
 # -b        Use oldstyle format for ncal output.
