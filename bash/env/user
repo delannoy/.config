@@ -30,8 +30,6 @@ export RSYNCOF='%i %o %b/%7''l %B %L %C %n'; # [rsyncd log format](https://downl
 # %c    the total size of the block checksums received for the basis file (only when sending)
 # %n    the filename (short form; trailing "/" on dir)
 
-# export _SSHCONFIG="${XDG_CONFIG_HOME}/ssh/config";
-
 export USER_AGENT='mozilla'; # https://stackoverflow.com/a/29546832/13019084 # export USER_AGENT="$(command -v 'yt-dlp' >/dev/null && yt-dlp --dump-user-agent || echo 'mozilla')"; # [Display the current browser identification](https://github.com/ytdl-org/youtube-dl#options)
 
 export VENV_DIR="${XDG_DATA_HOME}/venv";
