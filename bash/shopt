@@ -1,112 +1,109 @@
 #!/usr/bin/env bash
 
-if [[ -n "${BASH}" ]] && [[ $- == *i* ]]; # [Exit if shell is not running BASH or is non-interactive](https://askubuntu.com/a/1070182)
-    then (( "${_VERBOSE}" >= 2 )) && printf '%s\n' "***$(realpath "${BASH_SOURCE[0]}")***"; # [Reliable way for a Bash script to get the full path to itself [duplicate]](https://stackoverflow.com/a/11114547)
-    else return;
-fi
+log 'DEBUG' "$(realpath "${BASH_SOURCE[0]}")";
 
 # [Modifying Shell Behavior](https://www.gnu.org/software/bash/manual/html_node/Modifying-Shell-Behavior.html)
 
-_set(){
+set.user(){
     # [The Set Builtin](https://www.gnu.org/software/bash/manual/html_node/The-Set-Builtin.html)
-    # [The set builtin command](https://wiki.bash-hackers.org/commands/builtin/set)
-    set -o pipefail     # If set, the exit code from a pipeline is different from the normal ("last command in pipeline") behaviour: TRUE when no command failed, FALSE when something failed (code of the rightmost command that failed).
-    set -o notify       # Don't wait for the next prompt to print when showing the reports for a terminated background job (only with job control).
-    # set -o allexport  # Automatically mark new and altered variables to be exported to subsequent environments.
-    # set -o errexit    # When set, the shell exits when a simple command in a command list exits non-zero (FALSE). This is not done in situations, where the exit code is already checked (if, while, until, ||, &&)
-    # set -o errtrace   # ERR-traps are inherited by shell functions, command substitutions, and commands executed in a subshell environment.
-    # set -o functrace  # DEBUG- and RETURN-traps are inherited by subsequent environments, like -E for ERR trap.
-    # set -o ignoreeof  # The effect is as if the shell command IGNOREEOF=10 had been executed. See [shell variables](https://wiki.bash-hackers.org/syntax/shellvars).
-    # set -o keyword    # Allows to place environment-assignments everywhere in the commandline, not only in front of the called command.
-    # set -o noclobber  # Don't overwrite files on redirection operations. You can override that by specifying the >| redirection operator when needed. See [redirection](https://wiki.bash-hackers.org/syntax/redirection)
-    # set -o noglob     # Disable [pathname expansion](https://wiki.bash-hackers.org/syntax/expansion/globs) (globbing)
-    # set -o nounset    # Treat unset variables as an error when performing parameter expansion. Non-interactive shells exit on this error.
-    # set -o onecmd     # Exit after reading and executing one command.
-    # set -o physical   # Don't follow symlinks when changing directories - use the physical filesystem structure.
-    # set -o posix      # When set, Bash runs in POSIX mode.
-    # set -o privileged # Turn on privileged mode. In this mode, the $BASH_ENV and $ENV files are not processed, shell functions are not inherited from the environment, and the SHELLOPTS, BASHOPTS, CDPATH and GLOBIGNORE variables, if they appear in the environment, are ignored.
-    # set -o verbose    # Print shell input lines as they are read - useful for debugging.
-    # set -o vi         # Enables a vi-style command line editing interface.
-    # set -o xtrace     # Print commands just before execution - with all expansions and substitutions done, and words marked - useful for debugging.
+    # [The set builtin command](https://bash-hackers.docs.cern.ch/commands/builtin/set)
+    set -o pipefail;    # If set, the exit code from a pipeline is different from the normal ("last command in pipeline") behaviour: TRUE when no command failed, FALSE when something failed (code of the rightmost command that failed).
+    set -o notify;      # Don't wait for the next prompt to print when showing the reports for a terminated background job (only with job control).
+    # set -o allexport; # Automatically mark new and altered variables to be exported to subsequent environments.
+    # set -o errexit;   # When set, the shell exits when a simple command in a command list exits non-zero (FALSE). This is not done in situations, where the exit code is already checked (if, while, until, ||, &&)
+    # set -o errtrace;  # ERR-traps are inherited by shell functions, command substitutions, and commands executed in a subshell environment.
+    # set -o functrace; # DEBUG- and RETURN-traps are inherited by subsequent environments, like -E for ERR trap.
+    # set -o ignoreeof; # The effect is as if the shell command IGNOREEOF=10 had been executed. See [shell variables](https://bash-hackers.docs.cern.ch/syntax/shellvars).
+    # set -o keyword;   # Allows to place environment-assignments everywhere in the commandline, not only in front of the called command.
+    # set -o noclobber; # Don't overwrite files on redirection operations. You can override that by specifying the >| redirection operator when needed. See [redirection](https://bash-hackers.docs.cern.ch/syntax/redirection)
+    # set -o noglob;    # Disable [pathname expansion](https://bash-hackers.docs.cern.ch/syntax/expansion/globs) (globbing)
+    # set -o nounset;   # Treat unset variables as an error when performing parameter expansion. Non-interactive shells exit on this error.
+    # set -o onecmd;    # Exit after reading and executing one command.
+    # set -o physical;  # Don't follow symlinks when changing directories - use the physical filesystem structure.
+    # set -o posix;     # When set, Bash runs in POSIX mode.
+    # set -o privileged;# Turn on privileged mode. In this mode, the $BASH_ENV and $ENV files are not processed, shell functions are not inherited from the environment, and the SHELLOPTS, BASHOPTS, CDPATH and GLOBIGNORE variables, if they appear in the environment, are ignored.
+    # set -o verbose;   # Print shell input lines as they are read - useful for debugging.
+    # set -o vi;        # Enables a vi-style command line editing interface.
+    # set -o xtrace;    # Print commands just before execution - with all expansions and substitutions done, and words marked - useful for debugging.
 }
 
-_setDefaults(){
+set.default(){
     # [The Set Builtin](https://www.gnu.org/software/bash/manual/html_node/The-Set-Builtin.html)
-    # [The set builtin command](https://wiki.bash-hackers.org/commands/builtin/set)
-    set -o braceexpand  # The shell performs [brace expansion](https://wiki.bash-hackers.org/syntax/expansion/brace) This is on by default.
-    set -o emacs        # Use an emacs-style command line editing interface. This is enabled by default when the shell is interactive, unless the shell is started with –noediting option.
-    set -o hashall      # Remembers the location of commands when they're called (hashing). Enabled by default.
-    set -o histexpand   # Enable !-style history expansion. Defaults to on for interactive shells.
-    set -o history      # If set, command historization is done (enabled by default on interactive shells).
-    set -o monitor      # Monitor mode. With job control, a short descriptive line is printed when a backgroud job ends. Default is "on" for interactive shells (with job control).
+    # [The set builtin command](https://bash-hackers.docs.cern.ch/commands/builtin/set)
+    set -o braceexpand; # The shell performs [brace expansion](https://bash-hackers.docs.cern.ch/syntax/expansion/brace) This is on by default.
+    set -o emacs;       # Use an emacs-style command line editing interface. This is enabled by default when the shell is interactive, unless the shell is started with –noediting option.
+    set -o hashall;     # Remembers the location of commands when they're called (hashing). Enabled by default.
+    set -o histexpand;  # Enable !-style history expansion. Defaults to on for interactive shells.
+    set -o history;     # If set, command historization is done (enabled by default on interactive shells).
+    set -o monitor;     # Monitor mode. With job control, a short descriptive line is printed when a backgroud job ends. Default is "on" for interactive shells (with job control).
 }
 
-_shopt(){
+shopt.user(){
     # [The Shopt Builtin](https://www.gnu.org/software/bash/manual/html_node/The-Shopt-Builtin.html)
-    # [The shopt builtin command](https://wiki.bash-hackers.org/commands/builtin/shopt)
-    shopt -s autocd                     # If set, a command name that is the name of a directory is executed as if it were the argument to the cd command.
-    shopt -s cdable_vars                # Treat every non-directory argument to the cd-command as variable name containing a directory to cd into.
-    shopt -s cdspell                    # If set, minor errors in the spelling of a directory component in a cd command will be corrected. The errors checked for are transposed characters, a missing character, and one character too many. If a correction is found, the corrected file name is printed, and the command proceeds.
-    shopt -s checkhash                  # If set, Bash checks that a command found in the hash table exists before trying to execute it. If a hashed command no longer exists, a normal path search is performed.
-    shopt -s checkjobs                  # If set, Bash lists the status of any stopped and running jobs before exiting an interactive shell. If any jobs are running, this causes the exit to be deferred until a second exit is attempted without an intervening command. The shell always postpones exiting if any jobs are stopped.
-    shopt -s checkwinsize               # If set, Bash checks the window size after each command and, if necessary, updates the values of the variables LINES and COLUMNS.
-    shopt -s direxpand                  # If set, bash replaces directory names with the results of word expansion when performing filename completion. This changes the contents of the readline editing buffer. If not set, bash attempts to preserve what the user typed.
-    shopt -s dirspell                   # If set, Bash will perform spelling corrections on directory names to match a glob.
-    shopt -s dotglob                    # If set, Bash includes filenames beginning with a . (dot) in the results of [pathname expansion](https://wiki.bash-hackers.org/syntax/expansion/globs). [dotglob](https://mywiki.wooledge.org/glob#dotglob)
-    shopt -s extglob                    # If set, the extended pattern matching features are enabled. See the important note below under [Parser configurations](https://wiki.bash-hackers.org/internals/shell_options#parser_configurations). [extglob](https://mywiki.wooledge.org/glob#extglob)
-    shopt -s globstar                   # If set, recursive globbing with ** is enabled. [globstar (since bash 4.0-alpha)](https://mywiki.wooledge.org/glob#globstar_.28since_bash_4.0-alpha.29)
-    shopt -s histappend                 # If set, the history list is appended to the file named by the value of the HISTFILE variable when the shell exits, rather than overwriting the file.
-    shopt -s histreedit                 # If set, and readline is being used, a user is given the opportunity to re-edit a failed history substitution.
-    shopt -s histverify                 # Allow to review a history substitution result by loading the resulting line into the editing buffer, rather than directly executing it.
-    shopt -s nocaseglob                 # If set, Bash matches filenames in a case-insensitive fashion when performing pathname expansion. [nocaseglob (since bash 2.02-alpha1)](https://mywiki.wooledge.org/glob#nocaseglob_.28since_bash_2.02-alpha1.29)
-    shopt -s nocasematch                # If set, Bash matches patterns in a case-insensitive fashion when performing matching while executing case or [[ conditional commands. [nocasematch](https://mywiki.wooledge.org/glob#nocasematch)
-    shopt -s no_empty_cmd_completion    # If set, and readline is being used, Bash will not attempt to search the PATH for possible completions when completion is attempted on an empty line.
-    shopt -s shift_verbose              # If set, the shift builtin prints an error message when the shift count exceeds the number of positional parameters.
-    # shopt -s assoc_expand_once        # If set, Bash attempts to expand associative array options only once.
-    # shopt -s compat31                 # Compatiblity mode for Bash 3.1
-    # shopt -s compat32                 # Compatiblity mode for Bash 3.2
-    # shopt -s compat40                 # Compatiblity mode for Bash 4.0
-    # shopt -s compat41                 # Compatiblity mode for Bash 4.1
-    # shopt -s compat42                 # Compatiblity mode for Bash 4.2
-    # shopt -s compat43                 # Compatiblity mode for Bash 4.3
-    # shopt -s compat44                 # Compatiblity mode for Bash 4.4
-    # shopt -s execfail                 # If set, a non-interactive shell will not exit if it cannot execute the file specified as an argument to the exec-builtin command. An interactive shell does not exit if exec fails.
-    # shopt -s extdebug                 # If set, behavior intended for use by debuggers is enabled.
-    # shopt -s failglob                 # If set, patterns which fail to match filenames during pathname expansion result in an error message.
-    # shopt -s gnu_errfmt               # If set, shell error messages are written in the "standard GNU error message format".
-    # shopt -s huponexit                # If set, Bash will send the SIGHUP signal to all jobs when an interactive login shell exits.
-    # shopt -s lastpipe                 # If set, and job control is not active, the shell runs the last command of a pipeline not executed in the background in the current shell environment.
-    # shopt -s lithist                  # If set, and the cmdhist option is enabled, multi-line commands are saved to the history with embedded newlines rather than using semicolon separators where possible.
-    # shopt -s localvar_inherit         # If this option is set, a local variable inherits the value of a variable with the same name at the nearest preceding scope.
-    # shopt -s mailwarn                 # If set, and a file that Bash is checking for mail has been accessed since the last time it was checked, the message "The mail in mailfile has been read" is displayed.
-    # shopt -s nullglob                 # If set, Bash allows patterns which match no files to expand to a null string, rather than themselves.
-    # shopt -s syslog_history           # If set, the shell history is sent to syslog. This option is undocumented and available only if the shell supports syslog.
-    # shopt -s xpg_echo                 # If set, the echo-builtin command expands backslash-escape sequences by default (POSIX, SUS, XPG).
+    # [The shopt builtin command](https://bash-hackers.docs.cern.ch/commands/builtin/shopt)
+    shopt -s autocd;                    # If set, a command name that is the name of a directory is executed as if it were the argument to the cd command.
+    shopt -s cdable_vars;               # Treat every non-directory argument to the cd-command as variable name containing a directory to cd into.
+    shopt -s cdspell;                   # If set, minor errors in the spelling of a directory component in a cd command will be corrected. The errors checked for are transposed characters, a missing character, and one character too many. If a correction is found, the corrected file name is printed, and the command proceeds.
+    shopt -s checkhash;                 # If set, Bash checks that a command found in the hash table exists before trying to execute it. If a hashed command no longer exists, a normal path search is performed.
+    shopt -s checkjobs;                 # If set, Bash lists the status of any stopped and running jobs before exiting an interactive shell. If any jobs are running, this causes the exit to be deferred until a second exit is attempted without an intervening command. The shell always postpones exiting if any jobs are stopped.
+    shopt -s checkwinsize;              # If set, Bash checks the window size after each command and, if necessary, updates the values of the variables LINES and COLUMNS.
+    shopt -s direxpand;                 # If set, bash replaces directory names with the results of word expansion when performing filename completion. This changes the contents of the readline editing buffer. If not set, bash attempts to preserve what the user typed.
+    shopt -s dirspell;                  # If set, Bash will perform spelling corrections on directory names to match a glob.
+    shopt -s dotglob;                   # If set, Bash includes filenames beginning with a . (dot) in the results of [pathname expansion](https://bash-hackers.docs.cern.ch/syntax/expansion/globs). [dotglob](https://mywiki.wooledge.org/glob#dotglob)
+    shopt -s extglob;                   # If set, the extended pattern matching features are enabled. See the important note below under [Parser configurations](https://bash-hackers.docs.cern.ch/internals/shell_options#parser_configurations). [extglob](https://mywiki.wooledge.org/glob#extglob)
+    shopt -s globstar;                  # If set, recursive globbing with ** is enabled. [globstar (since bash 4.0-alpha)](https://mywiki.wooledge.org/glob#globstar_.28since_bash_4.0-alpha.29)
+    shopt -s histappend;                # If set, the history list is appended to the file named by the value of the HISTFILE variable when the shell exits, rather than overwriting the file.
+    shopt -s histreedit;                # If set, and readline is being used, a user is given the opportunity to re-edit a failed history substitution.
+    shopt -s histverify;                # Allow to review a history substitution result by loading the resulting line into the editing buffer, rather than directly executing it.
+    shopt -s nocaseglob;                # If set, Bash matches filenames in a case-insensitive fashion when performing pathname expansion. [nocaseglob (since bash 2.02-alpha1)](https://mywiki.wooledge.org/glob#nocaseglob_.28since_bash_2.02-alpha1.29)
+    shopt -s nocasematch;               # If set, Bash matches patterns in a case-insensitive fashion when performing matching while executing case or [[ conditional commands. [nocasematch](https://mywiki.wooledge.org/glob#nocasematch)
+    shopt -s no_empty_cmd_completion;   # If set, and readline is being used, Bash will not attempt to search the PATH for possible completions when completion is attempted on an empty line.
+    shopt -s shift_verbose;             # If set, the shift builtin prints an error message when the shift count exceeds the number of positional parameters.
+    # shopt -s assoc_expand_once;       # If set, Bash attempts to expand associative array options only once.
+    # shopt -s compat31;                # Compatiblity mode for Bash 3.1
+    # shopt -s compat32;                # Compatiblity mode for Bash 3.2
+    # shopt -s compat40;                # Compatiblity mode for Bash 4.0
+    # shopt -s compat41;                # Compatiblity mode for Bash 4.1
+    # shopt -s compat42;                # Compatiblity mode for Bash 4.2
+    # shopt -s compat43;                # Compatiblity mode for Bash 4.3
+    # shopt -s compat44;                # Compatiblity mode for Bash 4.4
+    # shopt -s execfail;                # If set, a non-interactive shell will not exit if it cannot execute the file specified as an argument to the exec-builtin command. An interactive shell does not exit if exec fails.
+    # shopt -s extdebug;                # If set, behavior intended for use by debuggers is enabled.
+    # shopt -s failglob;                # If set, patterns which fail to match filenames during pathname expansion result in an error message.
+    # shopt -s gnu_errfmt;              # If set, shell error messages are written in the "standard GNU error message format".
+    # shopt -s huponexit;               # If set, Bash will send the SIGHUP signal to all jobs when an interactive login shell exits.
+    # shopt -s lastpipe;                # If set, and job control is not active, the shell runs the last command of a pipeline not executed in the background in the current shell environment.
+    # shopt -s lithist;                 # If set, and the cmdhist option is enabled, multi-line commands are saved to the history with embedded newlines rather than using semicolon separators where possible.
+    # shopt -s localvar_inherit;        # If this option is set, a local variable inherits the value of a variable with the same name at the nearest preceding scope.
+    # shopt -s mailwarn;                # If set, and a file that Bash is checking for mail has been accessed since the last time it was checked, the message "The mail in mailfile has been read" is displayed.
+    # shopt -s nullglob;                # If set, Bash allows patterns which match no files to expand to a null string, rather than themselves.
+    # shopt -s syslog_history;          # If set, the shell history is sent to syslog. This option is undocumented and available only if the shell supports syslog.
+    # shopt -s xpg_echo;                # If set, the echo-builtin command expands backslash-escape sequences by default (POSIX, SUS, XPG).
 }
 
-_shoptDefaults(){
+shopt.default(){
     # [The Shopt Builtin](https://www.gnu.org/software/bash/manual/html_node/The-Shopt-Builtin.html)
-    # [The shopt builtin command](https://wiki.bash-hackers.org/commands/builtin/shopt)
-    shopt -s checkwinsize           # If set, Bash checks the window size after each command and, if necessary, updates the values of the variables [LINES](https://wiki.bash-hackers.org/syntax/shellvars#lines) and [COLUMNS](https://wiki.bash-hackers.org/syntax/shellvars#columns).
-    shopt -s cmdhist                # If set, Bash attempts to save all lines of a multiple-line command in the same history entry. This allows easy re-editing of multi-line commands.
-    shopt -s complete_fullquote     # If set, Bash quotes all shell metacharacters in filenames and directory names when performing completion. If not set, Bash removes metacharacters such as the dollar sign from the set of characters that will be quoted in completed filenames when these metacharacters appear in shell variable references in words to be completed. This means that dollar signs in variable names that expand to directories will not be quoted; however, any dollar signs appearing in filenames will not be quoted, either. This is active only when bash is using backslashes to quote completed filenames. This variable is set by default, which is the default Bash behavior in versions through 4.2.
-    shopt -s expand_aliases         # If set, aliases are expanded. This option is enabled by default for interactive shells.
-    shopt -s extquote               # If set, $'string' and $"string" quoting is performed within [parameter expansions](https://wiki.bash-hackers.org/syntax/pe) enclosed in double quotes. See the important note below under [Parser configurations](https://wiki.bash-hackers.org/internals/shell_options#parser_configurations).
-    shopt -s force_fignore          # If set, the suffixes specified by the [FIGNORE](https://wiki.bash-hackers.org/syntax/shellvars#fignore) shell variable cause words to be ignored when performing word completion even if the ignored words are the only possible completions. This option is enabled by default.
-    shopt -s globasciiranges        # If set, range expressions used in pattern matching behave as if in the traditional C locale when performing comparisons. That is, the current locale's collating sequence is not taken into account, so b will not collate between A and B, and upper-case and lower-case ASCII characters will collate together.
-    shopt -s hostcomplete           # If set, Bash completion also completes hostnames. On by default.
-    shopt -s interactive_comments   # Allow commenting in interactive shells, on by default.
-    shopt -s progcomp               # If set, the programmable completion facilities are enabled. This option is enabled by default.
-    shopt -s promptvars             # If set, prompt strings undergo parameter expansion, command substitution, arithmetic expansion, and quote removal after being expanded using the prompt special sequences. This option is enabled by default.
-    shopt -s sourcepath             # If set, the source builtin command uses the value of PATH to find the directory containing the file supplied as an argument. This option is enabled by default.
+    # [The shopt builtin command](https://bash-hackers.docs.cern.ch/commands/builtin/shopt)
+    shopt -s checkwinsize;          # If set, Bash checks the window size after each command and, if necessary, updates the values of the variables [LINES](https://bash-hackers.docs.cern.ch/syntax/shellvars#lines) and [COLUMNS](https://bash-hackers.docs.cern.ch/syntax/shellvars#columns).
+    shopt -s cmdhist;               # If set, Bash attempts to save all lines of a multiple-line command in the same history entry. This allows easy re-editing of multi-line commands.
+    shopt -s complete_fullquote;    # If set, Bash quotes all shell metacharacters in filenames and directory names when performing completion. If not set, Bash removes metacharacters such as the dollar sign from the set of characters that will be quoted in completed filenames when these metacharacters appear in shell variable references in words to be completed. This means that dollar signs in variable names that expand to directories will not be quoted; however, any dollar signs appearing in filenames will not be quoted, either. This is active only when bash is using backslashes to quote completed filenames. This variable is set by default, which is the default Bash behavior in versions through 4.2.
+    shopt -s expand_aliases;        # If set, aliases are expanded. This option is enabled by default for interactive shells.
+    shopt -s extquote;              # If set, $'string' and $"string" quoting is performed within [parameter expansions](https://bash-hackers.docs.cern.ch/syntax/pe) enclosed in double quotes. See the important note below under [Parser configurations](https://bash-hackers.docs.cern.ch/internals/shell_options#parser_configurations).
+    shopt -s force_fignore;         # If set, the suffixes specified by the [FIGNORE](https://bash-hackers.docs.cern.ch/syntax/shellvars#fignore) shell variable cause words to be ignored when performing word completion even if the ignored words are the only possible completions. This option is enabled by default.
+    shopt -s globasciiranges;       # If set, range expressions used in pattern matching behave as if in the traditional C locale when performing comparisons. That is, the current locale's collating sequence is not taken into account, so b will not collate between A and B, and upper-case and lower-case ASCII characters will collate together.
+    shopt -s hostcomplete;          # If set, Bash completion also completes hostnames. On by default.
+    shopt -s interactive_comments;  # Allow commenting in interactive shells, on by default.
+    shopt -s progcomp;              # If set, the programmable completion facilities are enabled. This option is enabled by default.
+    shopt -s promptvars;            # If set, prompt strings undergo parameter expansion, command substitution, arithmetic expansion, and quote removal after being expanded using the prompt special sequences. This option is enabled by default.
+    shopt -s sourcepath;            # If set, the source builtin command uses the value of PATH to find the directory containing the file supplied as an argument. This option is enabled by default.
 }
 
-_stty(){
+stty.user(){
     # [https://www.gnu.org/software/coreutils/manual/html_node/stty-invocation.html]
     # [https://www.gnu.org/software/coreutils/manual/html_node/Characters.html]
-    stty stop ''
+    stty stop '';
 }
 
-_set
-_shopt
-_stty
+set.user
+shopt.user
+stty.user
