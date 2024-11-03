@@ -66,3 +66,8 @@ mplhep          # [Extended histogram plots on top of matplotlib and HEP compati
                 # ├── packaging                       Core utilities for Python packages
                 # └── uhi>=0.2.0                      Unified Histogram Interface: tools to help library authors work with histograms
                 #     └── numpy>=1.13.3               Fundamental package for array computing in Python
+
+plotly          # [The interactive graphing library for Python ✨ This project now includes Plotly Express!](https://github.com/plotly/plotly.py)
+                # plotly               An open-source, interactive data visualization library for Python
+                # ├── packaging        Core utilities for Python packages
+                # └── tenacity>=6.2.0  Retry code until it succeeds
