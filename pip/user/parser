@@ -14,6 +14,9 @@ dateparser          # [Python parser for human readable dates](https://github.co
 lxml                # [lxml is the most feature-rich and easy-to-use library for processing XML and HTML in the Python language](https://github.com/lxml/lxml)
                     # lxml    Powerful and Pythonic XML processing library combining libxml2/libxslt with the ElementTree API.
 
+orjson              # [Fast, correct Python JSON library supporting dataclasses, datetimes, and numpy](https://github.com/ijl/orjson)
+                    # orjson  Fast, correct Python JSON library supporting dataclasses, datetimes, and numpy
+
 pydantic            # [Data parsing and validation using Python type hints](https://github.com/pydantic/pydantic)
                     # pydantic                                  Data validation using Python type hints
                     # ├── annotated-types>=0.4.0                Reusable constraint types to use with typing.Annotated
