@@ -4,55 +4,57 @@ This repo aims to organize dotfiles into the `$XDG_CONFIG_HOME` directory, follo
 It relies heavily on information collected in the [ArchWiki XDG Base Directory page](https://wiki.archlinux.org/title/XDG_Base_Directory).
 A private git submodule is used to version control private config files.
 
-# Installation
+## Installation
 
 ```bash
-# set `$XDG_CONFIG_HOME` to its default location (`$HOME/.config`)
+# set `XDG_CONFIG_HOME` to its default location (`$HOME/.config`):
 export XDG_CONFIG_HOME="${HOME}/.config"
 
-# if it already exists, rename `$XDG_CONFIG_HOME` directory to `$XDG_CONFIG_HOME.bkp`; otherwise, create the backup directory
-[[ -d "${XDG_CONFIG_HOME}" ]] && mv --verbose "${XDG_CONFIG_HOME}" "${XDG_CONFIG_HOME}.bkp" || mkdir --parents "${XDG_CONFIG_HOME}.bkp"
+# if it already exists, rename `$XDG_CONFIG_HOME` directory to `$XDG_CONFIG_HOME_bkp`; otherwise, create the backup directory:
+[[ -d "${XDG_CONFIG_HOME}" ]] && mv --verbose "${XDG_CONFIG_HOME}" "${XDG_CONFIG_HOME}_bkp" || mkdir --parents --verbose "${XDG_CONFIG_HOME}_bkp"
 
-# move all hidden files or directories (dotfiles) in `$HOME` to `$XDG_CONFIG_HOME.bkp`
-find "${HOME}" -name '.*' | xargs mv --verbose --target-directory="${XDG_CONFIG_HOME}.bkp"
+# move all hidden files and directories (dotfiles) in `$HOME` to `$XDG_CONFIG_HOME_bkp` (except `.cache` and `.local` directories):
+for i in "${HOME}/"[.]*; do [[ ! "${i##*/}" =~ .cache|.local ]] && mv --verbose --target-directory="${XDG_CONFIG_HOME}_bkp" "${i}"; done
 
-# clone repo and private submodule(s) into `$XDG_CONFIG_HOME`
+# clone repo and private submodule(s) into `$XDG_CONFIG_HOME`:
 sudo apt update && sudo apt install git-all --yes
-user='delannoy'
+github_user="${USER}"
 private_identity_file='/path/to/identity_file'
-# [How to specify the private SSH-key to use when executing shell command on Git?](https://stackoverflow.com/a/29754018/13019084)
-export GIT_SSH_COMMAND="ssh -i ${private_identity_file} -o IdentitiesOnly=yes"
-# [Using Git Submodules for Private Content](https://www.taniarascia.com/git-submodules-private-content/)
-git clone --recurse-submodules "git@github.com:${user}/.config.git" "${XDG_CONFIG_HOME}"
+export GIT_SSH_COMMAND="ssh -o IdentityFile=${private_identity_file} -o IdentitiesOnly=yes" # [How to specify the private SSH-key to use when executing shell command on Git?](https://stackoverflow.com/a/29754018/13019084)
+git clone --recurse-submodules "git@github.com:${github_user}/.config.git" "${XDG_CONFIG_HOME}" # [Using Git Submodules for Private Content](https://www.taniarascia.com/git-submodules-private-content/)
 
-# symlink startup files for login and interactive shells to their expected locations
+# symlink startup files for login and interactive shells to their expected locations:
 ln --symbolic "${XDG_CONFIG_HOME}/bash/profile" "${HOME}/.bash_profile"
 ln --symbolic "${XDG_CONFIG_HOME}/ssh" "${HOME}/.ssh"
 
-# move contents of `${XDG_CONFIG_HOME}.bkp` back to `$XDG_CONFIG_HOME`
-mv --verbose --interactive "${XDG_CONFIG_HOME}.bkp/"* "${XDG_CONFIG_HOME}/" && rmdir "${XDG_CONFIG_HOME}.bkp"
+# move contents of `${XDG_CONFIG_HOME}_bkp` back to `$XDG_CONFIG_HOME`:
+mv --verbose --interactive "${XDG_CONFIG_HOME}_bkp/"* "${XDG_CONFIG_HOME}/" && rmdir "${XDG_CONFIG_HOME}_bkp"
 ```
 
 ## tl;dr
+
 ```bash
-backup_config(){
-    export XDG_CONFIG_HOME="${HOME}/.config"
-    local bkp_dir="${XDG_CONFIG_HOME}.bkp"
-    [[ -d "${XDG_CONFIG_HOME}" ]] && mv --verbose "${XDG_CONFIG_HOME}" "${bkp_dir}" || mkdir --parents "${bkp_dir}"
-    find "${HOME}" -name '.*' | xargs mv --verbose --target-directory="${bkp_dir}"
+function backup_config(){
+    export XDG_CONFIG_HOME="${HOME}/.config";
+    local bkp_dir="${XDG_CONFIG_HOME}_bkp";
+    [[ -d "${XDG_CONFIG_HOME}" ]] && mv --verbose "${XDG_CONFIG_HOME}" "${bkp_dir}" || mkdir --parents --verbose "${bkp_dir}";
+    for i in "${HOME}/"[.]*; do
+        [[ ! "${i##*/}" =~ .cache|.local ]] && mv --verbose --target-directory="${bkp_dir}" "${i}";
+    done
 }
 
-clone_config(){
-    local user='delannoy'
-    local private_identity_file='/path/to/identity_file'
-    export GIT_SSH_COMMAND="ssh -i ${private_identity_file} -o IdentitiesOnly=yes"
-    sudo apt update && sudo apt install git-all --yes
-    git clone --recurse-submodules "https://github.com/${user}/.config.git" "${XDG_CONFIG_HOME}"
-    ln -s "${XDG_CONFIG_HOME}/bash/profile" "${HOME}/.bash_profile"
-    ln --symbolic "${XDG_CONFIG_HOME}/ssh" "${HOME}/.ssh"
-    source "${HOME}/.bash_profile"
+function clone_config(){
+    local github_user="$1";
+    local private_identity_file="$2";
+    export GIT_SSH_COMMAND="ssh -o IdentityFile=${private_identity_file} -o IdentitiesOnly=yes"; # [How to specify the private SSH-key to use when executing shell command on Git?](https://stackoverflow.com/a/29754018/13019084)
+    sudo apt update && sudo apt install git-all --yes;
+    git clone --recurse-submodules "git@github.com:${github_user}/.config.git" "${XDG_CONFIG_HOME}"; # [Using Git Submodules for Private Content](https://www.taniarascia.com/git-submodules-private-content/)
+    ln --symbolic "${XDG_CONFIG_HOME}/bash/profile" "${HOME}/.bash_profile";
+    ln --symbolic "${XDG_CONFIG_HOME}/ssh" "${HOME}/.ssh";
+    source "${HOME}/.bash_profile";
 }
 
 backup_config
-clone_config
+clone_config "${USER}" '/path/to/identity_file'
+mv --verbose --interactive "${XDG_CONFIG_HOME}_bkp/"* "${XDG_CONFIG_HOME}/" && rmdir "${XDG_CONFIG_HOME}_bkp"
 ```
