@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-log 'DEBUG' "$(realpath "${BASH_SOURCE[0]}")";
+log DEBUG "$(filepath)";
 
 # [XDG Base Directory Specification](https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html#variables)
 # [XDG Base Directory](https://wiki.archlinux.org/index.php/XDG_Base_Directory)
