@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-log 'DEBUG' "$(realpath "${BASH_SOURCE[0]}")";
+log DEBUG "$(filepath)";
 
 export DISTRO_VERSION="$(source '/etc/os-release' 2>/dev/null && echo "${ID}${VERSION_ID}" || lsb_release --short --id --release 2>/dev/null | tr -d '\n')"; # [https://unix.stackexchange.com/a/6348] [https://unix.stackexchange.com/a/25131]
 
@@ -20,7 +20,7 @@ export RSYNCOF='%i %o %b/%7''l %B %L %C %n'; # [rsyncd log format](https://downl
 # In addition, one or more apostrophes may be specified prior to a numerical escape to indicate that the numerical value should be made more human-readable.
 # The 3 supported levels are the same as for the --human-readable command-line option
 # Each added apostrophe increases the level (e.g. "%''l %'b %f")
-# [The unit letters that are appended in levels 2 and 3 are: K (kilo), M (mega), G (giga), T (tera), or P (peta).  For example, a 1234567-byte file would output as 1.23M in level-2 (assuming that a period is your local decimal point).](https://download.samba.org/pub/rsync/rsync.1#opt--human-readable)
+# [The unit letters that are appended in levels 2 and 3 are: K (kilo), M (mega), G (giga), T (tera), or P (peta). For example, a 1234567-byte file would output as 1.23M in level-2 (assuming that a period is your local decimal point).](https://download.samba.org/pub/rsync/rsync.1#opt--human-readable)
 # %i    an itemized list of what is being updated
 # %o    the operation, which is "send", "recv", or "del." (the latter includes the trailing period)
 # %b    the number of bytes actually transferred
