@@ -1,19 +1,23 @@
 #!/usr/bin/env bash
 
+# [Configuring your login sessions with dot files](https://mywiki.wooledge.org/DotFiles)
+
 [[ -n "${BASH}" ]] || return;
-shopt -q 'login_shell' || return; # [How to check if a shell is login/interactive/batch](https://unix.stackexchange.com/a/26782)
+shopt -q login_shell || return; # [How to check if a shell is login/interactive/batch](https://unix.stackexchange.com/a/26782)
 
 export LOG_LEVEL='DEBUG';
 
-function text.formatting(){
+alias filepath='realpath "${BASH_SOURCE[0]}"'; # [Reliable way for a Bash script to get the full path to itself](https://stackoverflow.com/a/11114547) # [https://mywiki.wooledge.org/BashFAQ/028]
+
+function ansi(){
     # [How can I print text in various colors?](https://mywiki.wooledge.org/BashFAQ/037)
     # [Terminal codes (ANSI/VT100) introduction](https://bash-hackers.docs.cern.ch/scripting/terminalcodes)
-    # [terminfo(5) - Color Handling](https://invisible-island.net/ncurses/man/terminfo.5.html#h3-Color-Handling)
+    # [Coloring Terminal Text: tput and ANSI Escape Sequences](https://www.codequoi.com/en/coloring-terminal-text-tput-and-ansi-escape-sequences/)
     local i;
     declare -A -g TXT; # [before BASH 4.2, associative array must be declared outside function in order to be global](https://stackoverflow.com/a/10806853/13019084)
     declare -a fg=('black' 'red' 'green' 'yellow' 'blue' 'magenta' 'cyan' 'white' 'BLACK' 'RED' 'GREEN' 'YELLOW' 'BLUE' 'MAGENTA' 'CYAN' 'WHITE');
-    declare -A attr=(['reset']='sgr0' ['bold']='bold' ['dim']='dim' ['italic']='sitm' ['underline']='smul' ['blink']='blink' ['invert']='rev' ['hide']='invis' ['strikethrough']='smxx' \
-                     ['clear']='sgr0' ['bright']='bold' ['faint']='dim' ['italics']='sitm' ['uline']='smul' ['flicker']='blink' ['reverse']='rev' ['invisible']='invis' ['strikeout']='smxx');
+    declare -A attr=(['reset']='sgr0' ['bold']='bold' ['dim']='dim' ['italic']='sitm' ['underline']='smul' ['blink']='blink' ['reverse']='rev' ['invisible']='invis' ['strikethrough']='smxx');
+                    # ['clear']='sgr0' ['bright']='bold' ['faint']='dim' ['italics']='sitm' ['uline']='smul' ['flicker']='blink' ['invert']='rev' ['hide']='invis' ['strikeout']='smxx');
     for ((i=0; i<=${#fg[@]}-1; i++)); do
         TXT["${fg[$i]}"]="$(tput setaf $i)";
         TXT["${fg[$i]}BG"]="$(tput setab $i)";
@@ -26,33 +30,47 @@ function text.formatting(){
 function log(){
     # [Simple logging levels in Bash](https://stackoverflow.com/a/48087251/13019084)
     local log_priority="$1";
+    declare -A LOG=(['NOTSET']=0 ['DEBUG']=10 ['INFO']=20 ['WARNING']=30 ['ERROR']=40 ['CRITICAL']=50); # https://docs.python.org/3/howto/logging.html#logging-levels
+    [[ -z "${LOG["${log_priority}"]}" ]] && log ERROR "'${log_priority}' is not a valid log level (must be one of: ${!LOG[*]})" && return 1;
+    (( "${LOG["${log_priority}"]}" >= "${LOG["${LOG_LEVEL}"]}" )) || return 0;
     local message="${log_priority}: $2";
     local date_time="${TXT['dim']}$(date +'%Y-%m-%d %H:%M:%S.%3N')${TXT['reset']}";
     local pad="$(( "${COLUMNS}" - "${#message}" + ${#TXT['dim']} + ${#TXT['reset']} ))";
-    declare -A LOG=(['NOTSET']=0 ['DEBUG']=10 ['INFO']=20 ['WARNING']=30 ['ERROR']=40 ['CRITICAL']=50); # https://docs.python.org/3/howto/logging.html#logging-levels
     case "${log_priority}" in
-        'DEBUG') message="${TXT['BLACK']}${message}${TXT['reset']}";;
-        'INFO') message="${TXT['green']}${message}${TXT['reset']}";;
-        'WARNING') message="${TXT['yellow']}${message}${TXT['reset']}";;
-        'ERROR') message="${TXT['red']}${message}${TXT['reset']}";;
-        'CRITICAL') message="${TXT['blink']}${TXT['red']}${message}${TXT['reset']}";;
+        DEBUG) message="${TXT['BLACK']}${message}${TXT['reset']}";;
+        INFO) message="${TXT['green']}${message}${TXT['reset']}";;
+        WARNING) message="${TXT['yellow']}${message}${TXT['reset']}";;
+        ERROR) message="${TXT['red']}${message}${TXT['reset']}";;
+        CRITICAL) message="${TXT['blink']}${TXT['red']}${message}${TXT['reset']}";;
         *) return 1;
     esac
-    (( "${LOG["${log_priority}"]}" >= "${LOG["${LOG_LEVEL}"]}" )) || return;
     printf "%s%${pad}s\n" "${message}" "${date_time}"; # https://bash-hackers.docs.cern.ch/commands/builtin/printf#modifiers
 }
 
 function src(){
     # [How to source all files in a directory?](https://stackoverflow.com/a/12426672)
-    local target="$1";
-    [[ -f "${target}" ]] && source "${target}";
-    [[ -d "${target}" ]] && for file in $(find "${target}" -type f -not -name '.*'); do source "${file}"; done
+    # [Sourcing Files in Bash Profile using Wildcard](https://askubuntu.com/a/1271269/1987701)
+    local target file;
+    target="$1";
+    [[ ! -f "${target}" ]] && [[ ! -d "${target}" ]] && log WARNING "'${target}' is not an existing file/directory!" && return 1;
+    [[ -f "${target}" ]] && source "${target}" && return 0;
+    target=${target%*/}; # strip trailing '/' [https://mywiki.wooledge.org/BashFAQ/100#Removing_part_of_a_string]
+    for file in "${target}/"_*; do
+        [[ -f "${file}" ]] && src "${file}"; # if any, source files with a leading underscore first
+    done;
+    for file in "${target}/"[!._]*; do
+        src "${file}"; # source all other files/directories, except files/directories with a leading dot or underscore
+    done;
 }
 
-text.formatting;
+ansi;
 
-log 'INFO' "$(realpath "${BASH_SOURCE[0]}")" || return; # [Reliable way for a Bash script to get the full path to itself](https://stackoverflow.com/a/11114547)
+log INFO "$(filepath)";
 
-src "${XDG_CONFIG_HOME}/bash/env/";
-src "${XDG_CONFIG_HOME}/private/bash/env/";
-src "${XDG_CONFIG_HOME}/bash/bashrc";
+# src "${XDG_CONFIG_HOME}/bash/env/";
+# src "${XDG_CONFIG_HOME}/private/bash/env/";
+# src "${XDG_CONFIG_HOME}/bash/bashrc";
+
+src '/mnt/a/Dropbox/Public/.config/bash/env/';
+src '/mnt/a/Dropbox/Public/.config/bash/bashrc';
+# source "$HOME/.bashrc"
