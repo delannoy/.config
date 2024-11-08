@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 
-log 'DEBUG' "$(realpath "${BASH_SOURCE[0]}")";
+log DEBUG "$(filepath)";
 
 export INPUTRC="${XDG_CONFIG_HOME}/readline/inputrc"; # [The filename for the readline startup file](https://bash-hackers.docs.cern.ch/syntax/shellvars#inputrc)
-export IGNOREEOF=2; # [If set, the value is the number of consecutive EOF characters (e.g. by Ctrl-D) which must be typed as the first characters on an input line before Bash exits.](https://bash-hackers.docs.cern.ch/syntax/shellvars#ignoreeof)
+export IGNOREEOF=1; # [If set, the value is the number of consecutive EOF characters (e.g. by Ctrl-D) which must be typed as the first characters on an input line before Bash exits.](https://bash-hackers.docs.cern.ch/syntax/shellvars#ignoreeof)
+# export LANG="$(for locale in $(locale -a); do [[ "${locale,,}" =~ ^c\.utf[-]?8 ]] && echo "${locale}" && break; done)"; # [https://mywiki.wooledge.org/locale]
+export LANG="${LANG:-'C'}";
 export PATH="${XDG_DATA_HOME/share/bin}:${PATH}"; # [The search path for commands. This is a colon-separated list of directories in which the shell looks for commands.](https://bash-hackers.docs.cern.ch/syntax/shellvars#path)
