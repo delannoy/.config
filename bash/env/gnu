@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+log DEBUG "$(filepath)";
+
+export GNUPGHOME="${XDG_DATA_HOME}/gnupg"; # [If set, directory used instead of "~/.gnupg"](https://www.gnupg.org/documentation/manuals/gnupg/GPG-Configuration.html)
+export NETRC="${XDG_CONFIG_HOME}/private/netrc" # [The .netrc file contains login and initialization information used by the auto-login process](https://www.gnu.org/software/inetutils/manual/html_node/The-_002enetrc-file.html)
+export PARALLEL_HOME="${XDG_CONFIG_HOME}/parallel"; # [Dir where GNU parallel stores config files, semaphores, and caches information between invocations](https://www.gnu.org/software/parallel/parallel.html#environment-variables)
+export TERMINFO="${XDG_DATA_HOME}/terminfo"; # [The TERMINFO variable overrides the location for the default terminal database](https://www.man7.org/linux/man-pages/man3/ncurses.3x.html#ENVIRONMENT)
+export TERMINFO_DIRS="${XDG_DATA_HOME}/terminfo:/usr/share/terminfo"; # [Specifies a list of locations to search for terminal descriptions](https://www.man7.org/linux/man-pages/man3/ncurses.3x.html#ENVIRONMENT)
