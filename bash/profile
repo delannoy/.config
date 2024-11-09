@@ -6,6 +6,7 @@
 shopt -q login_shell || return; # [How to check if a shell is login/interactive/batch](https://unix.stackexchange.com/a/26782)
 
 export LOG_LEVEL='DEBUG';
+export NO_COLOR=''; # [Command-line software which adds ANSI color to its output by default should check for a NO_COLOR environment variable that, when present and not an empty string (regardless of its value), prevents the addition of ANSI color.](https://no-color.org/)
 
 alias filepath='realpath "${BASH_SOURCE[0]}"'; # [Reliable way for a Bash script to get the full path to itself](https://stackoverflow.com/a/11114547) # [https://mywiki.wooledge.org/BashFAQ/028]
 
@@ -15,6 +16,7 @@ function ansi(){
     # [Coloring Terminal Text: tput and ANSI Escape Sequences](https://www.codequoi.com/en/coloring-terminal-text-tput-and-ansi-escape-sequences/)
     local i;
     declare -A -g TXT; # [before BASH 4.2, associative array must be declared outside function in order to be global](https://stackoverflow.com/a/10806853/13019084)
+    [[ -n "${NO_COLOR}" ]] && return 0;
     declare -a fg=('black' 'red' 'green' 'yellow' 'blue' 'magenta' 'cyan' 'white' 'BLACK' 'RED' 'GREEN' 'YELLOW' 'BLUE' 'MAGENTA' 'CYAN' 'WHITE');
     declare -A attr=(['reset']='sgr0' ['bold']='bold' ['dim']='dim' ['italic']='sitm' ['underline']='smul' ['blink']='blink' ['reverse']='rev' ['invisible']='invis' ['strikethrough']='smxx');
                     # ['clear']='sgr0' ['bright']='bold' ['faint']='dim' ['italics']='sitm' ['uline']='smul' ['flicker']='blink' ['invert']='rev' ['hide']='invis' ['strikeout']='smxx');
