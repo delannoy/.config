@@ -4,16 +4,9 @@ log DEBUG "$(filepath)";
 
 export DISTRO_VERSION="$(source '/etc/os-release' 2>/dev/null && echo "${ID}${VERSION_ID}" || lsb_release --short --id --release 2>/dev/null | tr -d '\n')"; # [https://unix.stackexchange.com/a/6348] [https://unix.stackexchange.com/a/25131]
 
-export STRFTIME='+%Y.%m.%d-%H.%M.%S.%3N'; # [date(1)](https://man7.org/linux/man-pages/man1/date.1.html#DESCRIPTION) # [Command to get time in milliseconds](https://stackoverflow.com/a/18704121)
-# %Y    year
-# %m    month (01..12)
-# %d    day of month (e.g., 01)
-# %H    hour (00..23)
-# %M    minute (00..59)
-# %S    second (00..60)
-# %N    nanoseconds (000000000..999999999)
-
 export GIT_STATUS_PROMPT='true';
+
+export HISTFILE_BKP="${HISTFILE%/*}}/${HOSTNAME}.bkp.history";
 
 export RSYNCOF='%i %o %b/%7''l %B %L %C %n'; # [rsyncd log format](https://download.samba.org/pub/rsync/rsyncd.conf.html#log_format)
 # An optional numeric field width may also be specified between the percent and the escape letter (e.g. "%-50n %8l %07p").
@@ -29,6 +22,17 @@ export RSYNCOF='%i %o %b/%7''l %B %L %C %n'; # [rsyncd log format](https://downl
 # %L    the string "-> SYMLINK", "=> HARDLINK", or "" (where SYMLINK or HARDLINK is a filename)
 # %c    the total size of the block checksums received for the basis file (only when sending)
 # %n    the filename (short form; trailing "/" on dir)
+
+export PYTHON_HISTORY_BKP="${PYTHON_HISTFILE%/*}}/${HOSTNAME}.bkp.history";
+
+export STRFTIME='+%Y.%m.%d-%H.%M.%S.%3N'; # [date(1)](https://man7.org/linux/man-pages/man1/date.1.html#DESCRIPTION) # [Command to get time in milliseconds](https://stackoverflow.com/a/18704121)
+# %Y    year
+# %m    month (01..12)
+# %d    day of month (e.g., 01)
+# %H    hour (00..23)
+# %M    minute (00..59)
+# %S    second (00..60)
+# %N    nanoseconds (000000000..999999999)
 
 export USER_AGENT='mozilla'; # https://stackoverflow.com/a/29546832/13019084 # export USER_AGENT="$(command -v 'yt-dlp' >/dev/null && yt-dlp --dump-user-agent || echo 'mozilla')"; # [Display the current browser identification](https://github.com/ytdl-org/youtube-dl#options)
 

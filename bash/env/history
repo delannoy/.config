@@ -5,7 +5,6 @@ log DEBUG "$(filepath)";
 mkdir --parents --verbose "${XDG_DATA_HOME}/"{bash,less,python}
 
 export HISTFILE="${XDG_DATA_HOME}/bash/${HOSTNAME}.history"; # [The name of the file in which command history is saved](https://bash-hackers.docs.cern.ch/syntax/shellvars#histfile)
-export HISTFILE_BKP="${HISTFILE%/*}}/${HOSTNAME}.bkp.history";
 
 # [Using History Interactively](https://www.gnu.org/software/bash/manual/html_node/Using-History-Interactively.html)
 # [How can I avoid losing any history lines?](http://mywiki.wooledge.org/BashFAQ/088)
@@ -19,7 +18,6 @@ export HISTTIMEFORMAT='[%Y%m%d-%H%M%S] '; # [If this variable is set and not nul
 export LESSHISTFILE="${XDG_DATA_HOME}/less/${HOSTNAME}.history"; # [Name of the history file used to remember search commands and shell commands between invocations of less](https://man7.org/linux/man-pages/man1/less.1.html#ENVIRONMENT_VARIABLES)
 export LESSHISTSIZE=''; # [The maximum number of commands to save in the history file](https://man7.org/linux/man-pages/man1/less.1.html#ENVIRONMENT_VARIABLES)
 
-export PYTHON_HISTFILE="${XDG_DATA_HOME}/python/${HOSTNAME}.history";
-export PYTHON_HISTFILE_BKP="${PYTHON_HISTFILE%/*}}/${HOSTNAME}.bkp.history";
+export PYTHON_HISTORY="${XDG_DATA_HOME}/python/${HOSTNAME}.history";
 
 shopt -s histappend; # [If set, the history list is appended to the file named by the value of the HISTFILE variable when the shell exits, rather than overwriting the file](https://bash-hackers.docs.cern.ch/internals/shell_options#histappend)
