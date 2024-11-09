@@ -4,9 +4,7 @@ log DEBUG "$(filepath)";
 
 export EDITOR='/usr/bin/vim'; # [The editor program called by sudoedit, vipw, and other such programs when you tell them to edit a file](https://en.wikibooks.org/wiki/Guide_to_Unix/Environment_Variables#EDITOR)
 
-export LESS='--ignore-case --line-numbers --no-histdups --LONG-PROMPT'; # [https://man7.org/linux/man-pages/man1/less.1.html#ENVIRONMENT_VARIABLES] [https://man7.org/linux/man-pages/man1/less.1.html#OPTIONS]
-# export LESSKEY="${XDG_CONFIG_HOME}/less/key"; # [Lesskey is used to specify a set of key bindings to be used by less](https://man7.org/linux/man-pages/man1/lesskey.1.html)
-# [[ ! -f ${LESSKEY} ]] && [[ -f "${XDG_CONFIG_HOME}/less/key.txt" ]] && lesskey -o "${LESSKEY}" "${XDG_CONFIG_HOME}/less/key.txt"; # [The input file is a text file which describes the key bindings](https://man7.org/linux/man-pages/man1/lesskey.1.html) [How to make lesskey terminal-independent?](https://unix.stackexchange.com/a/377221)
+export LESS='--quit-if-one-screen --RAW-CONTROL-CHARS --LONG-PROMPT --window=-4 --ignore-case --no-histdups'; # [https://man7.org/linux/man-pages/man1/less.1.html#ENVIRONMENT_VARIABLES] [https://man7.org/linux/man-pages/man1/less.1.html#OPTIONS] [https://www.topbug.net/blog/2016/09/27/make-gnu-less-more-powerful/]
 
 export PAGER="$(command -v 'bat' || echo '/usr/bin/less')"; # [The pager called by man and other such programs when you tell them to view a file](https://en.wikibooks.org/wiki/Guide_to_Unix/Environment_Variables#PAGER)
 
