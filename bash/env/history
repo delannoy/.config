@@ -1,23 +1,21 @@
 #!/usr/bin/env bash
 
-log DEBUG "$(filepath)";
-
-mkdir --parents --verbose "${XDG_DATA_HOME}/"{bash,less,python}
-
-export HISTFILE="${XDG_DATA_HOME}/bash/${HOSTNAME}.history"; # [The name of the file in which command history is saved](https://bash-hackers.docs.cern.ch/syntax/shellvars#histfile)
+log.debug.filepath;
 
 # [Using History Interactively](https://www.gnu.org/software/bash/manual/html_node/Using-History-Interactively.html)
 # [How can I avoid losing any history lines?](http://mywiki.wooledge.org/BashFAQ/088)
 # Setting the HISTFILESIZE and HISTSIZE variables to an empty string makes the bash history size unlimited [https://web.archive.org/web/20240114230359/https://www.soberkoder.com/unlimited-bash-history/] [https://stackoverflow.com/a/12234989/13019084] [https://resonantecho.net/linux/bash/2018/02/19/unlimited-bash-history.html]
+export HISTFILE="${XDG_DATA_HOME}/bash/${HOSTNAME}.history"; # [The name of the file in which command history is saved](https://bash-hackers.docs.cern.ch/syntax/shellvars#histfile)
 export HISTCONTROL=ignoredups; # [A colon-separated list of values controlling how commands are saved on the history list](https://bash-hackers.docs.cern.ch/syntax/shellvars#histcontrol)
 export HISTFILESIZE=''; # [The maximum number of lines contained in the history file](https://bash-hackers.docs.cern.ch/syntax/shellvars#histfilesize)
 export HISTSIZE=''; # [The number of commands to remember in the command history](https://bash-hackers.docs.cern.ch/syntax/shellvars#histsize)
 export HISTTIMEFORMAT='[%Y%m%d-%H%M%S] '; # [If this variable is set and not null, its value is used as a format string for strftime(3) to print the time stamp associated with each history entry displayed by the history builtin](https://bash-hackers.docs.cern.ch/syntax/shellvars#histtimeformat)
 
-
 export LESSHISTFILE="${XDG_DATA_HOME}/less/${HOSTNAME}.history"; # [Name of the history file used to remember search commands and shell commands between invocations of less](https://man7.org/linux/man-pages/man1/less.1.html#ENVIRONMENT_VARIABLES)
 export LESSHISTSIZE=''; # [The maximum number of commands to save in the history file](https://man7.org/linux/man-pages/man1/less.1.html#ENVIRONMENT_VARIABLES)
 
-export PYTHON_HISTORY="${XDG_DATA_HOME}/python/${HOSTNAME}.history";
+export PYTHON_HISTORY="${XDG_DATA_HOME}/python/${HOSTNAME}.history"; # [This environment variable can be used to set the location of a .python_history file](https://docs.python.org/3.13/using/cmdline.html#envvar-PYTHON_HISTORY)
 
 shopt -s histappend; # [If set, the history list is appended to the file named by the value of the HISTFILE variable when the shell exits, rather than overwriting the file](https://bash-hackers.docs.cern.ch/internals/shell_options#histappend)
+
+mkdir --parents --verbose "${HISTFILE%/*}" "${LESSHISTFILE%/*}" "${PYTHON_HISTORY%/*}"
