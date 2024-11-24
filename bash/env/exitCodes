@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-log DEBUG "$(filepath)";
+log.debug.filepath;
 
 declare -ag ERR;
 
