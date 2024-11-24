@@ -1,78 +1,69 @@
 #!/usr/bin/env bash
 
 # [Configuring your login sessions with dot files](https://mywiki.wooledge.org/DotFiles)
+# [Namespaces on the Cheap](https://www.binaryphile.com/bash/2018/09/17/approach-bash-like-a-developer-part-22.5-naming-and-namespaces.html#namespaces-on-the-cheap)
 
-[[ -n "${BASH}" ]] || return;
-shopt -q login_shell || return; # [How to check if a shell is login/interactive/batch](https://unix.stackexchange.com/a/26782)
+function benchmark(){
+    # [Debugging slow bash startup files](https://mdjnewman.me/2017/10/debugging-slow-bash-startup-files/)
+    exec 5> >(ts -i "%.s" >> /tmp/timestamps);
+    export BASH_XTRACEFD='5';
+    set -x;
+}
+
+# benchmark
+
+[[ -v BASH ]] || return 0;
+
+shopt -q login_shell || return 0; # [How to check if a shell is login/interactive/batch](https://unix.stackexchange.com/a/26782)
 
 export LOG_LEVEL='DEBUG';
 export NO_COLOR=''; # [Command-line software which adds ANSI color to its output by default should check for a NO_COLOR environment variable that, when present and not an empty string (regardless of its value), prevents the addition of ANSI color.](https://no-color.org/)
 
-alias filepath='realpath "${BASH_SOURCE[0]}"'; # [Reliable way for a Bash script to get the full path to itself](https://stackoverflow.com/a/11114547) # [https://mywiki.wooledge.org/BashFAQ/028]
-
-function ansi(){
-    # [How can I print text in various colors?](https://mywiki.wooledge.org/BashFAQ/037)
-    # [Terminal codes (ANSI/VT100) introduction](https://bash-hackers.docs.cern.ch/scripting/terminalcodes)
-    # [Coloring Terminal Text: tput and ANSI Escape Sequences](https://www.codequoi.com/en/coloring-terminal-text-tput-and-ansi-escape-sequences/)
-    local i;
-    declare -A -g TXT; # [before BASH 4.2, associative array must be declared outside function in order to be global](https://stackoverflow.com/a/10806853/13019084)
-    [[ -n "${NO_COLOR}" ]] && return 0;
-    declare -a fg=('black' 'red' 'green' 'yellow' 'blue' 'magenta' 'cyan' 'white' 'BLACK' 'RED' 'GREEN' 'YELLOW' 'BLUE' 'MAGENTA' 'CYAN' 'WHITE');
-    declare -A attr=(['reset']='sgr0' ['bold']='bold' ['dim']='dim' ['italic']='sitm' ['underline']='smul' ['blink']='blink' ['reverse']='rev' ['invisible']='invis' ['strikethrough']='smxx');
-                    # ['clear']='sgr0' ['bright']='bold' ['faint']='dim' ['italics']='sitm' ['uline']='smul' ['flicker']='blink' ['invert']='rev' ['hide']='invis' ['strikeout']='smxx');
-    for ((i=0; i<=${#fg[@]}-1; i++)); do
-        TXT["${fg[$i]}"]="$(tput setaf $i)";
-        TXT["${fg[$i]}BG"]="$(tput setab $i)";
-    done;
-    for i in "${!attr[@]}"; do
-        TXT["$i"]="$(tput "${attr[$i]}")";
-    done;
-}
-
-function log(){
-    # [Simple logging levels in Bash](https://stackoverflow.com/a/48087251/13019084)
-    local log_priority="$1";
+function filepath.logger(){
+    # pre-calculate whether `INFO` or `DEBUG` levels should be logged (if so, define their printf format), store the results as environment variables, and define alias for startup files.
     declare -A LOG=(['NOTSET']=0 ['DEBUG']=10 ['INFO']=20 ['WARNING']=30 ['ERROR']=40 ['CRITICAL']=50); # https://docs.python.org/3/howto/logging.html#logging-levels
-    [[ -z "${LOG["${log_priority}"]}" ]] && log ERROR "'${log_priority}' is not a valid log level (must be one of: ${!LOG[*]})" && return 1;
-    (( "${LOG["${log_priority}"]}" >= "${LOG["${LOG_LEVEL}"]}" )) || return 0;
-    local message="${log_priority}: $2";
-    local date_time="${TXT['dim']}$(date +'%Y-%m-%d %H:%M:%S.%3N')${TXT['reset']}";
-    local pad="$(( "${COLUMNS}" - "${#message}" + ${#TXT['dim']} + ${#TXT['reset']} ))";
-    case "${log_priority}" in
-        DEBUG) message="${TXT['BLACK']}${message}${TXT['reset']}";;
-        INFO) message="${TXT['green']}${message}${TXT['reset']}";;
-        WARNING) message="${TXT['yellow']}${message}${TXT['reset']}";;
-        ERROR) message="${TXT['red']}${message}${TXT['reset']}";;
-        CRITICAL) message="${TXT['blink']}${TXT['red']}${message}${TXT['reset']}";;
-        *) return 1;
-    esac
-    printf "%s%${pad}s\n" "${message}" "${date_time}"; # https://bash-hackers.docs.cern.ch/commands/builtin/printf#modifiers
+    export LOG_DEBUG=$(( ${LOG[${LOG_LEVEL}]} <= ${LOG[DEBUG]} )); # https://mywiki.wooledge.org/ArithmeticExpression
+    export LOG_INFO=$(( ${LOG[${LOG_LEVEL}]} <= ${LOG[INFO]} )); # https://bash-hackers.docs.cern.ch/syntax/arith_expr
+    (( "${LOG_DEBUG}" )) && [[ -z "${NO_COLOR}" ]] && export DEBUG_FMT="$(tput setaf 8)%s$(tput sgr0)\n"; # DEBUG_FMT='\033[90m%s\033[0m\n' 
+    (( "${LOG_INFO}" )) && [[ -z "${NO_COLOR}" ]] && export INFO_FMT="$(tput setaf 2)%s$(tput sgr0)\n"; # INFO_FMT='\033[32m%s\033[0m\n' 
+    alias log.debug.filepath='(( "${LOG_DEBUG}" )) && printf "${DEBUG_FMT}" "${BASH_SOURCE[0]}"'; # "$(realpath "${BASH_SOURCE[0]}")" # [How do I determine the location of my script?](https://mywiki.wooledge.org/BashFAQ/028);
+    alias log.info.filepath='(( "${LOG_INFO}" )) && printf "${INFO_FMT}" "${BASH_SOURCE[0]}"'; # "$(realpath "${BASH_SOURCE[0]}")" # [Reliable way for a Bash script to get the full path to itself](https://stackoverflow.com/a/11114547)
 }
 
-function src(){
-    # [How to source all files in a directory?](https://stackoverflow.com/a/12426672)
-    # [Sourcing Files in Bash Profile using Wildcard](https://askubuntu.com/a/1271269/1987701)
-    local target file;
-    target="$1";
-    [[ ! -f "${target}" ]] && [[ ! -d "${target}" ]] && log WARNING "'${target}' is not an existing file/directory!" && return 1;
-    [[ -f "${target}" ]] && source "${target}" && return 0;
-    target=${target%*/}; # strip trailing '/' [https://mywiki.wooledge.org/BashFAQ/100#Removing_part_of_a_string]
-    for file in "${target}/"_*; do
-        [[ -f "${file}" ]] && src "${file}"; # if any, source files with a leading underscore first
-    done;
-    for file in "${target}/"[!._]*; do
-        src "${file}"; # source all other files/directories, except files/directories with a leading dot or underscore
+function path.executable(){
+    # check whether argument is found in `$PATH` and whether it is executable.
+    local executable_path;
+    executable_path="$(command -v "$1")" && [[ -x "${executable_path}" ]]
+}
+
+function source.dir(){
+    # [How to source all files in a directory?](https://stackoverflow.com/a/12426672) [Sourcing Files in Bash Profile using Wildcard](https://askubuntu.com/a/1271269/1987701)
+    local file dir="${1%*/}"; # strip trailing '/' [https://mywiki.wooledge.org/BashFAQ/100#Removing_part_of_a_string]
+    for file in "${dir}"/[!.]*; do # matching_files="$(compgen -G "${dir}/${glob}")"; # [How can I check whether a directory is empty or not?](https://mywiki.wooledge.org/BashFAQ/004)
+        [[ -f "${file}" ]] && source "${file}";
     done;
 }
 
-ansi;
+function xdg(){
+    # [XDG Base Directory Specification](https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html#variables)
+    # [XDG Base Directory](https://wiki.archlinux.org/index.php/XDG_Base_Directory)
+    export XDG_CACHE_HOME="${HOME}/.cache"; # contains user-specific non-essential data files
+    export XDG_CONFIG_DIRS='/etc/xdg'; # preference-ordered set of base directories to search for configuration files in addition to the $XDG_CONFIG_HOME
+    export XDG_CONFIG_HOME="${HOME}/.config"; # contains user-specific configuration files [$XDG_CONFIG_HOME is considered more important than any of the base directories defined by $XDG_CONFIG_DIRS]
+    export XDG_DATA_DIRS='/usr/local/share:/usr/share'; # preference-ordered set of base directories to search for data files in addition to the $XDG_DATA_HOME
+    export XDG_DATA_HOME="${HOME}/.local/share"; # contains user-specific data files [$XDG_DATA_HOME is considered more important than any of the base directories defined by $XDG_DATA_DIRS]
+    export XDG_STATE_HOME="${HOME}/.local/state"; # contains user-specific state files that should persist between (application) restarts
+    export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-"/run/user/${UID}"}"; # contains user-specific non-essential runtime files and other file objects (such as sockets, named pipes, ...)
+}
 
-log INFO "$(filepath)";
+xdg;
 
-# src "${XDG_CONFIG_HOME}/bash/env/";
-# src "${XDG_CONFIG_HOME}/private/bash/env/";
-# src "${XDG_CONFIG_HOME}/bash/bashrc";
+filepath.logger;
 
-src '/mnt/a/Dropbox/Public/.config/bash/env/';
-src '/mnt/a/Dropbox/Public/.config/bash/bashrc';
-# source "$HOME/.bashrc"
+log.info.filepath;
+
+export -f filepath.logger source.dir; # [Can I "export" functions in bash?](https://unix.stackexchange.com/a/22867/663009)
+
+source.dir "${XDG_CONFIG_HOME}/bash/env/";
+source.dir "${XDG_CONFIG_HOME}/private/bash/env/";
+source "${XDG_CONFIG_HOME}/bash/bashrc";
