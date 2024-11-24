@@ -25,6 +25,7 @@ git clone --recurse-submodules "git@github.com:${github_user}/.config.git" "${XD
 
 # symlink startup files for login and interactive shells to their expected locations:
 ln --symbolic "${XDG_CONFIG_HOME}/bash/profile" "${HOME}/.bash_profile"
+ln --symbolic "${XDG_CONFIG_HOME}/bash/bashrc" "${HOME}/.bashrc"
 ln --symbolic "${XDG_CONFIG_HOME}/ssh" "${HOME}/.ssh"
 
 # move contents of `${XDG_CONFIG_HOME}_bkp` back to `$XDG_CONFIG_HOME`:
@@ -50,6 +51,7 @@ function clone_config(){
     sudo apt update && sudo apt install git-all --yes;
     git clone --recurse-submodules "git@github.com:${github_user}/.config.git" "${XDG_CONFIG_HOME}"; # [Using Git Submodules for Private Content](https://www.taniarascia.com/git-submodules-private-content/)
     ln --symbolic "${XDG_CONFIG_HOME}/bash/profile" "${HOME}/.bash_profile";
+    ln --symbolic "${XDG_CONFIG_HOME}/bash/bashrc" "${HOME}/.bashrc"
     ln --symbolic "${XDG_CONFIG_HOME}/ssh" "${HOME}/.ssh";
     source "${HOME}/.bash_profile";
 }
