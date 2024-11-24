@@ -2,10 +2,11 @@
 
 [alias]
     br = branch
-    ci = commit --message
+    ci = commit
     cfg = config --list --show-origin
     cm = commit --message
     co = checkout
+    diff = diff --word-diff
     hist = log --all --graph
     log = log --all --graph
     st = status --short --branch --show-stash
