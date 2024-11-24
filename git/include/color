@@ -23,7 +23,7 @@
     func = normal                           # function in hunk header
     meta = bold                             # metainformation
     new = green                             # added lines
-    newMoved = cyan                         # added lines
+    newMoved = bold cyan                    # added lines
     old = red                               # removed lines
     oldMoved = bold magenta                 # deleted lines
     plain = normal                          # context text - plain is a historical synonym
@@ -79,10 +79,10 @@
     # [color.remote.<slot>](https://git-scm.com/docs/git-config#Documentation/git-config.txt-colorremoteltslotgt)
     # [keyword_entry keywords](https://github.com/git/git/blob/5210225f256d01938960d439bff9d809c2ff1809/sideband.c#L16)
     # [sideband: highlight keywords in remote sideband output](https://github.com/git/git/commit/bf1a11f0a100b080a25233980c14b5ae8f3a7d2d)
-    hint = yellow
-    warning = bold yellow
-    success = bold green
     error = bold red
+    hint = yellow
+    success = bold green
+    warning = bold yellow
 
 [color "status"]
     # [color.status.<slot>](https://git-scm.com/docs/git-config#Documentation/git-config.txt-colorstatusltslotgt)
