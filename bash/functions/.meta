@@ -1,18 +1,10 @@
 #!/usr/bin/env bash
 
-log DEBUG "$(filepath)";
+log.debug.filepath;
 
-# https://www.binaryphile.com/bash/2018/09/17/approach-bash-like-a-developer-part-22.5-naming-and-namespaces.html#variable-namespaces
+# [https://www.binaryphile.com/bash/2018/09/17/approach-bash-like-a-developer-part-22.5-naming-and-namespaces.html#variable-namespaces]
 
-function meta.requires(){
-    local executable="$1";
-    if ! [[ -x "$(command -v "${executable}")" ]]; then
-        log ERROR "'${executable}' is not available";
-        return 1;
-    fi
-}
-
-function meta.nameref(){
+function assign.nameref(){
     # [https://mywiki.wooledge.org/BashFAQ/006#Assigning_indirect.2Freference_variables]
     # [https://www.gnu.org/software/bash/manual/html_node/Shell-Parameters.html]
     # [Assigning one variable to another in Bash?](https://stackoverflow.com/a/73319606/13019084)
@@ -21,20 +13,28 @@ function meta.nameref(){
     log DEBUG "$(declare -p ${!ref})";
 }
 
-function meta.printfv(){
+function assign.printfv(){
     # [https://mywiki.wooledge.org/BashFAQ/006#Assigning_indirect.2Freference_variables]
     printf -v "$1" "%s" "$2"; # note that `printf -v` doesn't support direct assignment to array indexes for BASH<4.1 [https://bash-hackers.docs.cern.ch/commands/builtin/printf#options]
     log DEBUG "$(declare -p $1)"; # [https://bash-hackers.docs.cern.ch/commands/builtin/declare]
 }
 
-function meta.read(){
+function assign.indirect(){
     # [https://mywiki.wooledge.org/BashFAQ/006#Assigning_indirect.2Freference_variables]
     # [How to use a variable's value as another variable's name in bash](https://stackoverflow.com/a/9715739/13019084)
     read -r -- "$1" <<< "$2"; # [https://bash-hackers.docs.cern.ch/commands/builtin/read]
     log DEBUG "$(declare -p $1)"; # [https://bash-hackers.docs.cern.ch/commands/builtin/declare]
 }
 
-function meta.args(){
+function function.requires(){
+    local executable="$1";
+    local executable_path="$(command -v "${executable}")";
+    [[ -n "${executable_path}" ]] && [[ -x "${executable_path}" ]] && return 0;
+    log ERROR "'${executable}' is required";
+    return 1;
+}
+
+function function.args(){
     # Convenience metafunction to define function arguments, including optional arguments with default values
     # It expects "$FUNCNAME" (name of parent function), followed by the positional parameters passed to the parent function, folowed by an ASCII "record separator" delimiter, followed by the variable names for the parent function's required & optional arguments
     # Variable names for optional arguments should be indicated by wrapping them in square brackets, e.g `[optional_argument]`
@@ -53,28 +53,28 @@ function meta.args(){
     IFS=$'\30' read -r param arg <<< "$*"; # [Octal 34 is the ASCII "file separator" character, and is unlikely to be present in your data](https://unix.stackexchange.com/a/628543) [https://en.wikipedia.org/wiki/Delimiter#ASCII_delimited_text] [https://bash-hackers.docs.cern.ch/scripting/posparams#mass_usage]
     read -r -a param <<< "${param}"; # [https://bash-hackers.docs.cern.ch/commands/builtin/read]
     read -r -a arg <<< "${arg}";
-    log DEBUG "$(declare -p function_name)";
-    log DEBUG "$(declare -p param)";
-    log DEBUG "$(declare -p arg)";
+    # log DEBUG "$(declare -p function_name)";
+    # log DEBUG "$(declare -p param)";
+    # log DEBUG "$(declare -p arg)";
 
     for (( i=0; i<${#arg[@]}; i++ )); do
         if ! [[ "${arg[i]}" =~ ${bracket_regex} ]]; then # required arguments (not wrapped in square brackets)
             [[ -z "${param[i]}" ]] && { printf "%s: ${red}%s\n${reset}" "usage" "${function_name} ${arg[*]}"; return 64; } # [https://bash-hackers.docs.cern.ch/syntax/arrays#getting_values]
-            [[ -n "${param[i]}" ]] && meta.read "${arg[i]}" "${param[i]}";
+            [[ -n "${param[i]}" ]] && assign.indirect "${arg[i]}" "${param[i]}";
         elif [[ "${arg[i]}" =~ ${bracket_regex} ]]; then # optional arguments (wrapped in square brackets)
             opt_arg="${BASH_REMATCH[1]}"; # regex match group of characters enclosed in square brackets
-            ! [[ "${opt_arg}" =~ ${equals_regex} ]] && meta.read "${opt_arg}" "${param[i]}";
+            ! [[ "${opt_arg}" =~ ${equals_regex} ]] && assign.indirect "${opt_arg}" "${param[i]}";
             if [[ "${opt_arg}" =~ ${equals_regex} ]]; then
                 opt_arg="${BASH_REMATCH[1]}"; # regex match group of characters before '=' character
                 default_value="${BASH_REMATCH[2]}"; # regex match group of characters after '=' character
-                [[ -n "${param[i]}" ]] && meta.read "${opt_arg}" "${param[i]}";
-                [[ -z "${param[i]}" ]] && meta.read "${opt_arg}" "${default_value}";
+                [[ -n "${param[i]}" ]] && assign.indirect "${opt_arg}" "${param[i]}";
+                [[ -z "${param[i]}" ]] && assign.indirect "${opt_arg}" "${default_value}";
             fi
         fi
     done
 }
 
-# Define an alias to pass "$FUNCNAME", positional parameters, and an ASCII "record separator" delimiter to `meta.args` before passing the variable names.
-# Set a trap on `ERR` signal to force the parent function to break if `meta.args` returns 64.
+# Define an alias to pass "$FUNCNAME", positional parameters, and an ASCII "record separator" delimiter to `function.args` before passing the variable names.
+# Set a trap on `ERR` signal to force the parent function to break if `function.args` returns 64.
 # [https://bash-hackers.docs.cern.ch/commands/builtin/trap] [How to trap exit code in Bash script](https://stackoverflow.com/a/23637952/13019084) [Escaping characters in bash alias](https://stackoverflow.com/a/42954517)
-alias args=$'trap "(( \$? == 64 )) && return 22" ERR; meta.args "${FUNCNAME}" "$@" $\'\\030\''
+alias args=$'trap "(( \$? == 64 )) && return 22" ERR; function.args "${FUNCNAME}" "$@" $\'\\030\''
