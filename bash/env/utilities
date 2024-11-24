@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+log.debug.filepath;
+
+path.executable docker && export DOCKER_CONFIG="${XDG_CONFIG_HOME}/docker"; # [The location of your client configuration files](https://docs.docker.com/engine/reference/commandline/cli/#environment-variables)
+
+path.executable fzf && export FZF_DEFAULT_COMMAND='find -maxdepth 10 -not -path "*.git/*"'; # [Default command to use when input is tty](https://github.com/junegunn/fzf#environment-variables)
+# path.executable fzf && export FZF_DEFAULT_OPTS_FILE="${XDG_CONFIG_HOME}/fzf/options"; # [If you prefer to manage default options in a file, set this variable to point to the location of the file](https://github.com/junegunn/fzf?tab=readme-ov-file#environment-variables)
+
+path.executable rg && export RIPGREP_CONFIG_PATH="${XDG_CONFIG_HOME}/ripgrep/config"; # [set the RIPGREP_CONFIG_PATH environment variable to the file path of your config file](https://github.com/BurntSushi/ripgrep/blob/master/GUIDE.md#configuration-file)
+
+path.executable ruff && export RUFF_CACHE_DIR="${XDG_CACHE_HOME}/ruff"; # [A path to the cache directory](https://beta.ruff.rs/docs/settings/#cache-dir)
+
+if path.executable starship; then
+    export STARSHIP_CONFIG="${XDG_CONFIG_HOME}/starship.toml"; # [You can change default configuration file location with STARSHIP_CONFIG environment variable](https://starship.rs/config/#config-file-location)
+    export STARSHIP_CACHE="${XDG_CACHE_HOME}/starship"; # [starship logs warnings and errors into a file [...] can be changed using the STARSHIP_CACHE environment variable](https://starship.rs/config/#logging)
+fi
