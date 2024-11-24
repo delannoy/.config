@@ -1,9 +1,19 @@
 #!/usr/bin/env bash
 
-log DEBUG "$(filepath)";
+log.debug.filepath;
 
-export GNUPGHOME="${XDG_DATA_HOME}/gnupg"; # [If set, directory used instead of "~/.gnupg"](https://www.gnupg.org/documentation/manuals/gnupg/GPG-Configuration.html)
-export NETRC="${XDG_CONFIG_HOME}/private/netrc" # [The .netrc file contains login and initialization information used by the auto-login process](https://www.gnu.org/software/inetutils/manual/html_node/The-_002enetrc-file.html)
-export PARALLEL_HOME="${XDG_CONFIG_HOME}/parallel"; # [Dir where GNU parallel stores config files, semaphores, and caches information between invocations](https://www.gnu.org/software/parallel/parallel.html#environment-variables)
+path.executable gpg && export GNUPGHOME="${XDG_DATA_HOME}/gnupg"; # [If set, directory used instead of "~/.gnupg"](https://www.gnupg.org/documentation/manuals/gnupg/GPG-Configuration.html)
+
+path.executable ftp && export NETRC="${XDG_CONFIG_HOME}/private/netrc" # [The .netrc file contains login and initialization information used by the auto-login process](https://www.gnu.org/software/inetutils/manual/html_node/The-_002enetrc-file.html)
+
+path.executable parallel && export PARALLEL_HOME="${XDG_CONFIG_HOME}/parallel"; # [Dir where GNU parallel stores config files, semaphores, and caches information between invocations](https://www.gnu.org/software/parallel/parallel.html#environment-variables)
+
+if path.executable screen; then
+    export SCREENRC="${XDG_CONFIG_HOME}/screen/conf"; # [Alternate user screenrc file](https://www.gnu.org/software/screen/manual/screen.html#Environment)
+    export SCREENDIR="${XDG_RUNTIME_DIR}/screen"; # [Socket Directory. If screen is not running setuid-root, the user can specify any mode 700 directory in the environment variable $SCREENDIR](https://www.gnu.org/software/screen/manual/html_node/Socket-Directory.html)
+fi
+
+# path.executable wget && export WGETRC="${XDG_CONFIG_HOME}/wget/conf"; # [Wgetrc Location](https://www.gnu.org/software/wget/manual/html_node/Wgetrc-Location.html)
+
 export TERMINFO="${XDG_DATA_HOME}/terminfo"; # [The TERMINFO variable overrides the location for the default terminal database](https://www.man7.org/linux/man-pages/man3/ncurses.3x.html#ENVIRONMENT)
 export TERMINFO_DIRS="${XDG_DATA_HOME}/terminfo:/usr/share/terminfo"; # [Specifies a list of locations to search for terminal descriptions](https://www.man7.org/linux/man-pages/man3/ncurses.3x.html#ENVIRONMENT)
