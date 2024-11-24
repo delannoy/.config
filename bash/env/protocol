@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+log.debug.filepath;
+
+if path.executable kinit; then
+    export KRB5_CONFIG="${XDG_CONFIG_HOME}/krb5/conf"; # [Main Kerberos configuration file.](https://web.mit.edu/kerberos/krb5-1.12/doc/admin/env_variables.html#environment-variables)
+    export KRB5_KTNAME="${XDG_DATA_HOME}/krb5/keytab"; # [Default keytab file name.](https://web.mit.edu/kerberos/krb5-1.12/doc/admin/env_variables.html#environment-variables)
+fi
+
+if path.executable Xorg; then
+    export ICEAUTHORITY="${XDG_CACHE_HOME}/ICEauthority"; # [If the ICEAUTHORITY environment variable if set, this value is returned. Otherwise, the default authorization file name is $HOME/.ICEauthority.](https://www.x.org/releases/X11R7.7/doc/libICE/ICElib.html#authentication_utility_functions)
+    export XAUTHORITY="${XDG_RUNTIME_DIR}/Xauthority"; # [Specifies the name of the authority file on the local host](https://www.ibm.com/docs/en/zos/2.2.0?topic=motif-x-window-system-environment-variables)
+fi
