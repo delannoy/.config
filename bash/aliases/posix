@@ -1,15 +1,19 @@
 #!/usr/bin/env bash
 
-log 'DEBUG' "$(realpath "${BASH_SOURCE[0]}")";
+log.debug.filepath;
 
 # [POSIX Utilities](https://pubs.opengroup.org/onlinepubs/9699919799/idx/utilities.html)
+
+alias cal='ncal -bw'
+# -b        Use oldstyle format for ncal output.
+# -w        Print the number of the week below each week column.
 
 alias cp='cp --interactive --preserve="all" --verbose'
 # --interactive             prompt before overwrite (overrides a previous -n option)
 # --preserve[=ATTR_LIST]    preserve the specified attributes (default: mode,ownership,timestamps), if possible additional attributes: context, links, xattr, all
 # --verbose                 explain what is being done
 
-alias date='date "${STRFTIME}"'
+alias datetime='date "${STRFTIME}"'
 # [date(1)](https://man7.org/linux/man-pages/man1/date.1.html#DESCRIPTION)
 
 alias df='df --human-readable --print-type --total'
@@ -65,6 +69,3 @@ alias rm='rm --interactive="once" --dir --verbose'
 # --interactive[=WHEN]      prompt according to WHEN: never, once (-I), or always (-i); without WHEN, prompt always
 # --dir                     remove empty directories
 # --verbose                 explain what is being done
-
-alias which='command -v'
-# unlike `which`, `command` is a SHELL built-in [https://unix.stackexchange.com/a/85250] [https://stackoverflow.com/a/37056347/13019084]
