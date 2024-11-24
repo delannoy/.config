@@ -9,7 +9,7 @@
     path = include/format
     path = include/log
     path = include/status
-    # path = ../private/user
+    path = ../private/git/user
 
 # [Automatically configuring Git based on remote repository URL](https://www.eddgrant.com/blog/2023/03/28/automatically-configuring-git-based-on-remote-url.html)
 
