@@ -1,7 +1,7 @@
 # [PRETTY FORMATS](https://git-scm.com/docs/git-log#_pretty_formats)
 
 [format]
-    # [https://stackoverflow.com/a/49941383/13019084]
+    # [How to use git show with pretty or format that come up with just commit message brief?](https://stackoverflow.com/a/49941383/13019084)
     pretty = format:%C(magenta)%h%C(reset)|%C(bold blue)%ad%C(reset)|%C(cyan)%an%C(reset)|%s%C(auto)%d%C(reset)
     # %C(...)                       color specification, as described under Values in the "CONFIGURATION FILE" section of [git-config[1]](https://git-scm.com/docs/git-config#Documentation/git-config.txt-color).
     # %C(reset)                     reset color
