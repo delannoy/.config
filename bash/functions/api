@@ -1,30 +1,46 @@
 #!/usr/bin/env bash
 
-thesaurus(){
-    local 'term';
-    _args 'term';
-    curl --silent "dict://dict.org/d:${term}:moby-thesaurus" | grep '^ ';
+log.debug.filepath;
+
+function thesaurus(){
+    # [https://shkspr.mobi/blog/2024/09/http-ftp-and-dict/]
+    # [https://web.archive.org/web/20200830164200/http://www.dict.org/links.html]
+    # [https://www.rfc-editor.org/rfc/rfc2229]
+    function.requires curl || return 1;
+    local term;
+    args term;
+    url="dict://dict.org/d:${term}:moby-thesaurus"
+    log DEBUG "${url}"
+    curl --silent "${url}";
 }
 
-musicbrainz(){
-    local entity query jqFilter limit offset format;
-    _args entity query [jqFilter] [limit] [offset=0] [format='json'];
-    local url="https://musicbrainz.org/ws/2/${entity}?query=${query}&limit=${limit}&offset=${offset}&fmt=${format}";
-    echo "${url}";
-    jq --raw-output "${jqFilter:=.}" <(curl -s "${url}");
-}
-# musicbrainz release-group arid:"a630b133-bcc4-4796-9a0e-685c68b1e6ab" '."release-groups"[].title'
-
-redditDASH(){
-    local 'postID'
-    _args 'postID'
-    jsonPath='.[].data.children[].data.secure_media.reddit_video.fallback_url'
-    jq --raw-output "${jsonPath} | select(. != null)" <(curl --silent --location --user-agent "${_USERAGENT}" "https://www.reddit.com/${postID}.json");
+function musicbrainz.search(){
+    # [https://musicbrainz.org/doc/MusicBrainz_API/Search]
+    function.requires curl && function.requires jq || return 1;
+    local entity query jq_filter limit offset format url;
+    args entity query [jq_filter='.'] [limit=4] [offset=0] [format=json];
+    url="https://musicbrainz.org/ws/2/${entity}?query=${query}&limit=${limit}&offset=${offset}&fmt=${format}";
+    log DEBUG "${url}";
+    jq --raw-output "${jq_filter}" <(curl --silent --location --user-agent "${USER_AGENT}" "${url}");
 }
 
-weather(){
-    # [wttr.in](https://github.com/chubin/wttr.in)
-    local 'city';
-    _args '[city=Geneve]';
+# musicbrainz.search release-group arid:"a630b133-bcc4-4796-9a0e-685c68b1e6ab" '."release-groups"[].title' 10
+
+function reddit.getMP4(){
+    # [https://developers.reddit.com/docs/api]
+    function.requires curl && function.requires jq || return 1;
+    local subreddit post_id;
+    args subreddit post_id;
+    local json_path='.[].data.children[].data.secure_media.reddit_video.fallback_url';
+    local url="https://www.reddit.com/r/${subreddit}/comments/${post_id}.json";
+    log DEBUG "${url}";
+    jq --raw-output "${json_path} | select(. != null)" <(curl --silent --location --user-agent "${USER_AGENT}" "${url}");
+}
+
+function weather(){
+    # [https://github.com/chubin/wttr.in]
+    function.requires curl || return 1;
+    local city;
+    args [city=Geneve];
     curl "wttr.in/${city}";
 }
