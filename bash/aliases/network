@@ -2,10 +2,9 @@
 
 log.debug.filepath;
 
-alias scp='scp -p -r -v'
+alias scp='scp -p -r'
 # -p                    Preserves modification times, access times, and modes from the original file
 # -r                    Recursively copy entire directories. Note that scp follows symbolic links encountered in the tree traversal
-# -v                    Verbose mode. Causes scp and ssh(1) to print debugging messages about their progress.  This is helpful in debugging connection, authentication, and configuration problems.
 
 alias wget='wget --hsts-file="${XDG_CACHE_HOME}/wget_hsts"' # [HSTS database file](https://www.gnu.org/software/wget/manual/html_node/HTTPS-_0028SSL_002fTLS_0029-Options.html#index-HSTS)
 # --hsts-file=file      By default, Wget stores its HSTS database in ~/.wget-hsts. You can use --hsts-file to override this. Wget will use the supplied file as the HSTS database.
