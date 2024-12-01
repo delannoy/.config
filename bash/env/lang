@@ -10,14 +10,17 @@ fi
 
 if path.executable julia; then
     export JULIA_DEPOT_PATH="${XDG_CACHE_HOME}/julia:${JULIA_DEPOT_PATH}"; # [The JULIA_DEPOT_PATH environment variable is used to populate the global Julia DEPOT_PATH variable](https://docs.julialang.org/en/v1/manual/environment-variables/#JULIA_DEPOT_PATH)
-    export JULIA_HISTORY="${XDG_DATA_HOME}/julia/repl_history.jl" # [The absolute path REPL.find_hist_file() of the REPL's history file](https://docs.julialang.org/en/v1/manual/environment-variables/#JULIA_HISTORY)
+    export JULIA_HISTORY="${XDG_STATE_HOME}/julia/repl_history.jl" # [The absolute path REPL.find_hist_file() of the REPL's history file](https://docs.julialang.org/en/v1/manual/environment-variables/#JULIA_HISTORY)
+    mkdir --parents --verbose "${JULIA_HISTORY%/*}"
 fi
 
 if path.executable python3; then
     [[ -n "${NO_COLOR}" ]] && export PYTHON_COLORS=0; # [If this variable is set to 1, the interpreter will colorize various kinds of output. Setting it to 0 deactivates this behavior](https://docs.python.org/3.13/using/cmdline.html#envvar-PYTHON_COLORS)
+    export PYTHON_HISTORY="${XDG_STATE_HOME}/python/${HOSTNAME}.history"; # [This environment variable can be used to set the location of a .python_history file](https://docs.python.org/3.13/using/cmdline.html#envvar-PYTHON_HISTORY)
     export PYTHONPYCACHEPREFIX="${XDG_CACHE_HOME}/python"; # [If this is set, Python will write .pyc files in a mirror directory tree at this path, instead of in __pycache__ directories within the source tree](https://docs.python.org/3/using/cmdline.html#envvar-PYTHONPYCACHEPREFIX)
     export PYTHONSTARTUP="${XDG_CONFIG_HOME}/python/startup"; # [Python commands in that file are executed before the first prompt is displayed in interactive mode](https://docs.python.org/3/using/cmdline.html#envvar-PYTHONSTARTUP)
     export PYTHONUSERBASE="${XDG_DATA_HOME%/*}"; # [Defines the user base directory, which is used to compute the path of the user site-packages directory and installation paths for python -m pip install --user](https://docs.python.org/3/using/cmdline.html#envvar-PYTHONUSERBASE)
+    mkdir --parents --verbose "${PYTHON_HISTORY%/*}"
 fi
 
 path.executable cargo && export CARGO_HOME="${XDG_CACHE_HOME}/cargo" # [Cargo maintains a local cache of the registry index and of git checkouts of crates](https://doc.rust-lang.org/cargo/reference/environment-variables.html#environment-variables);
