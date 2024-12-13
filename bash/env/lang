@@ -18,6 +18,7 @@ if path.executable python3; then
     [[ -n "${NO_COLOR}" ]] && export PYTHON_COLORS=0; # [If this variable is set to 1, the interpreter will colorize various kinds of output. Setting it to 0 deactivates this behavior](https://docs.python.org/3.13/using/cmdline.html#envvar-PYTHON_COLORS)
     export PYTHON_HISTORY="${XDG_STATE_HOME}/python/${HOSTNAME}.history"; # [This environment variable can be used to set the location of a .python_history file](https://docs.python.org/3.13/using/cmdline.html#envvar-PYTHON_HISTORY)
     export PYTHONPYCACHEPREFIX="${XDG_CACHE_HOME}/python"; # [If this is set, Python will write .pyc files in a mirror directory tree at this path, instead of in __pycache__ directories within the source tree](https://docs.python.org/3/using/cmdline.html#envvar-PYTHONPYCACHEPREFIX)
+    export PYTHON_COLORS=1 # [Controlling color](https://docs.python.org/3.13/using/cmdline.html#using-on-controlling-color)
     export PYTHONSTARTUP="${XDG_CONFIG_HOME}/python/startup"; # [Python commands in that file are executed before the first prompt is displayed in interactive mode](https://docs.python.org/3/using/cmdline.html#envvar-PYTHONSTARTUP)
     export PYTHONUSERBASE="${XDG_DATA_HOME%/*}"; # [Defines the user base directory, which is used to compute the path of the user site-packages directory and installation paths for python -m pip install --user](https://docs.python.org/3/using/cmdline.html#envvar-PYTHONUSERBASE)
     mkdir --parents --verbose "${PYTHON_HISTORY%/*}"
