@@ -6,8 +6,7 @@
     cfg = config --list --show-origin
     cm = commit --message
     co = checkout
-    diff = diff --word-diff
+    df = diff --word-diff
     hist = log --all --graph
-    log = log --all --graph
-    st = status --short --branch --show-stash
+    st = status --short --branch --show-stash --untracked-files=no
     unstage = reset HEAD
