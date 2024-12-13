@@ -17,7 +17,9 @@ function benchmark(){
 shopt -q login_shell || return 0; # [How to check if a shell is login/interactive/batch](https://unix.stackexchange.com/a/26782)
 
 export LOG_LEVEL='DEBUG';
-export NO_COLOR=''; # [Command-line software which adds ANSI color to its output by default should check for a NO_COLOR environment variable that, when present and not an empty string (regardless of its value), prevents the addition of ANSI color.](https://no-color.org/)
+
+# [If the NO_COLOR environment variable is set, Python will disable all color in the output](https://docs.python.org/3.13/using/cmdline.html#using-on-controlling-color)
+# export NO_COLOR=''; # [Command-line software which adds ANSI color to its output by default should check for a NO_COLOR environment variable that, when present and not an empty string (regardless of its value), prevents the addition of ANSI color.](https://no-color.org/)
 
 function filepath.logger(){
     # pre-calculate whether `INFO` or `DEBUG` levels should be logged (if so, define their printf format), store the results as environment variables, and define alias for startup files.
@@ -45,16 +47,17 @@ function source.dir(){
 }
 
 function xdg(){
-    # [XDG Base Directory Specification](https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html#variables)
+    # [XDG Base Directory Specification](https://specifications.freedesktop.org/basedir-spec/latest/#variables)
     # [XDG Base Directory](https://wiki.archlinux.org/index.php/XDG_Base_Directory)
+    # [Use the XDG Base Directory Specification!](https://xdgbasedirectoryspecification.com/)
     local bash_source="$(realpath "${BASH_SOURCE[0]}")"; # [How do I determine the location of my script?](https://mywiki.wooledge.org/BashFAQ/028) [Reliable way for a Bash script to get the full path to itself](https://stackoverflow.com/a/11114547)
-    export XDG_CACHE_HOME="${HOME}/.cache"; # contains user-specific non-essential data files
-    export XDG_CONFIG_DIRS='/etc/xdg'; # preference-ordered set of base directories to search for configuration files in addition to the $XDG_CONFIG_HOME
-    export XDG_CONFIG_HOME="$(realpath "${bash_source%/*}/../")"; # "${HOME}/.config"; # contains user-specific configuration files [$XDG_CONFIG_HOME is considered more important than any of the base directories defined by $XDG_CONFIG_DIRS]
-    export XDG_DATA_DIRS='/usr/local/share:/usr/share'; # preference-ordered set of base directories to search for data files in addition to the $XDG_DATA_HOME
-    export XDG_DATA_HOME="${HOME}/.local/share"; # contains user-specific data files [$XDG_DATA_HOME is considered more important than any of the base directories defined by $XDG_DATA_DIRS]
-    export XDG_STATE_HOME="${HOME}/.local/state"; # contains user-specific state files that should persist between (application) restarts
-    export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-"/run/user/${UID}"}"; # contains user-specific non-essential runtime files and other file objects (such as sockets, named pipes, ...)
+    export XDG_CACHE_HOME="${HOME}/.cache"; # base directory relative to which user-specific non-essential data files should be stored
+    export XDG_CONFIG_DIRS='/etc/xdg'; # preference-ordered set of base directories to search for configuration files in addition to the $XDG_CONFIG_HOME directory
+    export XDG_CONFIG_HOME="$(realpath "${bash_source%/*}/../")"; # base directory relative to which user-specific configuration files should be stored
+    export XDG_DATA_DIRS='/usr/local/share:/usr/share'; # preference-ordered set of base directories to search for data files in addition to the $XDG_DATA_HOME base directory
+    export XDG_DATA_HOME="${HOME}/.local/share"; # base directory relative to which user-specific data files should be stored
+    export XDG_STATE_HOME="${HOME}/.local/state"; # base directory relative to which user-specific state files should be stored
+    export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-"/run/user/${UID}"}"; # base directory relative to which user-specific non-essential runtime files and other file objects (such as sockets, named pipes, ...) should be stored
 }
 
 xdg;
