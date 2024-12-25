@@ -1,63 +1,67 @@
 #!/usr/bin/env bash
 
-if [[ -n "${BASH}" ]] && [[ $- == *i* ]];
-    then (( "${_VERBOSE}" >= 3 )) && printf '%s\n' "***$(realpath "${BASH_SOURCE[0]}")***";
-    else return;
-fi
+log.debug.filepath;
 
-docker.uninstall(){
+function docker.uninstall(){
     # [https://docs.docker.com/engine/install/debian/#uninstall-old-versions]
-    sudo apt remove 'containerd' 'docker-compose' 'docker-doc' 'docker.io' 'podman-docker' 'runc'
+    function.requires apt || return 1;
+    sudo apt remove 'containerd' 'docker-compose' 'docker-doc' 'docker.io' 'podman-docker' 'runc';
 }
 
-docker.install(){
+function docker.install(){
     # [https://docs.docker.com/engine/install/debian/#install-using-the-repository]
-    docker.uninstall
-    sudo apt update && sudo apt install 'ca-certificates' 'curl'
-    local url='https://download.docker.com/linux/debian' # 'https://download.docker.com/linux/ubuntu'
-    local keyring='/etc/apt/keyrings/docker.asc'
-    local repo="deb [arch=$(dpkg --print-architecture) signed-by=${keyring}] ${url} $(source /etc/os-release && echo ${VERSION_CODENAME}) stable"
-    sudo install -m 0755 -d "${keyring%/*}"
-    sudo curl --fail --silent --show-error --location "${url}/gpg" -o "${keyring}"
-    sudo chmod a+r "${keyring}"
-    echo "${repo}" | sudo tee '/etc/apt/sources.list.d/docker.list' > /dev/null
-    sudo apt update && sudo apt install 'docker-ce' 'docker-ce-cli' 'containerd.io' 'docker-buildx-plugin' 'docker-compose-plugin'
-    sudo docker run 'hello-world'
+    function.requires apt && function.requires curl || return 1;
+    local keyring='/etc/apt/keyrings/docker.asc';
+    local repo="deb [arch=$(dpkg --print-architecture) signed-by=${keyring}] ${url} $(source /etc/os-release && echo ${VERSION_CODENAME}) stable";
+    local url='https://download.docker.com/linux/debian'; # 'https://download.docker.com/linux/ubuntu'
+    docker.uninstall;
+    sudo apt update && sudo apt install 'ca-certificates' 'curl';
+    sudo install -m 0755 -d "${keyring%/*}";
+    sudo curl --fail --silent --show-error --location "${url}/gpg" -o "${keyring}";
+    sudo chmod a+r "${keyring}";
+    echo "${repo}" | sudo tee '/etc/apt/sources.list.d/docker.list' > /dev/null;
+    sudo apt update && sudo apt install 'docker-ce' 'docker-ce-cli' 'containerd.io' 'docker-buildx-plugin' 'docker-compose-plugin';
+    sudo docker run 'hello-world';
 }
 
-docker.containerID(){
-    local 'imageName'
-    _args 'imageName'
-    sudo docker ps --all --quiet --filter "ancestor=${imageName}" # [https://stackoverflow.com/a/33573321/13019084]
+function docker.containerID(){
+    function.requires docker || return 1;
+    local image_name;
+    args image_name;
+    sudo docker ps --all --quiet --filter "ancestor=${image_name}"; # [How to filter docker process based on image](https://stackoverflow.com/a/33573321/13019084)
 }
 
-docker.imageID(){
-    local 'imageName'
-    _args 'imageName'
-    sudo docker images --quiet --filter "reference=${imageName}"
+function docker.imageID(){
+    function.requires docker || return 1;
+    local image_name;
+    args image_name;
+    sudo docker images --quiet --filter "reference=${image_name}";
 }
 
-docker.rm(){
-    local 'imageName'
-    _args 'imageName'
-    local containerIDs=$(docker.containerID "${imageName}")
-    if [[ -n "${containerIDs}" ]]; then
-        sudo docker stop "${containerIDs}";
-        sudo docker rm "${containerIDs}";
+function docker.rm(){
+    function.requires docker || return 1;
+    local image_name;
+    args image_name;
+    local container_ids=$(docker.containerID "${image_name}");
+    if [[ -n "${container_ids}" ]]; then
+        sudo docker stop "${container_ids}";
+        sudo docker rm "${container_ids}";
     fi
 }
 
-docker.rmi(){
-    local 'imageName'
-    _args 'imageName'
-    local imageID=$(docker.imageID "${imageName}")
-    dockerRM "${imageName}"
-    sudo docker rmi "${imageID}"
+function docker.rmi(){
+    function.requires docker || return 1;
+    local image_name;
+    args image_name;
+    local image_id=$(docker.imageID "${image_name}");
+    docker.rm "${image_name}";
+    sudo docker rmi "${image_id}";
 }
 
-docker.runInteractive(){
-    local 'imageName' 'containerName'
-    _args 'imageName' 'containerName'
-    local imageID=$(docker.imageID "${imageName}")
-    sudo docker run --interactive --tty --name "${containerName}" "${imageID}" '/bin/bash'
+function docker.runInteractive(){
+    function.requires docker || return 1;
+    local image_name container_name;
+    args image_name container_name;
+    local image_id=$(docker.imageID "${image_name}");
+    sudo docker run --interactive --tty --name "${container_name}" "${image_id}" '/bin/bash';
 }
