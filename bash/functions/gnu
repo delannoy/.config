@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+log.debug.filepath;
+
+function cal(){
+    command -v ncal 1>/dev/null && ncal -b -w && return;
+    command -v gcal 1>/dev/null && gcal --with-week-number --starting-day=Monday --iso-week-number=yes && return; # https://www.gnu.org/software/gcal/manual/gcal.html#index-_002d_002dwith_002dweek_002dnumber
+    command -v cal 1>/dev/null && cal;
+}
