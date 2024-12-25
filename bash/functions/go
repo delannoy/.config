@@ -1,23 +1,27 @@
 #!/usr/bin/env bash
 
-if [[ -n "${BASH}" ]] && [[ $- == *i* ]];
-    then (( "${_VERBOSE}" >= 3 )) && printf '%s\n' "***$(realpath "${BASH_SOURCE[0]}")***";
-    else return;
-fi
+log.debug.filepath;
 
-go.installPackagesDryRun(){
-    mkdir -p "${HOME}/tmp/go/"
+# [Linux and Unix xargs command tutorial with examples](https://shapeshed.com/unix-xargs/)
+# [An Opinionated Guide to xargs](https://www.oilshell.org/blog/2021/08/xargs.html)
+
+function go.installPackagesDryRun(){
+    function.requires go && function.requires gawk && function.requires xargs || return 1;
+    local pkg;
+    mkdir --parents "${HOME}/tmp/go/";
     for pkg in $(awk '!/^#/ {print $1}' "${XDG_CONFIG_HOME}/go/get" | xargs); do
         echo "${pkg}";
         go install -n "github.com/${pkg}@latest" > "${HOME}/tmp/go/${pkg//\//_}" 2>&1;
-    done;
+    done
 }
 
-go.installPackages(){
-    awk '!/^#/ {print $1}' "${XDG_CONFIG_HOME}/go/get" | xargs --max-lines=1 --replace={} -- go install github.com/{}@latest
+function go.installPackages(){
+    function.requires go && function.requires gawk && function.requires xargs || return 1;
+    awk '!/^#/ {print $1}' "${XDG_CONFIG_HOME}/go/get" | xargs --max-lines=1 --replace={} -- go install github.com/{}@latest;
 }
 
-go.upgrade(){
+function go.upgrade(){
     # [How to update all Go packages to the latest version](https://gosamples.dev/update-all-packages/)
-    awk '!/^#/ {print $1}' "${XDG_CONFIG_HOME}/go/get" | xargs --max-lines=1 -- go get -u
+    function.requires go && function.requires gawk && function.requires xargs || return 1;
+    awk '!/^#/ {print $1}' "${XDG_CONFIG_HOME}/go/get" | xargs --max-lines=1 -- go get -u;
 }
