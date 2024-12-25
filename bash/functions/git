@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+function git.add.commit(){
+    local file message;
+    args file message;
+    git add "${file}" && git commit -m "${message}";
+}
