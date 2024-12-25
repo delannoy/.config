@@ -1,37 +1,47 @@
 #!/usr/bin/env bash
 
-if [[ -n "${BASH}" ]] && [[ $- == *i* ]]; # [Exit if shell is not running BASH or is non-interactive](https://askubuntu.com/a/1070182)
-    then (( "${_VERBOSE}" >= 3 )) && printf '%s\n' "***$(realpath "${BASH_SOURCE[0]}")***"; # [Reliable way for a Bash script to get the full path to itself [duplicate]](https://stackoverflow.com/a/11114547)
-    else return;
-fi
+log.debug.filepath;
 
-apt.depends(){
+# [Linux and Unix xargs command tutorial with examples](https://shapeshed.com/unix-xargs/)
+# [An Opinionated Guide to xargs](https://www.oilshell.org/blog/2021/08/xargs.html)
+
+function apt.depends(){
     # [How can I determine why apt-get will install a package?](https://askubuntu.com/a/447972)
     # [How to check package dependencies with apt-rdepends](https://www.techrepublic.com/article/how-to-check-package-dependencies-with-apt-rdepends/)
-    apt-rdepends --dotty "${1}" > "${XDG_CONFIG_HOME}/apt/dependencies/${1}.dot"
-    dot -Tpng < "${XDG_CONFIG_HOME}/apt/dependencies/${1}.dot" > "${XDG_CONFIG_HOME}/apt/dependencies/${1}.png"
+    function.requires apt-rdepends && function.requires dot || return 1;
+    local package;
+    args package;
+    mkdir --parents --verbose "${XDG_CONFIG_HOME}/apt/dependencies/";
+    apt-rdepends --dotty "${package}" > "${XDG_CONFIG_HOME}/apt/dependencies/${package}.dot";
+    dot -Tpng < "${XDG_CONFIG_HOME}/apt/dependencies/${package}.dot" > "${XDG_CONFIG_HOME}/apt/dependencies/${package}.png";
 }
 
-apt.installAll(){
+function apt.install.all(){
     # while read -r ppa; do sudo add-apt-repository --update --yes "${ppa%%#*}"; done < "${XDG_CONFIG_HOME}/apt/ppa"
-    awk '!/^#/ {print $1}' "${XDG_CONFIG_HOME}/apt/"{base,dependency,user} | xargs -- sudo apt install --yes
+    function.requires apt && function.requires gawk && function.requires xargs || return 1;
+    awk '!/^#/ {print $1}' "${XDG_CONFIG_HOME}/apt/"{base,dependency,user} | xargs -- sudo apt install --yes;
 }
 
-apt.search(){
+function apt.search(){
     # [https://manpages.ubuntu.com/manpages/focal/man8/apt-cache.8.html]
-    apt search --names-only "$1"
+    function.requires apt || return 1;
+    local package;
+    args package;
+    apt search --names-only "${package}";
 }
 
-apt.upgrade(){
-    sudo apt update && sudo apt full-upgrade --auto-remove --purge --yes && sudo apt autoclean
+function apt.upgrade(){
+    function.requires apt || return 1;
+    sudo apt update && sudo apt full-upgrade --auto-remove --purge --yes && sudo apt autoclean;
 }
 
-apt.randomizedUpgrade(){
-    ((RANDOM % 997)) || { aptUpgrade; }
+function apt.upgrade.randomized(){
+    (( RANDOM % 997 )) || apt.upgrade;
 }
 
-apt.unstable(){
+function apt.unstable(){
     # [DebianUnstable](https://wiki.debian.org/DebianUnstable)
-    # [Configuring Apt Sources](https://wiki.debian.org/SourcesList#Example_sources.list)
-    printf '%s\n%s' 'deb http://deb.debian.org/debian/ unstable main' 'deb-src http://deb.debian.org/debian/ unstable main' | sudo tee /etc/apt/sources.list
+    # [Configuring Apt Sources](https://wiki.debian.org/SourcesList#Examplesrcs.list)
+    local url='http://deb.debian.org/debian/';
+    printf '%s\n%s' "deb ${url} unstable main" "deb-src ${url} unstable main" | sudo tee /etc/apt/sources.list;
 }
