@@ -1,41 +1,49 @@
 #!/usr/bin/env bash
 
-if [[ -n "${BASH}" ]] && [[ $- == *i* ]];
-    then (( "${_VERBOSE}" >= 3 )) && printf '%s\n' "***$(realpath "${BASH_SOURCE[0]}")***";
-    else return;
-fi
+log.debug.filepath;
 
-export KRB5_CONFIG="${XDG_DATA_HOME}/krb/conf"; # [Main Kerberos configuration file.](https://web.mit.edu/kerberos/krb5-1.12/doc/admin/env_variables.html#environment-variables)
-export KRB5_KTNAME="${XDG_DATA_HOME}/krb/keytab"; # [Default keytab file name.](https://web.mit.edu/kerberos/krb5-1.12/doc/admin/env_variables.html#environment-variables)
-export KRB5_PRINCIPAL='adelanno@CERN.CH';
+export KRB5_CONFIG="${KRB5_CONFIG:-${XDG_CONFIG_HOME}/krb5/conf}"; # [Main Kerberos configuration file.](https://web.mit.edu/kerberos/krb5-1.12/doc/admin/env_variables.html#environment-variables)
+export KRB5_KTNAME="${KRB5_KTNAME:-${XDG_DATA_HOME}/krb5/keytab}"; # [Default keytab file name.](https://web.mit.edu/kerberos/krb5-1.12/doc/admin/env_variables.html#environment-variables)
 
-[[ ! -f "${KRB5_CONFIG}" ]] && curls 'http://linux.web.cern.ch/linux/docs/krb5.conf' "${KRB5_CONFIG}"
+function krb.principal(){
+    [[ -z "${KRB5_PRINCIPAL}" ]] && read -p "kerberos principal (e.g. '${USER}@CERN.CH'): " KRB5_PRINCIPAL && export KRB5_PRINCIPAL="${KRB5_PRINCIPAL}";
+    # -p                    prompt output the string PROMPT without a trailing newline before attempting to read
+}
 
-krb.encryptions(){
+function krb.daemon(){
+    local check_interval_in_minutes;
+    args [check_interval_in_minutes=10];
+    krb.principal;
+    k5start -v -b -K "${check_interval_in_minutes}" -u "${KRB5_PRINCIPAL}" -f "${KRB5_KTNAME}";
+    # -v                    Be verbose
+    # -b                    After starting, detach from the controlling terminal and run in the background.
+    # -K minutes            Run in daemon mode to keep a ticket alive indefinitely. The program reawakens after minutes minutes, checks if the ticket will expire before or less than two minutes after the next scheduled check, and gets a new ticket if needed.
+    # -u client principal   This specifies the principal to obtain credentials as.
+    # -f keytab             Authenticate using the keytab keytab rather than asking for a password.
+}
+
+function krb.encryptions(){
     klist -c -e | awk 'BEGIN{FS=":"}; /Etype/{gsub(/ /,""); print $NF}';
+    # -c     List tickets held in a credentials cache.
+    # -e     Displays the encryption types of the session key and the ticket for each credential in the credential cache, or each key in the keytab file.
 }
 
-krb._keytabCreate(){
-    # [https://twiki.cern.ch/twiki/bin/view/Main/Kerberos]
-    # [https://gist.github.com/OmeGak/9530124]
-    local encryptions;
-    mkdir --verbose --parents "${KRB5_KTNAME%/*}";
-    printf "%s\n" "running \`kinit ${KRB5_PRINCIPAL}\` to obtain encryption types..."; # [Kerberos ktutil, what kinds of encryption are available?](https://serverfault.com/a/620592)
-    kinit "${KRB5_PRINCIPAL}" && IFS=, read -ra encryptions <<< "$(krbEncryptions)" || return 1
-    printf "%s\n" 'Run the following commands in the `ktutil` prompt:';
-    for encryption in "${encryptions[@]}"; do
-        printf "%9s%s\n" '' "add_entry -password -p ${KRB5_PRINCIPAL} -k 1 -e ${encryption}";
-    done
-    printf "%9s%s\n" '' "write_kt ${KRB5_KTNAME}";
-    printf "%9s%s\n" '' 'exit';
-    ktutil && klist -t -e -K -k "${KRB5_KTNAME}"
+function krb.init(){
+    krb.principal;
+    kinit -kt "${KRB5_KTNAME}" "${KRB5_PRINCIPAL}" && klist -c;
+    # -k                requests a ticket, obtained from a key in the local host's keytab.
+    # -t keytab_file    The location of the keytab may be specified with the -t keytab_file option
 }
 
-krb.keytabCreate(){
-    local password='pwdLOL';
-    local encryptions;
+function krb.keytabCreate(){
+    local password encryption encryptions;
     declare -a command;
-    kinit "${KRB5_PRINCIPAL}" <<< "${password}" && IFS=, read -ra encryptions <<< "$(krbEncryptions)" || return 1
+    args password;
+    krb.principal
+    kinit "${KRB5_PRINCIPAL}" <<< "${password}" && IFS=, read -ra encryptions <<< "$(krb.encryptions)" || return 1
+    # -r    do not allow backslashes to escape any characters
+    # -a    array  assign the words read to sequential indices of the array variable ARRAY, starting at zero
+    mkdir --verbose --parents "${KRB5_KTNAME%/*}";
     for encryption in "${encryptions[@]}"; do
         command+=("add_entry -password -p ${KRB5_PRINCIPAL} -k 1 -e ${encryption}");
         command+=("${password}");
@@ -45,14 +53,48 @@ krb.keytabCreate(){
     (printf "%s\n" "${command[@]}") | ktutil;
 }
 
-krb.keytabCERN(){
-    ssh -t lxplus "/usr/sbin/cern-get-keytab --user ${KRB5_PRINCIPAL%@*} --keytab ~/keytab"
-    scp lxplus:~/keytab "${KRB5_KTNAME}" && klist -t -e -K -k "${KRB5_KTNAME}"
+function krb._keytabCreate(){
+    # [https://twiki.cern.ch/twiki/bin/view/Main/Kerberos]
+    # [https://gist.github.com/OmeGak/9530124]
+    local encryptions;
+    krb.principal;
+    mkdir --verbose --parents "${KRB5_KTNAME%/*}";
+    printf "%s\n" "running \`kinit ${KRB5_PRINCIPAL}\` to obtain encryption types..."; # [Kerberos ktutil, what kinds of encryption are available?](https://serverfault.com/a/620592)
+    kinit "${KRB5_PRINCIPAL}" && IFS=, read -ra encryptions <<< "$(krb.encryptions)" || return 1;
+    printf "%s\n" 'Run the following commands in the `ktutil` prompt:';
+    for encryption in "${encryptions[@]}"; do
+        printf "%9s%s\n" '' "add_entry -password -p ${KRB5_PRINCIPAL} -k 1 -e ${encryption}";
+    done
+    printf "%9s%s\n" '' "write_kt ${KRB5_KTNAME}";
+    printf "%9s%s\n" '' 'exit';
+    ktutil && klist -t -e -K -k "${KRB5_KTNAME}"
+    # -t     Display the time entry timestamps for each keytab entry in the keytab file.
+    # -e     Displays the encryption types of the session key and the ticket for each credential in the credential cache, or each key in the keytab file.
+    # -K     Display the value of the encryption key in each keytab entry in the keytab file.
+    # -k     List keys held in a keytab file.
 }
 
-krb(){
+function krb.keytabCERN(){
+    # [Generating a user keytab](https://cern.service-now.com/service-portal?id=kb_article&n=KB0003405)
+    local username remote_keytab;
+    args username [remote_keytab=~/private/keytab];
+    ssh -F /dev/null -t "${username}@lxplus.cern.ch" "/usr/sbin/cern-get-keytab --user --keytab=${remote_keytab}";
+    scp -F /dev/null "${username}@lxplus.cern.ch:${remote_keytab}" "${KRB5_KTNAME}";
+    klist -t -e -K -k "${KRB5_KTNAME}";
+    # -t     Display the time entry timestamps for each keytab entry in the keytab file.
+    # -e     Displays the encryption types of the session key and the ticket for each credential in the credential cache, or each key in the keytab file.
+    # -K     Display the value of the encryption key in each keytab entry in the keytab file.
+    # -k     List keys held in a keytab file.
+}
+
+function krb.cern(){
     # [https://linux.web.cern.ch/docs/kerberos-access/]
     # [https://uz.sns.it/~enrico/site/posts/kerberos/password-less-ssh-login-with-kerberos.html]
-    (( "$(klist -k "${KRB5_KTNAME}" 2>/dev/null | grep --count "${KRB5_PRINCIPAL}")" == 0 )) && keytabCreate "${KRB5_PRINCIPAL}"
-    [[ ! "$(pgrep --list-full k5start)" =~ ${KRB5_PRINCIPAL} ]] && k5start -v -b -K 10 -u "${KRB5_PRINCIPAL}" -f "${KRB5_KTNAME}"
+    local krb_conf_url='http://linux.web.cern.ch/linux/docs/krb5.conf'
+    krb.principal;
+    [[ ! -f "${KRB5_CONFIG}" ]] && curl --progress-bar --create-dirs --location --url "${krb_conf_url}" --output "${KRB5_CONFIG}";
+    [[ ! -f "${KRB5_KTNAME}" ]] && krb.keytabCERN;
+    # (( "$(klist -k "${KRB5_KTNAME}" 2>/dev/null | grep --count "${KRB5_PRINCIPAL}")" == 0 )) && krb.keytabCreate "${KRB5_PRINCIPAL}";
+    klist -c 1>/dev/null || krb.init;
+    [[ ! "$(pgrep --list-full k5start)" =~ ${KRB5_PRINCIPAL} ]] && krb.daemon;
 }
