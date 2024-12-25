@@ -2,6 +2,33 @@
 
 log.debug.filepath;
 
+function deezer.search.album(){
+    # https://developers.deezer.com/api/album
+    function.requires curl && function.requires jq || return 1;
+    local artist album;
+    args artist album;
+    local url="https://api.deezer.com/search?q=artist:\"${artist// /+/}\"album:\"${album// /+}\"";
+    log DEBUG "${url}";
+    local response="$(jq '.' <(curl --silent "${url}"))";
+    album_ids="$(jq '[.data[].album.id] | unique[]' <<< "${response}")";
+    for album_id in ${album_ids}; do
+        url="https://api.deezer.com/album/${album_id}";
+        log DEBUG "${url}";
+        jq '. | {artist:.artist.name, album:.title, release_data:.release_date, number_tracks:.nb_tracks, duration:.duration, album_link:.link, cover:.cover_xl, upc:.upc}' <(curl --silent "${url}");
+    done
+}
+
+function deezer.search.track(){
+    # https://developers.deezer.com/api/search
+    function.requires curl && function.requires jq || return 1;
+    local artist track;
+    args artist track;
+    local url="https://api.deezer.com/search?q=artist:\"${artist// /+/}\"track:\"${track// /+}\"";
+    log DEBUG "${url}";
+    local response="$(jq '.' <(curl --silent "${url}"))";
+    jq '.data[] | {artist:.artist.name, album:.album.title, track:.title, track_url:.link}' <<< "${response}";
+}
+
 function thesaurus(){
     # [https://shkspr.mobi/blog/2024/09/http-ftp-and-dict/]
     # [https://web.archive.org/web/20200830164200/http://www.dict.org/links.html]
