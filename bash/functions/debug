@@ -1,58 +1,67 @@
 #!/usr/bin/env bash
 
-if [[ -n "${BASH}" ]] && [[ $- == *i* ]];
-    then (( "${_VERBOSE}" >= 3 )) && printf '%s\n' "***$(realpath "${BASH_SOURCE[0]}")***";
-    else return;
-fi
+log.debug.filepath;
 
-bareShell(){
-    # [https://wiki.bash-hackers.org/scripting/bashbehaviour] [How to start a shell without any user configuration?](https://stackoverflow.com/a/21391035)
+function debug.shell(){
+    # [https://bash-hackers.docs.cern.ch/scripting/bashbehaviour] [How to start a shell without any user configuration?](https://stackoverflow.com/a/21391035)
     env --ignore-environment bash --noprofile --norc;
     # --ignore-environment  start with an empty environment
-    # --noprofile           Do not read either the system-wide startup file /etc/profile or any of the personal initialization files ~/.bash_profile, ~/.bash_login, or ~/.profile
+    # --noprofile           Do not read either the system-wide startup file /etc/profile or any of the personal initialization files ~/.bash_profile, ~/.bashlogin, or ~/.profile
     # --norc                Do not read and execute the system wide initialization file /etc/bash.bashrc and the personal initialization file ~/.bashrc if the shell is interactive
 }
 
-debug.function(){
+function debug.function(){
     # [How can I find where certain bash function is defined?](https://askubuntu.com/a/1146305)
-    local 'function';
-    _args 'function';
+    local function;
+    args function;
     shopt -s extdebug;
     declare -F "${function}";
+    # -F        restrict display to function names only (plus line number and source file when debugging)
     shopt -u extdebug;
     declare -f "${function}";
+    # -f        restrict action or display to function names and definitions
 }
 
-debug.functions(){
-    # [https://wiki.bash-hackers.org/commands/builtin/declare#options]
+function debug.functions(){
+    # [https://bash-hackers.docs.cern.ch/commands/builtin/declare#options]
     declare -f;
+    # -f        restrict action or display to function names and definitions
 }
 
-debug.functionNames(){
-    # [https://wiki.bash-hackers.org/commands/builtin/declare#options]
+function debug.functionNames(){
+    # [https://bash-hackers.docs.cern.ch/commands/builtin/declare#options]
     declare -F | cut --delimiter=' ' --fields=3;
+    # -F        restrict display to function names only (plus line number and source file when debugging)
 }
 
-debug.variables()(
+function debug.variables()(
     # [list all variables declared in the current shell, and their values](https://stackoverflow.com/a/1305273/13019084)
     set -o posix;
     set;
 )
 
-debug.invokedCommands(){
-    # [https://unix.stackexchange.com/a/631291]
+function debug.variableNames()(
+    # [list all variables declared in the current shell, and their values](https://stackoverflow.com/a/1305273/13019084)
+    function.requires gawk || return 1;
+    set -o posix;
+    set | awk 'BEGIN{FS="="}; {print $1}';
+)
+
+function debug.invokedCommands(){
+    # [Find out what scripts are being run by bash at login](https://unix.stackexchange.com/a/631291)
     bash -l -i -x -c exit 2>&1;
-    # -l                    Make bash act as if it had been invoked as a login shell
-    # -i                    If the -i option is present, the shell is interactive
-    # -x                    Print commands and their arguments as they are executed
-    # -c                    If the -c option is present, then commands are read from the first non-option argument command_string
+    # -l    Make bash act as if it had been invoked as a login shell
+    # -i    If the -i option is present, the shell is interactive
+    # -x    Print commands and their arguments as they are executed
+    # -c    If the -c option is present, then commands are read from the first non-option argument command_string
 }
 
-debug.invokedFiles(){
+function debug.invokedFiles(){
     # [list files which the shell opened or tried to open](https://unix.stackexchange.com/a/334389)
+    function.requires strace && function.requires grep || return 1;
     strace bash -l -i -x -c exit 2>&1 | grep "^openat";
-    # -l                    Make bash act as if it had been invoked as a login shell
-    # -i                    If the -i option is present, the shell is interactive
-    # -x                    Print commands and their arguments as they are executed
-    # -c                    If the -c option is present, then commands are read from the first non-option argument command_string
+    # -l    Make bash act as if it had been invoked as a login shell
+    # -i    If the -i option is present, the shell is interactive
+    # -x    Print commands and their arguments as they are executed
+    # -c    If the -c option is present, then commands are read from the first non-option argument command_string
 }
