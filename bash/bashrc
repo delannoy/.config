@@ -9,7 +9,7 @@ declare -A -g TXT; # [before BASH 4.2, associative array must be declared outsid
 
 # Define an alias to pass "$FUNCNAME", positional parameters, and an ASCII "record separator" delimiter to `function.args` before passing the variable names.
 # Set a trap on `ERR` signal to force the parent function to break if `function.args` returns 64.
-alias args=$'trap "(( \$? == 64 )) && return 22" ERR; function.args "${FUNCNAME}" "$@" $\'\\030\'' # [https://bash-hackers.docs.cern.ch/commands/builtin/trap] [How to trap exit code in Bash script](https://stackoverflow.com/a/23637952/13019084) [Escaping characters in bash alias](https://stackoverflow.com/a/42954517)
+alias args=$'trap "(( \$? == 64 )) && return 22" ERR; function.args "${FUNCNAME}" "$@" $\'\\030\''; # [https://bash-hackers.docs.cern.ch/commands/builtin/trap] [How to trap exit code in Bash script](https://stackoverflow.com/a/23637952/13019084) [Escaping characters in bash alias](https://stackoverflow.com/a/42954517)
 
 function ansi(){
     # [How can I print text in various colors?](https://mywiki.wooledge.org/BashFAQ/037)
@@ -50,9 +50,15 @@ function function.args(){
 
     function_name="$1"; # [https://bash-hackers.docs.cern.ch/syntax/shellvars#funcname]
     shift; # [https://bash-hackers.docs.cern.ch/commands/builtin/shift]
-    IFS=$'\30' read -r param arg <<< "$*"; # [Octal 34 is the ASCII "file separator" character, and is unlikely to be present in your data](https://unix.stackexchange.com/a/628543) [https://en.wikipedia.org/wiki/Delimiter#ASCII_delimited_text] [https://bash-hackers.docs.cern.ch/scripting/posparams#mass_usage]
-    read -r -a param <<< "${param}"; # [https://bash-hackers.docs.cern.ch/commands/builtin/read]
-    read -r -a arg <<< "${arg}";
+    while (( "$#" > 0 )); do
+        [[ "$1" == $'\030' ]] && { shift; break; }; # [Octal 34 is the ASCII "file separator" character, and is unlikely to be present in your data](https://unix.stackexchange.com/a/628543) [https://en.wikipedia.org/wiki/Delimiter#ASCII_delimited_text] [https://bash-hackers.docs.cern.ch/scripting/posparams#mass_usage]
+        param+=("$1");
+        shift;
+    done;
+    while (( "$#" > 0 )); do
+        arg+=("$1");
+        shift;
+    done;
 
     for (( i=0; i<${#arg[@]}; i++ )); do
         if ! [[ "${arg[i]}" =~ ${bracket_regex} ]]; then # required arguments (not wrapped in square brackets)
@@ -108,7 +114,7 @@ function log.message(){
         CRITICAL) message="${TXT['blink']}${TXT['red']}${message}${TXT['reset']}";;
         *) return 1;
     esac
-    printf '%s\n' "${message}"
+    printf '%s\n' "${message}";
 }
 
 ansi;
