@@ -33,20 +33,19 @@ function assign.indirect(){
     # [Assigning indirect/reference variables](https://mywiki.wooledge.org/BashFAQ/006#Assigning_indirect.2Freference_variables)
     # [How to use a variable's value as another variable's name in bash](https://stackoverflow.com/a/9715739/13019084)
     read -r -- "$1" <<< "$2"; # [https://bash-hackers.docs.cern.ch/commands/builtin/read]
+    # -r        do not allow backslashes to escape any characters
     log DEBUG "$(declare -p $1)"; # [https://bash-hackers.docs.cern.ch/commands/builtin/declare]
 }
 
 function function.args(){
     # Convenience metafunction to define function arguments, including optional arguments with default values
     # It expects "$FUNCNAME" (name of parent function), followed by the positional parameters passed to the parent function, folowed by an ASCII "record separator" delimiter, followed by the variable names for the parent function's required & optional arguments
-    # Variable names for optional arguments should be indicated by wrapping them in square brackets, e.g `[optional_argument]`
-    # A default value for optional arguments may be specified with an equal sign, e.g. `[optional_argument=default_value]`
     # The passed positional parameters are assigned to the variable names as global variables (use `local` keyword in parent function to specify local variables)
+    # A default value for optional arguments may be specified following ':=', e.g. `optional_argument:=default_value`
     # When calling the parent function, optional positional parameters may be ommited with a quoted empty string, ''
     # If any required parameters are missing, the expected usage (with the expected positional parameters) is printed and an exit code of 64 is returned
     local function_name param arg bracket_regex equals_regex opt_arg default_value; # [https://bash-hackers.docs.cern.ch/commands/builtin/local]
-    bracket_regex='[[]([[:print:]]+)[]]'; # matches one or more 'printable' character(s) enclosed in square brackets (and groups each match into an array named "$BASH_REMATCH") [https://bash-hackers.docs.cern.ch/syntax/shellvars#bash_rematch]
-    equals_regex='([[:print:]]+)[=]([[:print:]]+)'; # matches and groups one or more 'printable' character(s) followed by an '=' and matches and groups the following one or more 'printable' character(s).
+    assignment_regex='([[:print:]]+):=([[:print:]]+)'; # matches and groups one or more 'printable' character(s) followed by ':=' and matches and groups the following one or more 'printable' character(s).
 
     function_name="$1"; # [https://bash-hackers.docs.cern.ch/syntax/shellvars#funcname]
     shift; # [https://bash-hackers.docs.cern.ch/commands/builtin/shift]
@@ -61,18 +60,14 @@ function function.args(){
     done;
 
     for (( i=0; i<${#arg[@]}; i++ )); do
-        if ! [[ "${arg[i]}" =~ ${bracket_regex} ]]; then # required arguments (not wrapped in square brackets)
+        if ! [[ "${arg[i]}" =~ ${assignment_regex} ]]; then # required arguments (no default value assignment)
             [[ -z "${param[i]}" ]] && { printf "%s: ${TXT[red]}%s\n${TXT[reset]}" "usage" "${function_name} ${arg[*]}"; return 64; } # [https://bash-hackers.docs.cern.ch/syntax/arrays#getting_values]
             [[ -n "${param[i]}" ]] && assign.indirect "${arg[i]}" "${param[i]}";
-        elif [[ "${arg[i]}" =~ ${bracket_regex} ]]; then # optional arguments (wrapped in square brackets)
-            opt_arg="${BASH_REMATCH[1]}"; # regex match group of characters enclosed in square brackets
-            ! [[ "${opt_arg}" =~ ${equals_regex} ]] && assign.indirect "${opt_arg}" "${param[i]}";
-            if [[ "${opt_arg}" =~ ${equals_regex} ]]; then
-                opt_arg="${BASH_REMATCH[1]}"; # regex match group of characters before '=' character
-                default_value="${BASH_REMATCH[2]}"; # regex match group of characters after '=' character
-                [[ -n "${param[i]}" ]] && assign.indirect "${opt_arg}" "${param[i]}";
-                [[ -z "${param[i]}" ]] && assign.indirect "${opt_arg}" "${default_value}";
-            fi
+        elif [[ "${arg[i]}" =~ ${assignment_regex} ]]; then # optional arguments (default value is assigned)
+            opt_arg="${BASH_REMATCH[1]}"; # regex match group of characters before ':='
+            default_value="${BASH_REMATCH[2]}"; # regex match group of characters after ':='
+            [[ -n "${param[i]}" ]] && assign.indirect "${opt_arg}" "${param[i]}";
+            [[ -z "${param[i]}" ]] && assign.indirect "${opt_arg}" "${default_value}";
         fi
     done
 }
@@ -80,7 +75,7 @@ function function.args(){
 function function.requires(){
     # check whether argument is found in `$PATH` and whether it is executable.
     local executable_path;
-    executable_path="$(command -v "$1")" && [[ -x "${executable_path}" ]] && return 0;
+    executable_path="$(which "$1")" && [[ -x "${executable_path}" ]] && return 0;
     log ERROR "'$1' is required" && return 1;
 }
 
@@ -117,6 +112,17 @@ function log.message(){
     printf '%s\n' "${message}";
 }
 
+function read.ini_file(){
+    # read each line in `ini_file` (unless it starts with "#") until the first "#" character is encountered
+    # [How can I read a file (data stream, variable) line-by-line (and/or field-by-field)?](http://mywiki.wooledge.org/BashFAQ/001)
+    local ini_file line value comment;
+    ini_file="$1";
+    while IFS='#' read -r value comment; do
+        value="${value%%+([[:space:]])}"; # [How do I trim leading and trailing whitespace from each line of some output?](https://unix.stackexchange.com/a/360648)
+        [[ -n "${value}" ]] && echo "<${value}>";
+    done < "${ini_file}";
+}
+
 ansi;
 
 filepath.logger; # defines `log.debug.filepath` and `log.info.filepath` aliases (see `bash/profile`)
@@ -127,3 +133,4 @@ source "${XDG_CONFIG_HOME}/bash/shopt";
 source.dir "${XDG_CONFIG_HOME}/bash/functions/"; # (see `bash/profile`)
 source.dir "${XDG_CONFIG_HOME}/bash/aliases/";
 source.dir "${XDG_CONFIG_HOME}/bash/prompt/";
+source.dir "${XDG_CONFIG_HOME}/private/bash/functions/";
