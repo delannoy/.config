@@ -11,9 +11,10 @@ function docker.uninstall(){
 function docker.install(){
     # [https://docs.docker.com/engine/install/debian/#install-using-the-repository]
     function.requires apt && function.requires curl || return 1;
-    local keyring='/etc/apt/keyrings/docker.asc';
-    local repo="deb [arch=$(dpkg --print-architecture) signed-by=${keyring}] ${url} $(source /etc/os-release && echo ${VERSION_CODENAME}) stable";
-    local url='https://download.docker.com/linux/debian'; # 'https://download.docker.com/linux/ubuntu'
+    local keyring repo url;
+    keyring='/etc/apt/keyrings/docker.asc';
+    repo="deb [arch=$(dpkg --print-architecture) signed-by=${keyring}] ${url} $(source /etc/os-release && echo ${VERSION_CODENAME}) stable";
+    url='https://download.docker.com/linux/debian'; # 'https://download.docker.com/linux/ubuntu'
     docker.uninstall;
     sudo apt update && sudo apt install 'ca-certificates' 'curl';
     sudo install -m 0755 -d "${keyring%/*}";
@@ -40,9 +41,9 @@ function docker.imageID(){
 
 function docker.rm(){
     function.requires docker || return 1;
-    local image_name;
+    local image_name container_ids;
     args image_name;
-    local container_ids=$(docker.containerID "${image_name}");
+    container_ids=$(docker.containerID "${image_name}");
     if [[ -n "${container_ids}" ]]; then
         sudo docker stop "${container_ids}";
         sudo docker rm "${container_ids}";
@@ -51,17 +52,17 @@ function docker.rm(){
 
 function docker.rmi(){
     function.requires docker || return 1;
-    local image_name;
+    local image_name image_id;
     args image_name;
-    local image_id=$(docker.imageID "${image_name}");
+    image_id=$(docker.imageID "${image_name}");
     docker.rm "${image_name}";
     sudo docker rmi "${image_id}";
 }
 
 function docker.runInteractive(){
     function.requires docker || return 1;
-    local image_name container_name;
+    local image_name container_name image_id;
     args image_name container_name;
-    local image_id=$(docker.imageID "${image_name}");
+    image_id=$(docker.imageID "${image_name}");
     sudo docker run --interactive --tty --name "${container_name}" "${image_id}" '/bin/bash';
 }
