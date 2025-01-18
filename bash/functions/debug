@@ -42,9 +42,8 @@ function debug.variables()(
 
 function debug.variableNames()(
     # [list all variables declared in the current shell, and their values](https://stackoverflow.com/a/1305273/13019084)
-    function.requires gawk || return 1;
     set -o posix;
-    set | awk 'BEGIN{FS="="}; {print $1}';
+    set | cut --delimiter='=' --fields=1;
 )
 
 function debug.invokedCommands(){
@@ -58,7 +57,7 @@ function debug.invokedCommands(){
 
 function debug.invokedFiles(){
     # [list files which the shell opened or tried to open](https://unix.stackexchange.com/a/334389)
-    function.requires strace && function.requires grep || return 1;
+    function.requires strace || return 1;
     strace bash -l -i -x -c exit 2>&1 | grep "^openat";
     # -l    Make bash act as if it had been invoked as a login shell
     # -i    If the -i option is present, the shell is interactive
