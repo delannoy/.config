@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 
+log.debug.filepath;
+
 function git.add.commit(){
+    function.requires git || return 1;
     local file message;
     args file message;
     git add "${file}" && git commit -m "${message}";
