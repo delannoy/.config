@@ -4,12 +4,12 @@ log.debug.filepath;
 
 function deezer.search.album(){
     # https://developers.deezer.com/api/album
-    function.requires curl && function.requires jq || return 1;
-    local artist album;
+    function.requires jq && function.requires curl || return 1;
+    local artist album url response;
     args artist album;
-    local url="https://api.deezer.com/search?q=artist:\"${artist// /+/}\"album:\"${album// /+}\"";
+    url="https://api.deezer.com/search?q=artist:\"${artist// /+/}\"album:\"${album// /+}\"";
     log DEBUG "${url}";
-    local response="$(jq '.' <(curl --silent "${url}"))";
+    response="$(jq '.' <(curl --silent "${url}"))";
     album_ids="$(jq '[.data[].album.id] | unique[]' <<< "${response}")";
     for album_id in ${album_ids}; do
         url="https://api.deezer.com/album/${album_id}";
@@ -20,12 +20,12 @@ function deezer.search.album(){
 
 function deezer.search.track(){
     # https://developers.deezer.com/api/search
-    function.requires curl && function.requires jq || return 1;
-    local artist track;
+    function.requires jq && function.requires curl || return 1;
+    local artist track url response;
     args artist track;
-    local url="https://api.deezer.com/search?q=artist:\"${artist// /+/}\"track:\"${track// /+}\"";
+    url="https://api.deezer.com/search?q=artist:\"${artist// /+/}\"track:\"${track// /+}\"";
     log DEBUG "${url}";
-    local response="$(jq '.' <(curl --silent "${url}"))";
+    response="$(jq '.' <(curl --silent "${url}"))";
     jq '.data[] | {artist:.artist.name, album:.album.title, track:.title, track_url:.link}' <<< "${response}";
 }
 
@@ -43,9 +43,9 @@ function thesaurus(){
 
 function musicbrainz.search(){
     # [https://musicbrainz.org/doc/MusicBrainz_API/Search]
-    function.requires curl && function.requires jq || return 1;
+    function.requires jq && function.requires curl || return 1;
     local entity query jq_filter limit offset format url;
-    args entity query [jq_filter='.'] [limit=4] [offset=0] [format=json];
+    args entity query jq_filter:='.' limit:=4 offset:=0 format:=json;
     url="https://musicbrainz.org/ws/2/${entity}?query=${query}&limit=${limit}&offset=${offset}&fmt=${format}";
     log DEBUG "${url}";
     jq --raw-output "${jq_filter}" <(curl --silent --location --user-agent "${USER_AGENT}" "${url}");
@@ -55,11 +55,11 @@ function musicbrainz.search(){
 
 function reddit.getMP4(){
     # [https://developers.reddit.com/docs/api]
-    function.requires curl && function.requires jq || return 1;
-    local subreddit post_id;
+    function.requires jq && function.requires curl || return 1;
+    local subreddit post_id json_path url;
     args subreddit post_id;
-    local json_path='.[].data.children[].data.secure_media.reddit_video.fallback_url';
-    local url="https://www.reddit.com/r/${subreddit}/comments/${post_id}.json";
+    json_path='.[].data.children[].data.secure_media.reddit_video.fallback_url';
+    url="https://www.reddit.com/r/${subreddit}/comments/${post_id}.json";
     log DEBUG "${url}";
     jq --raw-output "${json_path} | select(. != null)" <(curl --silent --location --user-agent "${USER_AGENT}" "${url}");
 }
@@ -68,6 +68,6 @@ function weather(){
     # [https://github.com/chubin/wttr.in]
     function.requires curl || return 1;
     local city;
-    args [city=Geneve];
+    args city:=Geneve;
     curl "wttr.in/${city}";
 }
