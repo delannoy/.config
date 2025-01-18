@@ -18,7 +18,7 @@ function apt.depends(){
 
 function apt.install.all(){
     # while read -r ppa; do sudo add-apt-repository --update --yes "${ppa%%#*}"; done < "${XDG_CONFIG_HOME}/apt/ppa"
-    function.requires apt && function.requires gawk && function.requires xargs || return 1;
+    function.requires apt && function.requires gawk || return 1;
     awk '!/^#/ {print $1}' "${XDG_CONFIG_HOME}/apt/"{base,dependency,user} | xargs -- sudo apt install --yes;
 }
 
@@ -43,5 +43,5 @@ function apt.unstable(){
     # [DebianUnstable](https://wiki.debian.org/DebianUnstable)
     # [Configuring Apt Sources](https://wiki.debian.org/SourcesList#Examplesrcs.list)
     local url='http://deb.debian.org/debian/';
-    printf '%s\n%s' "deb ${url} unstable main" "deb-src ${url} unstable main" | sudo tee /etc/apt/sources.list;
+    printf '%s\n%s' "deb ${url} unstable main" "deb-src ${url} unstable main" | sudo tee '/etc/apt/sources.list';
 }
