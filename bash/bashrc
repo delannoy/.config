@@ -73,12 +73,9 @@ function function.args(){
 }
 
 function function.requires(){
-    # check whether argument is found in `$PATH` and whether it is executable.
+    # check whether the provided argument is found in `$PATH` and whether it is executable.
     local executable_path;
-    executable_path="$(command -v "$1")";
-    [[ "${executable_path:0:5}" == 'alias' ]] && executable_path="$(which "$1")";
-    [[ -x "${executable_path}" ]] && return 0; # `which` is used instead of `command -v` because the latter responds similar to `type` for aliases
-    # executable_path="$(which "$1")" && [[ -x "${executable_path}" ]] && return 0; # `which` is used instead of `command -v` because the latter responds similar to `type` for aliases
+    executable_path="$(type -P "$1")" && [[ -x "${executable_path}" ]] && return 0; # `type -P` force a PATH search for each NAME, even if it is an alias, builtin, or function, and returns the name of the disk file that would be executed
     log ERROR "'$1' is required" && return 1;
 }
 
