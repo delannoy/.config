@@ -1,0 +1,46 @@
+
+# [GNU Readline Library](https://tiswww.case.edu/php/chet/readline/readline.html)
+# [8 Command Line Editing](https://www.gnu.org/software/bash/manual/html_node/Command-Line-Editing.html)
+# [8.3 Readline Init File](https://www.gnu.org/software/bash/manual/html_node/Readline-Init-File.html)
+# [8.3.1 Readline Init File Syntax](https://www.gnu.org/software/bash/manual/html_node/Readline-Init-File-Syntax.html)
+
+# Include system-wide inputrc, which is ignored by default when a user has their own .inputrc file [https://serverfault.com/a/462893]
+$include /etc/inputrc
+
+set bell-style visible
+# Controls what happens when Readline wants to ring the terminal bell. If set to ‘none’, Readline never rings the bell. If set to ‘visible’, Readline uses a visible bell if one is available. If set to ‘audible’ (the default), Readline attempts to ring the terminal’s bell.
+
+set blink-matching-paren on
+# If set to ‘on’, Readline attempts to briefly move the cursor to an opening parenthesis when a closing parenthesis is inserted. The default is ‘off’.
+
+set completion-ignore-case on
+# If set to ‘on’, Readline performs filename matching and completion in a case-insensitive fashion. The default value is ‘off’.
+
+set completion-map-case on
+# If set to ‘on’, and completion-ignore-case is enabled, Readline treats hyphens (‘-’) and underscores (‘_’) as equivalent when performing case-insensitive filename matching and completion. The default value is ‘off’.
+
+set editing-mode emacs
+# The editing-mode variable controls which default set of key bindings is used. By default, Readline starts up in Emacs editing mode, where the keystrokes are most similar to Emacs. This variable can be set to either ‘emacs’ or ‘vi’.
+
+set mark-symlinked-directories on
+# If set to ‘on’, completed names which are symbolic links to directories have a slash appended (subject to the value of mark-directories). The default is ‘off’.
+
+set match-hidden-files off
+# This variable, when set to ‘on’, causes Readline to match files whose names begin with a ‘.’ (hidden files) when performing filename completion. If set to ‘off’, the leading ‘.’ must be supplied by the user in the filename to be completed. This variable is ‘on’ by default.
+
+set print-completions-horizontally on
+# If set to ‘on’, Readline will display completions with matches sorted horizontally in alphabetical order, rather than down the screen. The default is ‘off’.
+
+set show-all-if-unmodified on
+# This alters the default behavior of the completion functions in a fashion similar to show-all-if-ambiguous. If set to ‘on’, words which have more than one possible completion without any possible partial completion (the possible completions don’t share a common prefix) cause the matches to be listed immediately instead of ringing the bell. The default value is ‘off’.
+
+# [8.4 Bindable Readline Commands](https://www.gnu.org/software/bash/manual/html_node/Bindable-Readline-Commands.html)
+# [8.4.2 Commands For Manipulating The History](https://www.gnu.org/software/bash/manual/html_node/Commands-For-History.html)
+# [The most important command-line tip - incremental history searching with .inputrc](https://codeinthehole.com/tips/the-most-important-command-line-tip-incremental-history-searching-with-inputrc/)
+# [showkey --ascii](https://www.man7.org/linux/man-pages/man1/showkey.1.html)
+
+"\033\133A": history-search-backward
+# Search backward through the history for the string of characters between the start of the current line and the current cursor position (the point). The search string must match at the beginning of a history line.
+
+"\033\133B": history-search-forward
+# Search forward through the history for the string of characters between the start of the current line and the point. The search string must match at the beginning of a history line.
