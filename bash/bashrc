@@ -112,15 +112,16 @@ function log.message(){
     printf '%s\n' "${message}";
 }
 
-function read.ini_file(){
-    # read each line in `ini_file` (unless it starts with "#") until the first "#" character is encountered
+function execute.line_by_line(){
+    # read each line in `input_file` (ignoring all characters after "#" and stripping leading/trailing whitespaces) provide each line as an argument to `function`
     # [How can I read a file (data stream, variable) line-by-line (and/or field-by-field)?](http://mywiki.wooledge.org/BashFAQ/001)
-    local ini_file line value comment;
-    ini_file="$1";
+    local function input_file line value comment;
+    function="$1";
+    input_file="$2";
     while IFS='#' read -r value comment; do
         value="${value%%+([[:space:]])}"; # [How do I trim leading and trailing whitespace from each line of some output?](https://unix.stackexchange.com/a/360648)
-        [[ -n "${value}" ]] && echo "<${value}>";
-    done < "${ini_file}";
+        [[ -n "${value}" ]] && "${function}" "${value}";
+    done < "${input_file}";
 }
 
 ansi;
