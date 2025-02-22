@@ -16,4 +16,4 @@ export LESSHISTSIZE=''; # [The maximum number of commands to save in the history
 
 shopt -s histappend; # [If set, the history list is appended to the file named by the value of the HISTFILE variable when the shell exits, rather than overwriting the file](https://bash-hackers.docs.cern.ch/internals/shell_options#histappend)
 
-mkdir --parents --verbose "${HISTFILE%/*}" "${LESSHISTFILE%/*}"
+mkdir --parents --verbose "${HISTFILE%/*}" "${LESSHISTFILE%/*}";
