@@ -1,43 +1,65 @@
 #!/usr/bin/env bash
 
-if [[ -n "${BASH}" ]] && [[ $- == *i* ]];
-    then (( "${_VERBOSE}" >= 3 )) && printf '%s\n' "***$(realpath "${BASH_SOURCE[0]}")***";
-    else return;
-fi
+log.debug.filepath;
 
-findLatest(){
+function convert.pdf_to_png(){
+    # https://stackoverflow.com/a/13784772/13019084
+    function.requires convert || return 1;
+    local file density quality;
+    args file density:=300 quality:=100;
+    convert -density "${quality}" -quality "${density}" -trim "${file}" "${file%%.*}-%02d.png";
+}
+
+function ffmpeg.convert_to_mkv(){
+    # https://old.reddit.com/r/linuxquestions/comments/cizwtz/ffmpeg_mpg_to_mkv_conversion_lossless/
+    function.requires mkvmerge && function.requires ffmpeg || return 1;
+    local input_file chapters_file mono;
+    args input_file chapters_file:='' mono:='false';
+    [[ ! -f "${chapters_file}" ]] && mkvmerge --output "${input_file%.*}.mkv" "${input_file}" && return 0;
+    [[ -f "${chapters_file}" ]] && mkvmerge --output "${input_file%.*}.mkv" --chapters "${chapters_file}" "${input_file}" && return 0;
+    [[ "${mono,,}" == 'true' ]] && ffmpeg -i "${input_file%.*}.mkv" -codec:v copy -ac 1 "${input_file%.*}.mkv" && return 0;
+    # mkvmerge -o "${input_file%.*}.mkv" "${input_file}" # https://askubuntu.com/a/390895
+    # ffmpeg -i "${input_file}" -c copy "${input_file%.*}.mkv"
+    # ffmpeg -i "${input_file}" -acodec copy -vcodec copy "${input_file%.*}.mkv"
+}
+
+function find.latest(){
     # find ${@} -maxdepth 0 -type d | sort --version-sort | tail -1
     # [How can I sort or compare files based on some metadata attribute (newest / oldest modification time, size, etc)?](http://mywiki.wooledge.org/BashFAQ/003)
-    local latest
-    for file in $1; do
+    local directory latest;
+    args directory;
+    for file in "${directory}"; do
         unset -v latest;
+        # -v        treat each NAME as a shell variable
         [[ "${file}" -nt "${latest}" ]] && latest="${file}";
     done;
     echo "${latest}";
 }
 
-mkcd(){
-    local 'dir'
-    _args 'dir'
-    mkdir --parents "${dir}" && cd "${dir}"
+function mkcd(){
+    local dir;
+    args dir;
+    mkdir --parents --verbose "${dir}" && cd "${dir}";
 }
 
-padString(){
+function string.pad(){
     # [How can I add x number of leading spaces in a string using Bash?](https://stackoverflow.com/a/43076506/13019084)
-    local 'pad' 'str'
-    _args 'pad' 'str'
-    printf "%*s%s\n" "${pad}" '' "${str}"
+    local pad str;
+    args pad str;
+    printf "%*s%s\n" "${pad}" '' "${str}";
 }
 
-removeDuplicateLines(){
+function remove.duplicate_lines(){
     # [How to remove duplicate lines inside a text file?](https://unix.stackexchange.com/a/30178)
-    local 'inFile' 'outFile'
-    _args 'inFile' 'outFile'
-    awk '!seen[$0]++' "${inFile}" > "${outFile}"
+    function.requires gawk || return 1;
+    local input_file output_file;
+    args input_file output_file;
+    awk '!seen[$0]++' "${input_file}" > "${output_file}";
 }
 
-textBetweenPatterns(){
-    local 'pat1' 'pat2'
-    _args 'pat1' 'pat2'
-    sed --silent --regexp-extended "/${pat1}/,/${pat2}/p"
+function find.text_between_patterns(){
+    function.requires sed || return 1;
+    local pat1 pat2;
+    args pat1 pat2;
+    sed --silent --regexp-extended "/${pat1}/,/${pat2}/p";
 }
