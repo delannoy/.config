@@ -11,7 +11,7 @@ function krb.principal(){
 }
 
 function krb.daemon(){
-    # function.requires k5start || return 1;
+    function.requires k5start || return 1;
     local check_interval_in_minutes;
     args check_interval_in_minutes:=10;
     krb.principal;
@@ -23,19 +23,35 @@ function krb.daemon(){
     # -f keytab             Authenticate using the keytab keytab rather than asking for a password.
 }
 
-function krb.encryptions(){
-    function.requires klist || return 1;
-    klist -c -e | awk 'BEGIN{FS=":"}; /Etype/{gsub(/ /,""); print $NF}';
-    # -c     List tickets held in a credentials cache.
-    # -e     Displays the encryption types of the session key and the ticket for each credential in the credential cache, or each key in the keytab file.
+function krb.init(){
+    function.requires kinit || return 1;
+    krb.principal;
+    kinit -k -f -p -t "${KRB5_KTNAME}" "${KRB5_PRINCIPAL}" && krb.list.cache;
+    # -k                requests a ticket, obtained from a key in the local host's keytab
+    # -f                requests forwardable tickets
+    # -p                requests proxiable tickets
+    # -t keytab_file    The location of the keytab may be specified with the -t keytab_file option
 }
 
-function krb.init(){
-    function.requires kinit && function.requires klist || return 1;
-    krb.principal;
-    kinit -kt "${KRB5_KTNAME}" "${KRB5_PRINCIPAL}" && klist -c;
-    # -k                requests a ticket, obtained from a key in the local host's keytab.
-    # -t keytab_file    The location of the keytab may be specified with the -t keytab_file option
+function krb.list.cache(){
+    function.requires klist || return 1;
+    klist -c -e -f;
+    # -c     List tickets held in a credentials cache.
+    # -e     Displays the encryption types of the session key and the ticket for each credential in the credential cache, or each key in the keytab file.
+    # -f     Shows the flags present in the credentials {F:Forwardable, f:forwarded, P:Proxiable, p:proxy, D:postDateable, d:postdated, R:Renewable, I:Initial, i:invalid, H:Hardware authenticated, A:preAuthenticated, T:Transit policy checked, O:Okay as delegate, a:anonymous}
+}
+
+function krb.list.cache.encryptions(){
+    krb.list.cache | awk 'BEGIN{FS=":"}; /Etype/{gsub(/ /,""); print $NF}';
+}
+
+function krb.list.keytab(){
+    function.requires klist || return 1;
+    klist -e -K -t -k "${KRB5_KTNAME}";
+    # -e     Displays the encryption types of the session key and the ticket for each credential in the credential cache, or each key in the keytab file.
+    # -K     Display the value of the encryption key in each keytab entry in the keytab file.
+    # -t     Display the time entry timestamps for each keytab entry in the keytab file.
+    # -k     List keys held in a keytab file.
 }
 
 function krb.keytab.create(){
@@ -46,7 +62,7 @@ function krb.keytab.create(){
     declare -a command;
     args password;
     krb.principal
-    kinit "${KRB5_PRINCIPAL}" <<< "${password}" && IFS=, read -r -a encryptions <<< "$(krb.encryptions)" || return 1
+    kinit "${KRB5_PRINCIPAL}" <<< "${password}" && IFS=, read -r -a encryptions <<< "$(krb.list.cache.encryptions)" || return 1
     # -r    do not allow backslashes to escape any characters
     # -a    array  assign the words read to sequential indices of the array variable ARRAY, starting at zero
     mkdir --verbose --parents "${KRB5_KTNAME%/*}";
@@ -62,7 +78,7 @@ function krb.keytab.create(){
 function krb.keytab._create(){
     # [https://twiki.cern.ch/twiki/bin/view/Main/Kerberos]
     # [https://gist.github.com/OmeGak/9530124]
-    function.requires kinit && function.requires ktutil && function.requires klist || return 1;
+    function.requires kinit && function.requires ktutil || return 1;
     local encryptions;
     krb.principal;
     mkdir --verbose --parents "${KRB5_KTNAME%/*}";
@@ -74,11 +90,7 @@ function krb.keytab._create(){
     done
     printf "%9s%s\n" '' "write_kt ${KRB5_KTNAME}";
     printf "%9s%s\n" '' 'exit';
-    ktutil && klist -t -e -K -k "${KRB5_KTNAME}"
-    # -t     Display the time entry timestamps for each keytab entry in the keytab file.
-    # -e     Displays the encryption types of the session key and the ticket for each credential in the credential cache, or each key in the keytab file.
-    # -K     Display the value of the encryption key in each keytab entry in the keytab file.
-    # -k     List keys held in a keytab file.
+    ktutil && krb.list.keytab;
 }
 
 function krb.keytab.create.cern(){
@@ -91,22 +103,18 @@ function krb.keytab.create.cern(){
     # -t                Force pseudo-terminal allocation.
     scp -F /dev/null "${username}@lxplus.cern.ch:${remote_keytab}" "${KRB5_KTNAME}";
     # -F ssh_config     Specifies an alternative per-user configuration file for ssh.
-    klist -t -e -K -k "${KRB5_KTNAME}";
-    # -t     Display the time entry timestamps for each keytab entry in the keytab file.
-    # -e     Displays the encryption types of the session key and the ticket for each credential in the credential cache, or each key in the keytab file.
-    # -K     Display the value of the encryption key in each keytab entry in the keytab file.
-    # -k     List keys held in a keytab file.
+    krb.list.keytab;
 }
 
 function krb.init.cern(){
     # [https://linux.web.cern.ch/docs/kerberos-access/]
     # [https://uz.sns.it/~enrico/site/posts/kerberos/password-less-ssh-login-with-kerberos.html]
     function.requires curl && function.requires klist && function.requires pgrep && function.requires k5start || return 1;
-    local krb_conf_url='http://linux.web.cern.ch/linux/docs/krb5.conf'
+    local krb_conf_url='https://linux.web.cern.ch/docs/krb5.conf'
     krb.principal;
     [[ ! -f "${KRB5_CONFIG}" ]] && curl --progress-bar --create-dirs --location --url "${krb_conf_url}" --output "${KRB5_CONFIG}";
     [[ ! -f "${KRB5_KTNAME}" ]] && krb.keytab.create.cern;
+    klist -c -s || krb.init;
     # (( "$(klist -k "${KRB5_KTNAME}" 2>/dev/null | grep --count "${KRB5_PRINCIPAL}")" == 0 )) && krb.keytabCreate "${KRB5_PRINCIPAL}";
-    klist -c 1>/dev/null || krb.init;
     [[ ! "$(pgrep --list-full k5start)" =~ ${KRB5_PRINCIPAL} ]] && krb.daemon;
 }
