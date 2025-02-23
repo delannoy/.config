@@ -1,57 +1,74 @@
 #!/usr/bin/env bash
 
-if [[ -n "${BASH}" ]] && [[ $- == *i* ]];
-    then (( "${_VERBOSE}" >= 3 )) && printf '%s\n' "***$(realpath "${BASH_SOURCE[0]}")***";
-    else return;
-fi
+log.debug.filepath;
 
-pip.list(){
-    python3 -m pip list --verbose --user
+# [Linux and Unix xargs command tutorial with examples](https://shapeshed.com/unix-xargs/)
+# [An Opinionated Guide to xargs](https://www.oilshell.org/blog/2021/08/xargs.html)
+
+function pip.list(){
+    # https://pip.pypa.io/en/stable/cli/pip_list/
+    function.requires pip || return 1;
+    [[ -v VIRTUAL_ENV ]] && python3 -m pip list --local "$@" | grep --invert-match 'requires-python' && return 0;
+    python3 -m pip list --user "$@" | grep --invert-match 'requires-python';
 }
 
-pip.showAll(){
-    # python3 -m pip show "$(python3 -m pip freeze --all | awk 'BEGIN{FS="=="} {printf("%s ", $1)}')";
-    python3 -m pip list --user --format=json | jq --raw-output '.[].name' | xargs -- python3 -m pip show
+function pip.list_names(){
+    function.requires jq && pip.list --format='json' "$@" | jq --raw-output '.[].name' && return 0;
+    function.requires gawk && pip.list "$@" | awk '(NR>2) {print $1}';
 }
 
-pip.upgradeAll(){
-    # python3 -m pip upgrade "$(python3 -m pip freeze --all | awk 'BEGIN{FS="=="} {printf("%s ", $1)}')";
-    python3 -m pip list --user --format=json | jq --raw-output '.[].name' | xargs --max-lines=1 -- python3 -m pip install --user --upgrade --upgrade-strategy='eager'
+function pip.show_all(){
+    # https://pip.pypa.io/en/stable/cli/pip_show/
+    pip.list_names | xargs -- python3 -m pip show;
 }
 
-pip.upgradeOutdated(){
-    # [Upgrade all packages in Python using pip](https://www.studytonight.com/python-howtos/upgrade-all-packages-in-python-using-pip)
-    python3 -m pip list --user --outdated --format=json | jq --raw-output '.[].name' | xargs --max-lines=1 -- python3 -m pip install --user --upgrade --upgrade-strategy='eager'
+function pip.upgrade_packages(){
+    # https://pip.pypa.io/en/stable/cli/pip_install/
+    local upgrade_strategy='only-if-needed'
+    # local pkg upgrade_strategy;
+    # args pkg upgrade_strategy:='only-if-needed';
+    [[ -v VIRTUAL_ENV ]] && python3 -m pip install --upgrade --upgrade-strategy="${upgrade_strategy}" "$@";
+    python3 -m pip install --user --upgrade --upgrade-strategy="${upgrade_strategy}" "$@";
 }
 
-pip.installUser(){
-    python3 -m pip install --user --upgrade --upgrade-strategy='eager' \
-    --requirement="${XDG_CONFIG_HOME}/pip/user/packaging" \
-    --requirement="${XDG_CONFIG_HOME}/pip/user/audio" \
-    --requirement="${XDG_CONFIG_HOME}/pip/user/formatter" \
-    --requirement="${XDG_CONFIG_HOME}/pip/user/io" \
-    --requirement="${XDG_CONFIG_HOME}/pip/user/network" \
-    --requirement="${XDG_CONFIG_HOME}/pip/user/parser" \
-    --requirement="${XDG_CONFIG_HOME}/pip/user/scientific" \
-    --requirement="${XDG_CONFIG_HOME}/pip/user/system" \
-    --requirement="${XDG_CONFIG_HOME}/pip/user/utility" \
-    --requirement="${XDG_CONFIG_HOME}/pip/user/visualization";
+function pip.upgrade_all(){
+    pip.list_names | xargs -- pip.upgrade_packages; # python3 -m pip install --user --upgrade --upgrade-strategy='eager';
 }
 
-pip.dependencies(){
-    awk '!/^[# ]/ {print $1}' $(find pip/user/* -not -path *optional) | xargs
+function pip.upgrade_outdated(){
+    local outdated_packages;
+    pip.list_names --outdated | xargs pip.upgrade_packages;
+    # python3 -m pip list --user --outdated --format=json | jq --raw-output '.[].name' | xargs --max-lines=1 -- python3 -m pip install --user --upgrade --upgrade-strategy='eager';
 }
 
-pypi.dependencies(){
+function pip.install_user_packages(){
+    function.requires find && function.requires pip || return 1;
+    pip.upgrade_packages "$(find "${XDG_CONFIG_HOME}/pip/user/" -maxdepth 1 -type f -not -name '.*' | xargs -- printf '--requirement="%s" ')";
+    # python3 -m pip install --user --upgrade --upgrade-strategy='eager' "$(find "${XDG_CONFIG_HOME}/pip/user/" -maxdepth 1 -type f | xargs -- printf '--requirement="%s" ')";
+}
+
+function pip.dependencies(){
+    function.requires gawk || return 1;
+    pip.show_all | awk 'BEGIN{FS=":"}; /Name:/{print $2} /Requires:/{print "    "$0} /Required-by:/{print "    "$0}'
+    # function.requires find || return 1;
+    # execute.line_by_line echo <(cat $(find "${XDG_CONFIG_HOME}/pip/user/" -maxdepth 1 -type f -not -name '.*'))
+    # awk '!/^[# ]/ {print $1}' $(find "${XDG_CONFIG_HOME}/pip/user/" -not -name '.*') | xargs;
+}
+
+function pypi.dependencies(){
     # [How to list dependencies for a python library without installing? [duplicate]](https://stackoverflow.com/a/50424967/13019084)
-    local 'package';
-    _args 'package';
+    function.requires jq && function.requires curl || return 1;
+    local package;
+    args package;
     jq --raw-output '.info.requires_dist[]' <(curl --silent "https://pypi.org/pypi/${package}/json");
 }
 
-pypi.search(){
-    # [JSON API for PyPi - how to list packages?](https://stackoverflow.com/a/23860244/13019084)
-    local 'package';
-    _args 'package';
-    pup "a[href*=${package}] text{}" -f <(curl --silent 'https://pypi.org/simple/');
+function pypi.search(){
+    # [JSON API for PyPi - how to list packages?](https://stackoverflow.com/a/74203841)
+    # [Filter by Regex in JQ](https://stackoverflow.com/a/50868294)
+    function.requires jq && function.requires curl || return 1;
+    local package;
+    args package;
+    jq --raw-output ".projects[] | select(.name | test(\"^${package}\")).name" <(curl --silent --header 'Accept: application/vnd.pypi.simple.v1+json' 'https://pypi.org/simple/');
+    # function.requires pup && pup "a[href*=${package}] text{}" -f <(curl --silent 'https://pypi.org/simple/');
 }
