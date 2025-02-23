@@ -1,53 +1,51 @@
 #!/usr/bin/env bash
 
-if [[ -n "${BASH}" ]] && [[ $- == *i* ]];
-    then (( "${_VERBOSE}" >= 3 )) && printf '%s\n' "***$(realpath "${BASH_SOURCE[0]}")***";
-    else return;
-fi
+log.debug.filepath;
 
-venv._createPipConf(){
+function venv.create.pip_conf(){
     printf "%s\n%s\n" '[general]' 'require-virtualenv = true' > "${VIRTUAL_ENV}/pip.conf"; # [Requiring an active virtual environment for pip](https://docs.python-guide.org/dev/pip-virtualenv/#requiring-an-active-virtual-environment-for-pip)
     printf "%s\n%s\n" '[install]' 'user = false' >> "${VIRTUAL_ENV}/pip.conf"; # [Install to the Python user install directory for your platform](https://pip.pypa.io/en/stable/cli/pip_install/#cmdoption-user) [pip install --user misbehaves inside venv](https://github.com/pypa/pip/issues/5702)
     printf "%s\n%s\n" '[list]' 'local = true' >> "${VIRTUAL_ENV}/pip.conf"; # [If in a virtualenv that has global access, do not list globally-installed packages](https://pip.pypa.io/en/stable/cli/pip_list/#cmdoption-l)
     printf "%s\n%s\n" '[freeze]' 'local = true' >> "${VIRTUAL_ENV}/pip.conf"; # [If in a virtualenv that has global access, do not list globally-installed packages](https://pip.pypa.io/en/stable/cli/pip_freeze/#cmdoption-l)
 }
 
-venv._instructions(){
-    printf "${TXT[GREEN]}%s${TXT[reset]}\n" "Activated venv: '"${VIRTUAL_ENV}"'";
-    # printf "${TXT[GREEN]}%s${TXT[reset]}\n" "location of python3 executable: '"$(command -v python3)"'";
-    printf "${TXT[YELLOW]}%s${TXT[reset]}\n" "Run 'deactivate' to exit the venv";
+function venv.instructions(){
+    log INFO "Activated venv: '${VIRTUAL_ENV}'";
+    log DEBUG "location of python3 executable: '$(command -v python3)'";
+    log INFO "Run 'deactivate' to exit the venv";
 }
 
-venv._userPrompt(){
+function venv.prompt.user(){
     local venv_path system_site_packages;
-    _args 'venv_path' 'system_site_packages';
-    printf "${TXT[YELLOW]}%s${TXT[reset]}\n" "A new python3 virtual environment will be created in '"${venv_path}"'";
-    if [[ "${system_site_packages}" == 'True' ]]; then
-        local globalPkgPath="$(python3 -c 'import site; print(site.getsitepackages())')"; # [How do I find the location of my Python site-packages directory?](https://stackoverflow.com/a/46071447)
-        printf "${TXT[RED]}%s${TXT[reset]}\n" "with access to system/global site-packages: ${globalPkgPath}";
+    args venv_path system_site_packages;
+    log INFO "A new python3 virtual environment will be created in '${venv_path}'";
+    if [[ "${system_site_packages,,}" == 'true' ]]; then
+        local global_pkg_path="$(python3 -c 'import site; print(site.getsitepackages())')"; # [How do I find the location of my Python site-packages directory?](https://stackoverflow.com/a/46071447)
+        log INFO "with access to system/global site-packages: ${global_pkg_path}";
     fi
-    printf "${TXT[YELLOW]}%s${TXT[reset]}\n" "Press <ENTER> to continue...";
+    log INFO "Press <ENTER> to continue...";
     read -s;
-    printf "${TXT[GREEN]}%s${TXT[reset]}\n" "Setting up '"${venv_path}"' venv...";
+    # -s        do not echo input coming from a terminal
+    log INFO "Setting up '${venv_path}' venv...";
 }
 
-venv.list(){
-    printf "%s\n" "available venv:"
-    find "${_VENV_DIR:-"${PWD}"}" -mindepth 1 -maxdepth 1 -type d -printf "    %f\n";
+function venv.list(){
+    find "${VENV_DIR:-"${PWD}"}" -mindepth 1 -maxdepth 1 -type d -printf "%f\n";
 }
 
-venv(){
-    [[ -z "$1" ]] && listVenv;
+function venv(){
+    function.requires python3 || return 1;
+    [[ -z "$1" ]] && venv.list;
     local venv_name system_site_packages venv_activate;
-    _args 'venv_name' '[system_site_packages=False]';
-    local venv_dir="${_VENV_DIR:-"${PWD}"}";
+    args venv_name system_site_packages:='false';
+    local venv_dir="${VENV_DIR:-"${PWD}"}";
     mkdir --parents --verbose "${venv_dir}";
     venv_activate="${venv_dir}/${venv_name}/bin/activate";
     if [[ ! -f "${venv_activate}" ]]; then
-        venv._userPrompt "${venv_dir}/${venv_name}" "${system_site_packages}";
-        [[ "${system_site_packages}" == 'True' ]] && python3 -m venv --system-site-packages "${venv_dir}/${venv_name}" || python3 -m venv "${venv_dir}/${venv_name}";
+        venv.prompt.user "${venv_dir}/${venv_name}" "${system_site_packages}";
+        [[ "${system_site_packages,,}" == 'true' ]] && python3 -m venv --system-site-packages "${venv_dir}/${venv_name}" || python3 -m venv "${venv_dir}/${venv_name}";
     fi
     source "${venv_activate}";
-    venv._createPipConf;
-    venv._instructions;
+    venv.create.pip_conf;
+    venv.instructions;
 }
