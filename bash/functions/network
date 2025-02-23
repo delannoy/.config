@@ -1,76 +1,115 @@
 #!/usr/bin/env bash
 
-if [[ -n "${BASH}" ]] && [[ $- == *i* ]];
-    then (( "${_VERBOSE}" >= 3 )) && printf '%s\n' "***$(realpath "${BASH_SOURCE[0]}")***";
-    else return;
-fi
+log.debug.filepath;
 
-curlCookie()(
-    local 'cookieFile' 'URL' 'outFile'
-    _args 'cookieFile' 'URL' 'outFile'
-    curl --progress-bar --user-agent "${_USERAGENT}" --cookie "${cookieFile}" --url "${URL}" --output "${outFile}"
-)
+function curl.cookie(){
+    function.requires curl || return 1;
+    local cookie_file url out_file;
+    args cookie_file url out_file;
+    curl --progress-bar --user-agent "${USER_AGENT}" --cookie "${cookie_file}" --url "${url}" --output "${out_file}";
+}
 
-curls()(
-    local 'url' 'outFile'
-    _args 'url' '[outFile]'
-    local curlWO='%{filename_effective}:%{size_download}:%{time_total}'
-        # %{filename_effective} the ultimate filename that curl writes out to. This is only meaningful if curl is told to write to a file with the --remote-name or --output option. It's most useful in combination with the --remote-header-name option.
-        # %{size_download}      the total number of bytes that were downloaded.
-        # %{time_total}         the total time, in seconds, that the full operation lasted. The time will be displayed with millisecond resolution.
-    [[ -n "${outFile}" ]] && outFile="--output ${outFile}" || outFile='--remote-name'
-    curl --progress-bar --create-dirs --location --url "${url}" --output "${outFile}" --write-out "${curlWO}" | awk 'BEGIN{FS=":"} {printf("[%s] [%s MB] [%s sec]\n", $1, $2/10^6, $3)}'
-        # -#, --progress-bar        Make curl display transfer progress as a simple progress bar instead of the standard, more informational, meter.
-        # --create-dirs             When used in conjunction with the -o, --output option, curl will create the necessary local directory hierarchy as needed.
-        # --location                (HTTP) If the server reports that the requested page has moved to a different location, this option will make curl redo the request on the new place.
-        # --write-out <format>      Defines what to display on stdout after a completed and successful operation. The format is a string that may contain plain text mixed with any number of variables,
-        #                           specified as %{variable_name} # [https://ec.haxx.se/usingcurl/usingcurl-verbose/usingcurl-writeout]
-        # -s, --silent              Silent or quiet mode. Don't show progress meter or error messages. Makes Curl mute. It will still output the data you ask for, potentially even to the terminal/stdout unless you redirect it.
-)
+function curls(){
+    function.requires curl && function.requires gawk || return 1;
+    local url out_file;
+    args url out_file:='';
+    local curlWO='%{filename_effective}:%{size_download}:%{time_total}';
+    # %{filename_effective} the ultimate filename that curl writes out to. This is only meaningful if curl is told to write to a file with the --remote-name or --output option. It's most useful in combination with the --remote-header-name option.
+    # %{size_download}      the total number of bytes that were downloaded.
+    # %{time_total}         the total time, in seconds, that the full operation lasted. The time will be displayed with millisecond resolution.
+    [[ -n "${out_file}" ]] && curl --progress-bar --create-dirs --location --url "${url}" --output "${out_file}" --write-out "${curlWO}" | awk 'BEGIN{FS=":"} {printf("[%s] [%s MB] [%s sec]\n", $1, $2/10^6, $3)}';
+    [[ -z "${out_file}" ]] && curl --progress-bar --create-dirs --location --url "${url}" --remote-name --write-out "${curlWO}" | awk 'BEGIN{FS=":"} {printf("[%s] [%s MB] [%s sec]\n", $1, $2/10^6, $3)}';
+    # --progress-bar        Make curl display transfer progress as a simple progress bar instead of the standard, more informational, meter.
+    # --create-dirs         When used in conjunction with the -o, --output option, curl will create the necessary local directory hierarchy as needed.
+    # --location            (HTTP) If the server reports that the requested page has moved to a different location, this option will make curl redo the request on the new place.
+    # --write-out <format>  Defines what to display on stdout after a completed and successful operation. The format is a string that may contain plain text mixed with any number of variables, specified as %{variable_name} # [https://ec.haxx.se/usingcurl/usingcurl-verbose/usingcurl-writeout]
+    # --silent              Silent or quiet mode. Don't show progress meter or error messages. Makes Curl mute. It will still output the data you ask for, potentially even to the terminal/stdout unless you redirect it.
+}
 
-ipPublic(){
+function ip.public(){
     # [Command for determining my public IP?](https://askubuntu.com/a/95911)
-    curl 'https://ipinfo.io/ip'
+    function.requires curl || return 1;
+    curl 'https://ipinfo.io/ip';
 }
 
-ipAddr(){
-    local 'device'
-    _args '[device=eth0]'
-    if [[ "$(ip -json 2>&1 | grep --count 'unknown')" == 0 ]] && [[ -n "$(command -v jq)" ]]; then
-        ip -json addr show dev "${device}" | jq --raw-output '.[].addr_info[] | select(.family=="inet").local'
-    else
-        ip addr show dev "${device}" | awk '/inet /{print $2}'
-    fi
+function ip.addr(){
+    local device;
+    args device:='eth0';
+    function.requires hostname && hostname --all-ip-addresses && return 0;
+    function.requires ip && function.requires jq && ip -json addr show dev "${device}" | jq --raw-output '.[].addr_info[] | select(.family=="inet").local' && return 0; # ip -json addr 2>&1 >/dev/null &&
+    function.requires ip && function.requires gawk && ip addr show dev "${device}" | awk '/inet /{print $2}';
 }
 
-sshdConfig(){
-    sudo apt-get remove  openssh-server -y
-    sudo apt-get install openssh-server -y
-    sudo sed --in-place 's|^PasswordAuthentication.*|PasswordAuthentication yes|g' "$(find /etc/ssh/ -name 'sshd_config')"
+function rsync.archive(){
+    function.requires rsync || return 1;
+    rsync --verbose --archive --update --human-readable --progress --out-format="${RSYNCOF}" "$@";
+    # --verbose             increase verbosity
+    # --archive             archive mode (equals --recursive --links --perms --times --group --owner --devices --specials)
+    #   --recursive         recurse into directories
+    #   --links             copy symlinks as symlinks
+    #   --perms             preserve permissions
+    #   --times             preserve modification times "(you're much better off using -t)"
+    #   --group             preserve group
+    #   --owner             preserve owner (super-user only)
+    #   --devices           preserve device files (super-user only)
+    #   --specials          preserve special files
+    # --update              skip files that are newer on the receiver
+    # --human-readable      output numbers in a human-readable format
+    # --progress            show progress during transfer
+    # --out-format=FORMAT   output updates using the specified FORMAT
+}
+
+function rsync.no_meta(){
+    # [rsync ignore owner, group, time, and perms](https://unix.stackexchange.com/a/102214)
+    function.requires rsync || return 1;
+    rsync.archive --no-perms --no-times --no-group --no-owner "$@";
+    # --no-OPTION           turn off an implied OPTION (e.g. --no-D)
+}
+
+function rsync.progress(){
+    # [How can I view a progress bar when running rsync?](https://askubuntu.com/a/907717)
+    function.requires rsync || return 1;
+    rsync --archive --info=PROGRESS2 "$@";
+    # `rsync --info=help | grep PROGRESS`
+    # PROGRESS   Mention 1) per-file progress or 2) total transfer progress
+}
+
+function sshd.config(){
+    function.requires sed || return 1;
+    sudo sed --in-place 's|^PasswordAuthentication.*|PasswordAuthentication yes|g' "$(find /etc/ssh/ -name 'sshd_config')";
     printf '%s\n%s\n%s\n'                                       \
            'ChallengeResponseAuthentication yes'                \
            'PasswordAuthentication          yes'                \
-           'PermitRootLogin                 no'                 | sudo tee '/etc/ssh/sshd'
-    sudo service ssh --full-restart
-    # hostname -I | cut --delimiter=' ' --fields=1
+           'PermitRootLogin                 no'                 | sudo tee '/etc/ssh/sshd';
+    sudo service ssh --full-restart;
 }
 
-wgetCookie()(
-    local 'cookieFile' 'URL' 'outFile'
-    _args 'cookieFile' 'URL' 'outFile'
-    wget --quiet --show-progress --no-check-certificate --trust-server-names --user-agent="${_USERAGENT}" --load-cookies="${cookieFile}" --output-document="${outFile}" "${URL}" # 2>&1 | /bin/grep '\-\-\|saved'
-)
+function ssh.key(){
+    function.requires ssh-keygen && function.requires ssh-copy-id || return 1;
+    local host_name ip;
+    args host_name ip;
+    ssh-keygen -t rsa -N '' -f "${HOME}/.ssh/keys/id_rsa_${host_name}";
+        # -t    Specifies the type of key to create. The possible values are “dsa”, “ecdsa”, “ed25519”, or “rsa”.
+        # -N    Provides the new passphrase.
+        # -f    Specifies the filename of the key file.
+    ssh-copy-id -i "${HOME}/.ssh/keys/id_rsa_${host_name}.pub" "${USER}@${ip}";
+        # -i    Use only the key(s) contained in identity_file (rather than looking for identities via ssh-add(1) or in the default_ID_file).
+}
 
-wgets(){
-    local 'url' 'outFile'
-    _args 'url' '[outFile]'
-    [[ -n "${outFile}" ]] && outFile="--output-document ${outFile}"
-    if [[ "$(wget --show-progress 2>&1 | grep --count 'unrecognized option')" == 0 ]]; then
-        wget --quiet --show-progress "${outFile}" "${url}"
-        # --quiet               Turn off Wget's output.
-        # --show-progress       Force wget to display the progress bar in any verbosity. Only available wget >= 1.16 [http://savannah.gnu.org/forum/forum.php?forum_id=8133] [https://stackoverflow.com/a/29457649]
-        # --output-document     The documents will not be written to the appropriate files, but all will be concatenated together and written to file.
-    else
-        wget "${outFile}" "${url}"
-    fi
+function wget.cookie(){
+    function.requires wget || return 1;
+    local cookie_file url out_file;
+    args cookie_file url out_file;
+    wget --quiet --show-progress --no-check-certificate --trust-server-names --user-agent="${USER_AGENT}" --load-cookies="${cookie_file}" --output-document="${out_file}" "${url}";
+}
+
+function wgets(){
+    function.requires wget || return 1;
+    local url out_file;
+    args url out_file:='';
+    [[ -z "${out_file}" ]] && wget --quiet --show-progress "${url}";
+    [[ -n "${out_file}" ]] && wget --quiet --show-progress --output-document="${out_file}" "${url}";
+    # --quiet               Turn off Wget's output.
+    # --show-progress       Force wget to display the progress bar in any verbosity. Only available wget >= 1.16 [http://savannah.gnu.org/forum/forum.php?forum_id=8133] [https://stackoverflow.com/a/29457649]
+    # --output-document     The documents will not be written to the appropriate files, but all will be concatenated together and written to file.
 }
