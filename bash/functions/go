@@ -5,23 +5,43 @@ log.debug.filepath;
 # [Linux and Unix xargs command tutorial with examples](https://shapeshed.com/unix-xargs/)
 # [An Opinionated Guide to xargs](https://www.oilshell.org/blog/2021/08/xargs.html)
 
-function go.installPackagesDryRun(){
-    function.requires go && function.requires gawk && function.requires xargs || return 1;
+function go.install.package.latest(){
+    function.requires go || return 1;
     local pkg;
-    mkdir --parents "${HOME}/tmp/go/";
-    for pkg in $(awk '!/^#/ {print $1}' "${XDG_CONFIG_HOME}/go/get" | xargs); do
-        echo "${pkg}";
-        go install -n "github.com/${pkg}@latest" > "${HOME}/tmp/go/${pkg//\//_}" 2>&1;
-    done
+    args pkg;
+    log DEBUG "go install github.com/${pkg}@latest";
+    go install "github.com/${pkg}@latest";
 }
 
-function go.installPackages(){
-    function.requires go && function.requires gawk && function.requires xargs || return 1;
-    awk '!/^#/ {print $1}' "${XDG_CONFIG_HOME}/go/get" | xargs --max-lines=1 --replace={} -- go install github.com/{}@latest;
+function go.install.package.dry_run(){
+    function.requires go || return 1;
+    local pkg log_file;
+    args pkg;
+    log DEBUG "go install -n github.com/${pkg}@latest > ${log_file}";
+    log_file="${HOME}/tmp/go/${pkg//\//_}";
+    mkdir --parents "${log_file%/*}";
+    go install -n "github.com/${pkg}@latest" > "${log_file}" 2>&1;
 }
 
-function go.upgrade(){
+function go.install.packages.dry_run(){
+    execute.line_by_line go.install.package.dry_run "${XDG_CONFIG_HOME}/go/get";
+}
+
+function go.install.packages(){
+    execute.line_by_line go.install.package.latest "${XDG_CONFIG_HOME}/go/get";
+    # awk '!/^#/ {print $1}' "${XDG_CONFIG_HOME}/go/get" | xargs --max-lines=1 --replace={} -- go install github.com/{}@latest;
+}
+
+function go.update.package(){
+    function.requires go || return 1;
+    local pkg;
+    args pkg;
+    log DEBUG "go get -u ${pkg}";
+    go get -u "${pkg}";
+}
+
+function go.upgrade.all(){
     # [How to update all Go packages to the latest version](https://gosamples.dev/update-all-packages/)
-    function.requires go && function.requires gawk && function.requires xargs || return 1;
-    awk '!/^#/ {print $1}' "${XDG_CONFIG_HOME}/go/get" | xargs --max-lines=1 -- go get -u;
+    execute.line_by_line go.update.package "${XDG_CONFIG_HOME}/go/get"
+    # awk '!/^#/ {print $1}' "${XDG_CONFIG_HOME}/go/get" | xargs --max-lines=1 -- go get -u;
 }
