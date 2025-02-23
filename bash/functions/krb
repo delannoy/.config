@@ -118,7 +118,6 @@ function krb.init.cern(){
     krb.principal;
     [[ ! -f "${KRB5_CONFIG}" ]] && curl --progress-bar --create-dirs --location --url "${krb_conf_url}" --output "${KRB5_CONFIG}";
     [[ ! -f "${KRB5_KTNAME}" ]] && krb.keytab.create.cern;
-    # [[ ! "$(krb.list.keytab)" =~ ${KRB5_PRINCIPAL} ]] && krb.keytab.create.cern;
-    klist -c -s || krb.init;
+    [[ ! "$(krb.list.keytab)" =~ ${KRB5_PRINCIPAL} ]] && krb.keytab.create.cern;
     [[ ! "$(pgrep --list-full k5start)" =~ ${KRB5_PRINCIPAL} ]] && krb.daemon;
 }
