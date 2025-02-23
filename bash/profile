@@ -58,6 +58,7 @@ function xdg(){
     export XDG_DATA_HOME="${HOME}/.local/share"; # base directory relative to which user-specific data files should be stored
     export XDG_STATE_HOME="${HOME}/.local/state"; # base directory relative to which user-specific state files should be stored
     export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-"/run/user/${UID}"}"; # base directory relative to which user-specific non-essential runtime files and other file objects (such as sockets, named pipes, ...) should be stored
+    mkdir --parents --verbose "${XDG_DATA_HOME}" "${XDG_STATE_HOME}";
 }
 
 xdg;
