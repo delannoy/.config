@@ -5,6 +5,30 @@ log.debug.filepath;
 # [Linux and Unix xargs command tutorial with examples](https://shapeshed.com/unix-xargs/)
 # [An Opinionated Guide to xargs](https://www.oilshell.org/blog/2021/08/xargs.html)
 
+function pip.config.list(){
+    # https://pip.pypa.io/en/stable/cli/pip_config/
+    pip config list
+}
+
+function pip.dependencies(){
+    function.requires gawk || return 1;
+    pip.show.all | awk 'BEGIN{FS=":"}; /Name:/{print $2} /Requires:/{print "    "$0} /Required-by:/{print "    "$0}'
+}
+
+function pip.inspect.packages(){
+    # https://pip.pypa.io/en/stable/cli/pip_inspect/
+    local fields='{name:.name, version:.version, summary:.summary[:200], keywords:.keywords, home_page:.home_page, requires:.requires_dist, provides:.provides_extra}'
+    [[ -v VIRTUAL_ENV ]] && python3 -m pip inspect --local | jq ".installed[].metadata | ${fields}" | less
+    python3 -m pip inspect --user | jq ".installed[].metadata | ${fields}" | less
+}
+
+function pip.install.user_packages(){
+    # https://pip.pypa.io/en/stable/cli/pip_install/
+    function.requires find && function.requires pip || return 1;
+    pip.upgrade.packages "$(find "${XDG_CONFIG_HOME}/pip/user/" -maxdepth 1 -type f -not -name '.*' | xargs -- printf '--requirement="%s" ')";
+    # python3 -m pip install --user --upgrade --upgrade-strategy='eager' "$(find "${XDG_CONFIG_HOME}/pip/user/" -maxdepth 1 -type f | xargs -- printf '--requirement="%s" ')";
+}
+
 function pip.list(){
     # https://pip.pypa.io/en/stable/cli/pip_list/
     function.requires pip || return 1;
@@ -13,6 +37,7 @@ function pip.list(){
 }
 
 function pip.list.package_names(){
+    # https://pip.pypa.io/en/stable/cli/pip_list/
     function.requires jq && pip.list --format='json' "$@" | jq --raw-output '.[].name' && return 0;
     function.requires gawk && pip.list "$@" | awk '(NR>2) {print $1}';
 }
@@ -29,24 +54,15 @@ function pip.upgrade.packages(){
 }
 
 function pip.upgrade.all_packages(){
+    # https://pip.pypa.io/en/stable/cli/pip_install/
     pip.list.package_names | xargs -- pip.upgrade.packages;
     # python3 -m pip install --user --upgrade --upgrade-strategy='eager';
 }
 
 function pip.upgrade.outdated_packages(){
+    # https://pip.pypa.io/en/stable/cli/pip_install/
     pip.list.package_names --outdated | xargs pip.upgrade.packages;
     # python3 -m pip list --user --outdated --format=json | jq --raw-output '.[].name' | xargs --max-lines=1 -- python3 -m pip install --user --upgrade --upgrade-strategy='eager';
-}
-
-function pip.install.user_packages(){
-    function.requires find && function.requires pip || return 1;
-    pip.upgrade.packages "$(find "${XDG_CONFIG_HOME}/pip/user/" -maxdepth 1 -type f -not -name '.*' | xargs -- printf '--requirement="%s" ')";
-    # python3 -m pip install --user --upgrade --upgrade-strategy='eager' "$(find "${XDG_CONFIG_HOME}/pip/user/" -maxdepth 1 -type f | xargs -- printf '--requirement="%s" ')";
-}
-
-function pip.dependencies(){
-    function.requires gawk || return 1;
-    pip.show.all | awk 'BEGIN{FS=":"}; /Name:/{print $2} /Requires:/{print "    "$0} /Required-by:/{print "    "$0}'
 }
 
 function pypi.dependencies(){
