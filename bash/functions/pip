@@ -12,47 +12,41 @@ function pip.list(){
     python3 -m pip list --user "$@" | grep --invert-match 'requires-python';
 }
 
-function pip.list_names(){
+function pip.list.package_names(){
     function.requires jq && pip.list --format='json' "$@" | jq --raw-output '.[].name' && return 0;
     function.requires gawk && pip.list "$@" | awk '(NR>2) {print $1}';
 }
 
-function pip.show_all(){
+function pip.show.all(){
     # https://pip.pypa.io/en/stable/cli/pip_show/
-    pip.list_names | xargs -- python3 -m pip show;
+    pip.list.package_names | xargs -- python3 -m pip show;
 }
 
-function pip.upgrade_packages(){
+function pip.upgrade.packages(){
     # https://pip.pypa.io/en/stable/cli/pip_install/
-    local upgrade_strategy='only-if-needed'
-    # local pkg upgrade_strategy;
-    # args pkg upgrade_strategy:='only-if-needed';
-    [[ -v VIRTUAL_ENV ]] && python3 -m pip install --upgrade --upgrade-strategy="${upgrade_strategy}" "$@";
-    python3 -m pip install --user --upgrade --upgrade-strategy="${upgrade_strategy}" "$@";
+    [[ -v VIRTUAL_ENV ]] && python3 -m pip install --upgrade "$@";
+    python3 -m pip install --user --upgrade "$@";
 }
 
-function pip.upgrade_all(){
-    pip.list_names | xargs -- pip.upgrade_packages; # python3 -m pip install --user --upgrade --upgrade-strategy='eager';
+function pip.upgrade.all_packages(){
+    pip.list.package_names | xargs -- pip.upgrade.packages;
+    # python3 -m pip install --user --upgrade --upgrade-strategy='eager';
 }
 
-function pip.upgrade_outdated(){
-    local outdated_packages;
-    pip.list_names --outdated | xargs pip.upgrade_packages;
+function pip.upgrade.outdated_packages(){
+    pip.list.package_names --outdated | xargs pip.upgrade.packages;
     # python3 -m pip list --user --outdated --format=json | jq --raw-output '.[].name' | xargs --max-lines=1 -- python3 -m pip install --user --upgrade --upgrade-strategy='eager';
 }
 
-function pip.install_user_packages(){
+function pip.install.user_packages(){
     function.requires find && function.requires pip || return 1;
-    pip.upgrade_packages "$(find "${XDG_CONFIG_HOME}/pip/user/" -maxdepth 1 -type f -not -name '.*' | xargs -- printf '--requirement="%s" ')";
+    pip.upgrade.packages "$(find "${XDG_CONFIG_HOME}/pip/user/" -maxdepth 1 -type f -not -name '.*' | xargs -- printf '--requirement="%s" ')";
     # python3 -m pip install --user --upgrade --upgrade-strategy='eager' "$(find "${XDG_CONFIG_HOME}/pip/user/" -maxdepth 1 -type f | xargs -- printf '--requirement="%s" ')";
 }
 
 function pip.dependencies(){
     function.requires gawk || return 1;
-    pip.show_all | awk 'BEGIN{FS=":"}; /Name:/{print $2} /Requires:/{print "    "$0} /Required-by:/{print "    "$0}'
-    # function.requires find || return 1;
-    # execute.line_by_line echo <(cat $(find "${XDG_CONFIG_HOME}/pip/user/" -maxdepth 1 -type f -not -name '.*'))
-    # awk '!/^[# ]/ {print $1}' $(find "${XDG_CONFIG_HOME}/pip/user/" -not -name '.*') | xargs;
+    pip.show.all | awk 'BEGIN{FS=":"}; /Name:/{print $2} /Requires:/{print "    "$0} /Required-by:/{print "    "$0}'
 }
 
 function pypi.dependencies(){
@@ -70,5 +64,4 @@ function pypi.search(){
     local package;
     args package;
     jq --raw-output ".projects[] | select(.name | test(\"^${package}\")).name" <(curl --silent --header 'Accept: application/vnd.pypi.simple.v1+json' 'https://pypi.org/simple/');
-    # function.requires pup && pup "a[href*=${package}] text{}" -f <(curl --silent 'https://pypi.org/simple/');
 }
