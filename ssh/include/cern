@@ -1,0 +1,53 @@
+# [The LXPLUS Service](https://lxplusdoc.web.cern.ch/)
+
+Host august
+    User                        root
+    Hostname                    %h.cern.ch
+    IdentityFile                ~/.ssh/keys/id_rsa_august
+    PubkeyAuthentication        yes
+    PreferredAuthentications    publickey
+    # GSSAPIAuthentication        no
+    # GSSAPIDelegateCredentials   no
+
+# [The LxTunnel Sevice](https://cern.service-now.com/service-portal?id=kb_article&n=KB0008504)
+# https://resources.web.cern.ch/resources/Manage/Accounts/Settings.aspx
+Host lxplus_tunnel
+    Hostname                    lxtunnel.cern.ch
+    GSSAPIAuthentication        yes
+    GSSAPIDelegateCredentials   no
+    ForwardAgent                no
+    ProxyJump                   none
+    DynamicForward              10880
+    ExitOnForwardFailure        yes
+    # IdentityFile                ~/.ssh/keys/id_rsa_lxtunnel
+    # PubkeyAuthentication        yes
+    # PreferredAuthentications    publickey
+# ssh -v -F /dev/null -i /home/delannoy/.ssh/keys/id_rsa_lxtunnel adelanno@lxtunnel.cern.ch
+# ssh -v -F /dev/null -o GSSAPIAuthentication=yes -o GSSAPIDelegateCredentials=yes adelanno@lxtunnel.cern.ch
+# ssh -v -F /dev/null -o ProxyCommand="ssh -i ~/.ssh/keys/id_rsa_lxtunnel adelanno@lxtunnel.cern.ch" adelanno@lxplus.cern.ch
+
+# [List of LXPLUS Aliases](https://lxplusdoc.web.cern.ch/evolution/list/)
+Host lxplus lxplus-gpu lxplus-testing lxplus8 lxplus8-arm lxplus9 lxplus9-arm
+    Hostname                    %h.cern.ch
+    ProxyJump                   none
+
+# [Using an SSH Contol Master to lxplus](https://cern.service-now.com/service-portal?id=kb_article&n=KB0009800)
+Host lxplus8-future lxplus9-future
+    Hostname                    %h.cern.ch
+    ProxyJump                   none
+    ControlPath                 /run/user/%i/%r@%h:%p
+    ControlMaster               auto
+    ControlPersist              1m
+# `ssh -O check lxplus.cern.ch` `ssh -O exit lxplus.cern.ch`
+
+Host brilvmlxa brilvmlxb brilvmlxc brilvmlxd brilvmlxe brilvmlxf
+    Hostname                    %h.cern.ch
+
+Host delannoy0 delannoy000 pltoffline
+    Hostname                    %h.cern.ch
+
+Match host="*.cern.ch"
+    User                        adelanno
+
+Match host="*.cern.ch,!lxplus*.cern.ch" !exec="ping -c 1 -W 1 pltoffline.cern.ch 2>&1 >/dev/null"
+    ProxyJump                   lxplus_tunnel
