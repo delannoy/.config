@@ -42,7 +42,9 @@ function krb.list.cache(){
 }
 
 function krb.list.cache.encryptions(){
-    krb.list.cache | awk 'BEGIN{FS=":"}; /Etype/{gsub(/ /,""); print $NF}';
+    while IFS='()' read -r _ encryption __; do [[ -n "${encryption}" ]] && echo "${encryption}"; done <<< "$(krb.list.keytab)" | sort | uniq | paste --delimiters=, --serial;
+    # while IFS=':' read -r key encryption; do [[ "${key}" =~ Etype ]] && echo "${encryption}"; done <<< "$(krb.list.cache)";
+    # krb.list.cache | awk 'BEGIN{FS=":"}; /Etype/{gsub(/ /,""); print $NF}';
 }
 
 function krb.list.keytab(){
@@ -61,8 +63,9 @@ function krb.keytab.create(){
     local password encryption encryptions;
     declare -a command;
     args password;
-    krb.principal
-    kinit "${KRB5_PRINCIPAL}" <<< "${password}" && IFS=, read -r -a encryptions <<< "$(krb.list.cache.encryptions)" || return 1
+    krb.principal;
+    krb.init;
+    kinit "${KRB5_PRINCIPAL}" <<< "${password}" && IFS=, read -r -a encryptions <<< "$(krb.list.cache.encryptions)" || return 1;
     # -r    do not allow backslashes to escape any characters
     # -a    array  assign the words read to sequential indices of the array variable ARRAY, starting at zero
     mkdir --verbose --parents "${KRB5_KTNAME%/*}";
@@ -71,7 +74,7 @@ function krb.keytab.create(){
         command+=("${password}");
     done
     command+=("write_kt ${KRB_KTNAME}");
-    command+=('exit')
+    command+=('exit');
     (printf "%s\n" "${command[@]}") | ktutil;
 }
 
@@ -81,9 +84,10 @@ function krb.keytab._create(){
     function.requires kinit && function.requires ktutil || return 1;
     local encryptions;
     krb.principal;
+    krb.init;
     mkdir --verbose --parents "${KRB5_KTNAME%/*}";
     printf "%s\n" "running \`kinit ${KRB5_PRINCIPAL}\` to obtain encryption types..."; # [Kerberos ktutil, what kinds of encryption are available?](https://serverfault.com/a/620592)
-    kinit "${KRB5_PRINCIPAL}" && IFS=, read -r -a encryptions <<< "$(krb.encryptions)" || return 1;
+    kinit "${KRB5_PRINCIPAL}" && IFS=, read -r -a encryptions <<< "$(krb.list.cache.encryptions)" || return 1;
     printf "%s\n" 'Run the following commands in the `ktutil` prompt:';
     for encryption in "${encryptions[@]}"; do
         printf "%9s%s\n" '' "add_entry -password -p ${KRB5_PRINCIPAL} -k 1 -e ${encryption}";
@@ -95,7 +99,7 @@ function krb.keytab._create(){
 
 function krb.keytab.create.cern(){
     # [Generating a user keytab](https://cern.service-now.com/service-portal?id=kb_article&n=KB0003405)
-    function.requires ssh && function.requires scp && function.requires klist || return 1;
+    function.requires ssh && function.requires scp || return 1;
     local username remote_keytab;
     args username remote_keytab:="${HOME}/private/keytab";
     ssh -F /dev/null -t "${username}@lxplus.cern.ch" "/usr/sbin/cern-get-keytab --user --keytab=${remote_keytab}";
@@ -109,12 +113,12 @@ function krb.keytab.create.cern(){
 function krb.init.cern(){
     # [https://linux.web.cern.ch/docs/kerberos-access/]
     # [https://uz.sns.it/~enrico/site/posts/kerberos/password-less-ssh-login-with-kerberos.html]
-    function.requires curl && function.requires klist && function.requires pgrep && function.requires k5start || return 1;
-    local krb_conf_url='https://linux.web.cern.ch/docs/krb5.conf'
+    function.requires curl && function.requires klist || return 1;
+    local krb_conf_url='https://linux.web.cern.ch/docs/krb5.conf';
     krb.principal;
     [[ ! -f "${KRB5_CONFIG}" ]] && curl --progress-bar --create-dirs --location --url "${krb_conf_url}" --output "${KRB5_CONFIG}";
     [[ ! -f "${KRB5_KTNAME}" ]] && krb.keytab.create.cern;
+    # [[ ! "$(krb.list.keytab)" =~ ${KRB5_PRINCIPAL} ]] && krb.keytab.create.cern;
     klist -c -s || krb.init;
-    # (( "$(klist -k "${KRB5_KTNAME}" 2>/dev/null | grep --count "${KRB5_PRINCIPAL}")" == 0 )) && krb.keytabCreate "${KRB5_PRINCIPAL}";
     [[ ! "$(pgrep --list-full k5start)" =~ ${KRB5_PRINCIPAL} ]] && krb.daemon;
 }
