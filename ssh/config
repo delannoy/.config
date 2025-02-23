@@ -1,0 +1,46 @@
+# [ssh_config(5) — Linux manual page](https://man7.org/linux/man-pages/man5/ssh_config.5.html)
+# Since the first obtained value for each parameter is used, more host-specific declarations should be given near the beginning of the file, and general defaults at the end.
+
+# [OpenSSH: Configurations Based On Hosts, Etc.](https://dev.to/nabbisen/openssh-configurations-by-hosts-h1g)
+# [Simplify Your Life With an SSH Config File](https://nerderati.com/2011/03/17/simplify-your-life-with-an-ssh-config-file/)
+# [OpenSSH/Cookbook/Proxies and Jump Hosts](https://en.wikibooks.org/wiki/OpenSSH/Cookbook/Proxies_and_Jump_Hosts)
+# [Tunneling an SSH connection only when necessary using Match](https://mike.place/2017/ssh-match/)
+# [Dynamic aliases to host in ssh config](https://stackoverflow.com/a/70993714)
+
+Include ~/.ssh/include/cern
+Include ~/.ssh/include/cms
+Include ~/.ssh/include/fnal
+Include ~/.ssh/include/git
+Include ~/.ssh/include/private
+
+# [About kerberos and ssh](https://devices.docs.cern.ch/devices/mac/AboutKerberosAndSsh/)
+# [Access using Kerberos](http://linux.web.cern.ch/linux/docs/kerberos-access.shtml)
+# [SSH FAQ for CERN](https://twiki.cern.ch/twiki/bin/view/LinuxSupport/SSHatCERNFAQ)
+# [Setup lxplus and .cern.ch hosts to use Kerberos tickets](https://twiki.cern.ch/twiki/bin/view/Main/Kerberos)
+# [SSH Tunneling](https://security.web.cern.ch/security/recommendations/en/ssh_tunneling.shtml)
+Match host="*.cern.ch,*.cms,*fnal.gov"
+    GSSAPIAuthentication        yes
+    GSSAPIDelegateCredentials   yes
+    ForwardAgent                yes
+    # GSSAPITrustDNS              no # https://devices.docs.cern.ch/devices/mac/AboutKerberosAndSsh/#about-gssapitrustdns
+    # PreferredAuthentications    gssapi-with-mic
+    # PubkeyAuthentication        no
+
+Match host="*.cern.ch,*.cms,*fnal.gov"
+    ForwardX11                  yes
+    ForwardX11Trusted           yes
+
+Match host="*.cern.ch,*.cms,*fnal.gov,github.com"
+    CheckHostIP                 no
+    StrictHostKeyChecking       no
+    UserKnownHostsFile          /dev/null
+
+Match host="*.cern.ch,*.cms,*fnal.gov"
+    RequestTTY                  yes
+
+Host *
+    Compression                 yes
+    LogLevel                    ERROR
+    ServerAliveInterval         10
+    ServerAliveCountMax         6
+    # SendEnv                     LANG LC_* # https://devices.docs.cern.ch/devices/mac/AboutKerberosAndSsh/#about-lang-lc_
