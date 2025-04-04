@@ -30,3 +30,6 @@ pyyaml              # [A full-featured YAML processing framework for Python](htt
 
 rapidfuzz           # [Rapid fuzzy string matching in Python using various string metrics](https://github.com/maxbachmann/RapidFuzz/)
                     # rapidfuzz  rapid fuzzy string matching
+
+xmltodict           # [Python module that makes working with XML feel like you are working with JSON](https://github.com/martinblech/xmltodict)
+                    # xmltodict  Makes working with XML feel like you are working with JSON
