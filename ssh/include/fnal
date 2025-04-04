@@ -1,0 +1,13 @@
+# [Connect to the LPC CAF (Central Analysis Facility)](https://uscms.org/uscms_at_work/physics/computing/getstarted/uaf.shtml)
+# [SSH configuration file](https://uscms.org/uscms_at_work/physics/computing/getstarted/uaf.shtml#prerequisiteSSHConfig)
+
+# [Interactive nodes to connect to](https://uscms.org/uscms_at_work/physics/computing/getstarted/uaf.shtml#nodes)
+# [CMS LPC GPU nodes three interactive nodes](https://uscms.org/uscms_at_work/computing/setup/gpu.shtml#GPUnodes)
+Host cmslpc-el8 cmslpc-el8-heavy01 cmslpc-el8-heavy02 cmslpc-el9 cmslpc-el9-heavy01 cmslpcgpu1 cmslpcgpu2 cmslpcgpu3
+    Hostname    %h.fnal.gov
+
+Host fnal lpc
+    Hostname    cmslpc-el9.fnal.gov
+
+Match host="*.fnal.gov"
+    User        delannoy
