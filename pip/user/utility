@@ -1,3 +1,7 @@
+diffoscope      # [In-depth comparison of files, archives, and directories.](https://salsa.debian.org/reproducible-builds/diffoscope)
+                # diffoscope        in-depth comparison of files, archives, and directories
+                # ├── libarchive-c  Python interface to libarchive
+                # └── python-magic  File type identification using libmagic
 
 img2pdf         # [Lossless conversion of raster images to PDF](https://gitlab.mister-muffin.de/josch/img2pdf)
                 # img2pdf                     Convert images to PDF via direct JPEG inclusion.
@@ -37,6 +41,11 @@ pyrosimple      # [An overhauled fork of the pyrocore tools for rTorrent](https:
 
 speedtest-cli   # [Command line interface for testing internet bandwidth using speedtest.net](https://github.com/sivel/speedtest-cli)
                 # speedtest-cli  Command line interface for testing internet bandwidth using speedtest.net
+
+tmuxp           # Session manager for tmux, which allows users to save and load tmux sessions through simple configuration files.
+                # ├── PyYAML<7.0,>=6.0         YAML parser and emitter for Python
+                # ├── colorama>=0.3.9          Cross-platform colored terminal text.
+                # └── libtmux<0.38.0,>=0.37.0  Typed library that provides an ORM wrapper for tmux, a terminal multiplexer.
 
 torrent_parser  # [A .torrent file parser and creator for both Python 2 and 3](https://github.com/7sDream/torrent_parser)
                 # torrent_parser  A .torrent file parser and creator for both Python 2 and 3
