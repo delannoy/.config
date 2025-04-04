@@ -19,6 +19,11 @@ johnnydep       # [Pretty-print a dependency tree for a Python distribution](htt
 pip             # [pip is the package installer for Python. You can use pip to install packages from the Python Package Index and other indexes.](https://github.com/pypa/pip)
                 # pip     The PyPA recommended tool for installing Python packages.
 
+pip3-autoremove # [Remove a package and its unused dependencies.](https://github.com/mrmarvel/pip3-autoremove)
+                # pip3-autoremove  Remove a package and its unused dependencies(Supports Python3)
+                # ├── pip          The PyPA recommended tool for installing Python packages.
+                # └── setuptools   Easily download, build, install, upgrade, and uninstall Python packages
+
 pipx            # [Install and Run Python Applications in Isolated Environments](https://github.com/pypa/pipx)
                 # pipx                       Install and Run Python Applications in Isolated Environments
                 # ├── argcomplete>=1.9.4     Bash tab completion for argparse
