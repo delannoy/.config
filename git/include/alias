@@ -9,4 +9,5 @@
     df = diff --word-diff
     hist = log --all --graph
     st = status --short --branch --show-stash --untracked-files=no
-    unstage = reset HEAD
+    uncommit = reset --soft HEAD~1 # https://www.geeksforgeeks.org/how-to-delete-local-commit-in-git/#keeping-the-changes-soft-reset
+    unstage = restore --staged
