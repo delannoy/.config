@@ -1,0 +1,114 @@
+" [Vim help files](https://vimhelp.org/)
+" [https://vimhelp.org/tags.html]
+" [https://vimhelp.org/options.txt.html#option-summary]
+" [https://vimhelp.org/quickref.txt.html#option-list]
+
+" [Learn Vimscript the Hard Way](https://learnvimscriptthehardway.stevelosh.com/)
+" [Learn Vim the Smart Way](https://learnvim.irian.to/)
+
+function RemoveHomeDotvim(path_csv)
+    " remove all paths in `path_name` option that match `~/.vim`
+    " https://learnvimscriptthehardway.stevelosh.com/chapters/27.html#string-functions
+    " let l:path_csv = eval('&'. a:path_name) " https://vimhelp.org/builtin.txt.html#eval%28%29
+    let l:path_array = split(a:path_csv, ',') " https://vimhelp.org/builtin.txt.html#split%28%29
+    let l:home_dotvim = expand('~') . '/.vim' " https://vimhelp.org/builtin.txt.html#expand%28%29
+    for path in path_array
+        if path =~ home_dotvim
+            let l:idx = index(path_array, path) " https://vimhelp.org/builtin.txt.html#index%28%29
+            let l:trash = remove(path_array, idx) " https://vimhelp.org/builtin.txt.html#remove%28%29
+        endif
+    endfor
+    return join(path_array, ',') " https://vimhelp.org/builtin.txt.html#join%28%29
+    " execute('set ' . a:path_name . '=' . join(path_array, ','))
+endfunction
+
+function RuntimepathRemoveHomeDotvim()
+    " https://learnvimscriptthehardway.stevelosh.com/chapters/27.html#string-functions
+    let l:path_array = split(&runtimepath, ',') " https://vimhelp.org/builtin.txt.html#split%28%29
+    let l:home_dotvim = expand('~') . '/.vim' " https://vimhelp.org/builtin.txt.html#expand%28%29
+    " if (path_array[0] == home_dotvim) && (path_array[-1] =~ home_dotvim)
+    "     let &runtimepath = join(path_array[1:-2], ',') " https://vimhelp.org/builtin.txt.html#join%28%29
+    " endif
+    for path in path_array
+        if path =~ home_dotvim
+            let l:idx = index(path_array, path) " https://vimhelp.org/builtin.txt.html#index%28%29
+            let l:trash = remove(path_array, idx) " https://vimhelp.org/builtin.txt.html#remove%28%29
+        endif
+    endfor
+    let &runtimepath = join(path_array, ',') " https://vimhelp.org/builtin.txt.html#join%28%29
+endfunction
+
+function RuntimepathReplacePath(old_path, new_path)
+    " https://learnvimscriptthehardway.stevelosh.com/chapters/19.html#options-as-variables
+    " https://learnvimscriptthehardway.stevelosh.com/chapters/24.html#function-arguments
+    let &runtimepath = substitute(&runtimepath, a:old_path, a:new_path, 'g') " https://vimhelp.org/builtin.txt.html#substitute%28%29
+endfunction
+
+function Runtimepath()
+    " https://learnvim.irian.to/customize/vim_runtime#vimruntime
+    " https://learnvimscriptthehardway.stevelosh.com/chapters/40.html#paths
+    set runtimepath=$XDG_CONFIG_HOME/vim
+    set runtimepath+=$VIM/vimfiles
+    set runtimepath+=$VIMRUNTIME
+    set runtimepath+=$VIM/vimfiles/after
+    set runtimepath+=$XDG_DATA_HOME/vim
+    set runtimepath+=$XDG_CONFIG_HOME/vim/after
+endfunction
+
+function XDG()
+    " [Make Vim follow XDG Base Directory specification](https://jorenar.com/blog/vim-xdg)
+
+    let &runtimepath = RemoveHomeDotvim(&runtimepath) " call RemoveHomeDotvim('runtimepath')
+    set runtimepath^=$XDG_CONFIG_HOME/vim
+    set runtimepath+=$XDG_DATA_HOME/vim
+    set runtimepath+=$XDG_CONFIG_HOME/vim/after
+
+    " call RemoveHomeDotvim('packpath')
+    " set packpath^=$XDG_DATA_HOME/vim,$XDG_CONFIG_HOME/vim
+    " set packpath+=$XDG_CONFIG_HOME/vim/after,$XDG_DATA_HOME/vim/after
+
+    " set packpath=$XDG_DATA_HOME/vim ",$XDG_DATA_HOME/vim/after
+
+    " set backupdir=$XDG_CACHE_HOME/vim/bkp | call mkdir(&backupdir, 'p', 0700)
+    " set directory=$XDG_CACHE_HOME/vim/swp | call mkdir(&directory, 'p', 0700)
+    " set undodir=$XDG_CACHE_HOME/vim/undo | call mkdir(&undodir, 'p', 0700)
+    " set viminfo='1000,<1000,s10000,h,n$XDG_CACHE_HOME/vim/viminfo
+    " set viewdir=$XDG_DATA_HOME/vim/view | call mkdir(&viewdir, 'p', 0700) " Name of the directory where to store files for :mkview
+
+    " let g:netrw_home = $XDG_DATA_HOME.'/vim' " The home directory for where bookmarks and history are saved (as .netrwbook and .netrwhist)
+    " call mkdir($XDG_DATA_HOME.'/vim/spell', 'p', 0700) " it isn't controlled by any option. Instead it searches for spell directory in whole runtime path
+endfunction
+
+function FindMapConflict(mapping)
+    " [Find conflicting mapping](https://www.reddit.com/r/vim/comments/1x6soh/_/cf8ldqd/)
+    execute('verbose map ' . a:mapping)
+endfunction
+
+function VerboseOption(option)
+    " [When 'verbose' is non-zero, displaying an option value will also tell where it was last set](https://vimhelp.org/options.txt.html#%3Aset-verbose)
+    execute('verbose set ' . a:option . '?')
+endfunction
+
+" [Attack of the 5,000-line vimrc](https://vimways.org/2018/from-vimrc-to-vim/#lose-the-source-luke)
+" [Read Ex commands from {file} in each directory given by 'runtimepath' and/or 'packpath'. There is no error for non-existing files. When [!] is included, all found files are sourced](https://vimhelp.org/repeat.txt.html#%3Aruntime)
+" runtime! config/*.vim
+
+" runtime config/cursor.vim
+" runtime config/folding.vim
+" runtime config/functions.vim
+" runtime config/indent.vim
+" runtime config/interface.vim
+" " runtime config/init.vim
+" runtime config/maps.vim
+" " runtime config/config.vim
+" runtime config/plugins.vim
+" runtime config/render.vim
+" runtime config/search.vim
+
+
+" call RemoveHomeDotvim('runtimepath')
+" call XDG()
+
+runtime config/test.vim
+
+set term=xterm-256color
