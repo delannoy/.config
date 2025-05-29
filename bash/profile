@@ -1,1 +1,100 @@
 #!/usr/bin/env bash
+
+[[ -v BASH ]] || return 0; # [BASH](https://bash-hackers.docs.cern.ch/syntax/shellvars#bash) [Misc syntax](https://bash-hackers.docs.cern.ch/commands/classictest#misc_syntax)
+
+shopt -q login_shell || return 0; # [How to check if a shell is login/interactive/batch](https://unix.stackexchange.com/a/26782)
+
+function env.xdg(){
+    # [XDG Base Directory Specification](https://specifications.freedesktop.org/basedir-spec/latest/#variables)
+    # [XDG Base Directory](https://wiki.archlinux.org/index.php/XDG_Base_Directory)
+    # [Use the XDG Base Directory Specification!](https://xdgbasedirectoryspecification.com/)
+    export XDG_CACHE_HOME="${HOME}/.cache"; # base directory relative to which user-specific non-essential data files should be stored
+    export XDG_CONFIG_DIRS='/etc/xdg'; # preference-ordered set of base directories to search for configuration files in addition to the $XDG_CONFIG_HOME directory
+    export XDG_CONFIG_HOME="${HOME}/.config"; # base directory relative to which user-specific configuration files should be stored
+    export XDG_DATA_DIRS='/usr/local/share:/usr/share'; # preference-ordered set of base directories to search for data files in addition to the $XDG_DATA_HOME base directory
+    export XDG_DATA_HOME="${HOME}/.local/share"; # base directory relative to which user-specific data files should be stored
+    export XDG_STATE_HOME="${HOME}/.local/state"; # base directory relative to which user-specific state files should be stored
+    export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-"/run/user/${UID}"}"; # base directory relative to which user-specific non-essential runtime files and other file objects (such as sockets, named pipes, ...) should be stored
+    mkdir --parents --verbose "${XDG_DATA_HOME}" "${XDG_STATE_HOME}";
+}
+
+function env.bash(){
+    export INPUTRC="${XDG_CONFIG_HOME}/readline/inputrc"; # [The filename for the readline startup file](https://bash-hackers.docs.cern.ch/syntax/shellvars#inputrc)
+    export IGNOREEOF=1; # [If set, the value is the number of consecutive EOF characters (e.g. by Ctrl-D) which must be typed as the first characters on an input line before Bash exits.](https://bash-hackers.docs.cern.ch/syntax/shellvars#ignoreeof)
+    export LANG="${LANG:-C}"; # [https://mywiki.wooledge.org/locale]
+    export PATH="${XDG_DATA_HOME/share/bin}:${PATH}"; # [The search path for commands. This is a colon-separated list of directories in which the shell looks for commands.](https://bash-hackers.docs.cern.ch/syntax/shellvars#path)
+}
+
+function env.editor(){
+    export EDITOR="$(command -v nvim || command -v vim)"; # [The editor program called by sudoedit, vipw, and other such programs when you tell them to edit a file](https://en.wikibooks.org/wiki/Guide_to_Unix/Environment_Variables#EDITOR)
+    export LESS='--quit-if-one-screen --RAW-CONTROL-CHARS --LONG-PROMPT --window=-4 --ignore-case --no-histdups'; # [https://man7.org/linux/man-pages/man1/less.1.html#ENVIRONMENT_VARIABLES] [https://man7.org/linux/man-pages/man1/less.1.html#OPTIONS] [https://www.topbug.net/blog/2016/09/27/make-gnu-less-more-powerful/]
+    export PAGER="$(command -v bat || command -v less)"; # [The pager called by man and other such programs when you tell them to view a file](https://en.wikibooks.org/wiki/Guide_to_Unix/Environment_Variables#PAGER)
+    export VIMINIT="source ${XDG_CONFIG_HOME}/vim/vimrc"; # [The value of $VIMINIT is used as an Ex command line](https://vimhelp.org/starting.txt.html#VIMINIT)
+    export VISUAL="${EDITOR}"; # [This variable is used to specify the "visual" - screen-oriented - editor. Generally you will want to set it to the same value as the EDITOR variable](https://en.wikibooks.org/wiki/Guide_to_Unix/Environment_Variables#VISUAL)
+}
+
+function env.gnu(){
+    export GNUPGHOME="${XDG_DATA_HOME}/gnupg"; # [If set, directory used instead of "~/.gnupg"](https://www.gnupg.org/documentation/manuals/gnupg/GPG-Configuration.html)
+    export PARALLEL_HOME="${XDG_CONFIG_HOME}/parallel"; # [Dir where GNU parallel stores config files, semaphores, and caches information between invocations](https://www.gnu.org/software/parallel/parallel.html#environment-variables)
+    export SCREENRC="${XDG_CONFIG_HOME}/screen/conf"; # [Alternate user screenrc file](https://www.gnu.org/software/screen/manual/screen.html#Environment)
+    export SCREENDIR="${XDG_RUNTIME_DIR}/screen"; # [Socket Directory. If screen is not running setuid-root, the user can specify any mode 700 directory in the environment variable $SCREENDIR](https://www.gnu.org/software/screen/manual/html_node/Socket-Directory.html)
+    export WGETRC="${XDG_CONFIG_HOME}/wget/conf"; # [Wgetrc Location](https://www.gnu.org/software/wget/manual/html_node/Wgetrc-Location.html)
+    export TERMINFO="${XDG_DATA_HOME}/terminfo"; # [The TERMINFO variable overrides the location for the default terminal database](https://www.man7.org/linux/man-pages/man3/ncurses.3x.html#ENVIRONMENT)
+    export TERMINFO_DIRS="${XDG_DATA_HOME}/terminfo:/usr/share/terminfo"; # [Specifies a list of locations to search for terminal descriptions](https://www.man7.org/linux/man-pages/man3/ncurses.3x.html#ENVIRONMENT)
+}
+
+function env.history(){
+    # [Using History Interactively](https://www.gnu.org/software/bash/manual/html_node/Using-History-Interactively.html)
+    # [How can I avoid losing any history lines?](http://mywiki.wooledge.org/BashFAQ/088)
+    # Setting the HISTFILESIZE and HISTSIZE variables to an empty string makes the bash history size unlimited [https://web.archive.org/web/20240114230359/https://www.soberkoder.com/unlimited-bash-history/] [https://stackoverflow.com/a/12234989/13019084] [https://resonantecho.net/linux/bash/2018/02/19/unlimited-bash-history.html]
+    export HISTFILE="${XDG_STATE_HOME}/bash/history"; # [The name of the file in which command history is saved](https://bash-hackers.docs.cern.ch/syntax/shellvars#histfile)
+    export HISTCONTROL=ignoredups; # [A colon-separated list of values controlling how commands are saved on the history list](https://bash-hackers.docs.cern.ch/syntax/shellvars#histcontrol)
+    export HISTFILESIZE=''; # [The maximum number of lines contained in the history file](https://bash-hackers.docs.cern.ch/syntax/shellvars#histfilesize)
+    export HISTSIZE=''; # [The number of commands to remember in the command history](https://bash-hackers.docs.cern.ch/syntax/shellvars#histsize)
+    export HISTTIMEFORMAT='[%Y%m%d-%H%M%S] '; # [If this variable is set and not null, its value is used as a format string for strftime(3) to print the time stamp associated with each history entry displayed by the history builtin](https://bash-hackers.docs.cern.ch/syntax/shellvars#histtimeformat)
+    export LESSHISTFILE="${XDG_STATE_HOME}/less/history"; # [Name of the history file used to remember search commands and shell commands between invocations of less](https://man7.org/linux/man-pages/man1/less.1.html#ENVIRONMENT_VARIABLES)
+    export LESSHISTSIZE=''; # [The maximum number of commands to save in the history file](https://man7.org/linux/man-pages/man1/less.1.html#ENVIRONMENT_VARIABLES)
+    shopt -s histappend; # [If set, the history list is appended to the file named by the value of the HISTFILE variable when the shell exits, rather than overwriting the file](https://bash-hackers.docs.cern.ch/internals/shell_options#histappend)
+    mkdir --parents --verbose "${HISTFILE%/*}" "${LESSHISTFILE%/*}";
+}
+
+function env.lang.go(){
+    export GOBIN="${XDG_DATA_HOME/share/bin}"; # [The directory where 'go install' will install a command.](https://pkg.go.dev/cmd/go#hdr-Environment_variables)
+    export GOMODCACHE="${XDG_CACHE_HOME}/go/mod"; # [The directory where the go command will store downloaded modules and related files](https://go.dev/ref/mod#environment-variables)
+    export GOPATH="${XDG_DATA_HOME}/go"; # [The GOPATH environment variable lists places to look for Go code.](https://pkg.go.dev/cmd/go#hdr-GOPATH_environment_variable)
+}
+
+function env.lang.python(){
+    [[ -n "${NO_COLOR}" ]] && export PYTHON_COLORS=0; # [If this variable is set to 1, the interpreter will colorize various kinds of output. Setting it to 0 deactivates this behavior](https://docs.python.org/3.13/using/cmdline.html#envvar-PYTHON_COLORS)
+    export PYTHON_HISTORY="${XDG_STATE_HOME}/python/${HOSTNAME}.history"; # [This environment variable can be used to set the location of a .python_history file](https://docs.python.org/3.13/using/cmdline.html#envvar-PYTHON_HISTORY)
+    export PYTHONPYCACHEPREFIX="${XDG_CACHE_HOME}/python"; # [If this is set, Python will write .pyc files in a mirror directory tree at this path, instead of in __pycache__ directories within the source tree](https://docs.python.org/3/using/cmdline.html#envvar-PYTHONPYCACHEPREFIX)
+    export PYTHON_COLORS=1; # [Controlling color](https://docs.python.org/3.13/using/cmdline.html#using-on-controlling-color)
+    export PYTHONSTARTUP="${XDG_CONFIG_HOME}/python/startup"; # [Python commands in that file are executed before the first prompt is displayed in interactive mode](https://docs.python.org/3/using/cmdline.html#envvar-PYTHONSTARTUP)
+    export PYTHONUSERBASE="${XDG_DATA_HOME%/*}"; # [Defines the user base directory, which is used to compute the path of the user site-packages directory and installation paths for python -m pip install --user](https://docs.python.org/3/using/cmdline.html#envvar-PYTHONUSERBASE)
+    mkdir --parents --verbose "${PYTHON_HISTORY%/*}";
+}
+
+function env.lang.rust(){
+    export CARGO_HOME="${XDG_CACHE_HOME}/cargo"; # [Cargo maintains a local cache of the registry index and of git checkouts of crates](https://doc.rust-lang.org/cargo/reference/environment-variables.html#environment-variables);
+}
+
+function env.krb(){
+    export KRB5_CONFIG='/etc/krb5.conf'; # [Main Kerberos configuration file.](https://web.mit.edu/kerberos/krb5-1.12/doc/admin/env_variables.html#environment-variables)
+    export KRB5_KTNAME="${XDG_DATA_HOME}/krb5/keytab"; # [Default keytab file name.](https://web.mit.edu/kerberos/krb5-1.12/doc/admin/env_variables.html#environment-variables)                                                                                                 
+}
+
+function env.xorg(){
+    export ICEAUTHORITY="${XDG_CACHE_HOME}/ICEauthority"; # [If the ICEAUTHORITY environment variable if set, this value is returned. Otherwise, the default authorization file name is $HOME/.ICEauthority.](https://www.x.org/releases/X11R7.7/doc/libICE/ICElib.html#authentication_utility_functions)
+    export XAUTHORITY="${XDG_RUNTIME_DIR}/Xauthority"; # [Specifies the name of the authority file on the local host](https://www.ibm.com/docs/en/zos/2.2.0?topic=motif-x-window-system-environment-variables)
+}
+
+env.xdg;
+env.bash;
+env.editor;
+env.gnu;
+env.history;
+env.lang.go;
+env.lang.python;
+env.lang.rust;
+env.krb;
+env.xorg;
