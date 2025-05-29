@@ -24,13 +24,9 @@ function ffmpeg.convert_to_mkv(){
 }
 
 function find.latest(){
-    # find ${@} -maxdepth 0 -type d | sort --version-sort | tail -1
     # [How can I sort or compare files based on some metadata attribute (newest / oldest modification time, size, etc)?](http://mywiki.wooledge.org/BashFAQ/003)
-    local directory latest;
-    args directory;
-    for file in "${directory}"; do
-        unset -v latest;
-        # -v        treat each NAME as a shell variable
+    local latest;
+    for file in "$@"; do
         [[ "${file}" -nt "${latest}" ]] && latest="${file}";
     done;
     echo "${latest}";
