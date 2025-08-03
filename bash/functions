@@ -1,0 +1,88 @@
+#!/usr/bin/env bash
+
+log.debug.filepath;
+
+function CD(){
+    local target="$1";
+    [[ -d "${target}" ]] && cd "${target}";
+    [[ -f "${target}" ]] && cd "$(dirname "$(realpath "${target}")")"
+}
+
+function debug.shell(){
+    # [https://bash-hackers.docs.cern.ch/scripting/bashbehaviour] [How to start a shell without any user configuration?](https://stackoverflow.com/a/21391035)
+    env --ignore-environment bash --noprofile --norc;
+    # --ignore-environment  start with an empty environment
+    # --noprofile           Do not read either the system-wide startup file /etc/profile or any of the personal initialization files ~/.bash_profile, ~/.bashlogin, or ~/.profile
+    # --norc                Do not read and execute the system wide initialization file /etc/bash.bashrc and the personal initialization file ~/.bashrc if the shell is interactive
+}
+
+function find.latest(){
+    # [How can I sort or compare files based on some metadata attribute (newest / oldest modification time, size, etc)?](http://mywiki.wooledge.org/BashFAQ/003)
+    local latest;
+    for file in "$@"; do
+        [[ "${file}" -nt "${latest}" ]] && latest="${file}";
+    done;
+    echo "${latest}";
+}
+
+function krb.keytab.create(){
+    # https://nxcals-docs.web.cern.ch/1.5.30/user-guide/data-access/authentication/#kerberos-keytab-file-generation
+    local krb5_ktname="${KRB5_KTNAME:-1}"
+    [[ -f "${krb5_ktname}" ]] && return 0
+    mkdir --parents --verbose "${krb5_ktname%/*}"
+    printf '\n%s\n' "type your CERN password to create a keytab file in '${krb5_ktname}'"
+    cern-get-keytab --user --keytab "${krb5_ktname}"
+    [[ ! -f "${krb5_ktname}" ]] && echo 'something went wrong :( try again' && return 1
+}
+
+function lcg.view(){
+    # https://lcgdocs.web.cern.ch/lcgdocs/lcgreleases/introduction/#complete-stacks-views
+    local lcg_release="$(find '/cvmfs/sft.cern.ch/lcg/views/' -maxdepth 1 -regextype posix-extended -regex '.*/LCG_[0-9]{3}' | sort --version-sort | tail -1)"
+    local flavor="$(find "${lcg_release}" -maxdepth 1 -name x86_64-el*-gcc*-opt | sort --version-sort | tail -1)"
+    local env_script="${flavor}/setup.sh"
+    [[ -f "${env_script}" ]] || return 1
+    log 'DEBUG' "source '${env_script}'"
+    source "${env_script}"
+}
+
+function lcg.release(){
+    local release="$1"
+    local version="$(find "/cvmfs/sft.cern.ch/lcg/releases/${release}" -maxdepth 2 -name x86_64-el*-gcc*-opt | sort --version-sort | tail -1)"
+    local env_script="${version}/${release}-env.sh"
+    [[ -f "${env_script}" ]] || return 1
+    log 'DEBUG' "source '${env_script}'"
+    source "${env_script}"
+}
+
+function mkcd(){
+    local dir="$1";
+    mkdir --parents --verbose "${dir}" && cd "${dir}";
+}
+
+function rsync.progress(){
+    # [How can I view a progress bar when running rsync?](https://askubuntu.com/a/907717)
+    rsync --archive --info='PROGRESS2' "$@";
+    # `rsync --info=help | grep PROGRESS`
+    # PROGRESS   Mention 1) per-file progress or 2) total transfer progress
+}
+
+function timer(){
+    local time="$1";
+    local fractional=$(bc <<< "${time} - ${time}/1"); # amount after decimal point, i.e. bc <<< $time/1 corresponds to int($time)
+    sleep "${fractional}";
+    time=$(bc <<< "${time}/1");
+    for ((time="${time}"; time>0; time--)); do
+        printf "${TXT[yellow]}%s\r${TXT[reset]}" "wait ${time} seconds...";
+        sleep 1;
+    done;
+}
+
+function venv(){
+    [[ -z "$1" ]] && { find "${VENV_DIR:-"${PWD}"}" -mindepth 1 -maxdepth 1 -type d -printf "%f\n"; return 0; }
+    local venv_name="$1";
+    local venv_dir="${VENV_DIR:-"${PWD}"}";
+    mkdir --parents --verbose "${venv_dir}";
+    local venv_activate="${venv_dir}/${venv_name}/bin/activate";
+    [[ ! -f "${venv_activate}" ]] && python3 -m venv "${venv_dir}/${venv_name}";
+    source "${venv_activate}";
+}

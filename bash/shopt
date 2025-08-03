@@ -1,0 +1,43 @@
+#!/usr/bin/env bash
+
+log.debug.filepath;
+
+function set.user(){
+    # [The Set Builtin](https://www.gnu.org/software/bash/manual/html_node/The-Set-Builtin.html)
+    # [The set builtin command](https://bash-hackers.docs.cern.ch/commands/builtin/set)
+    set -o pipefail;    # If set, the exit code from a pipeline is different from the normal ("last command in pipeline") behaviour: TRUE when no command failed, FALSE when something failed (code of the rightmost command that failed).
+    set -o notify;      # Don't wait for the next prompt to print when showing the reports for a terminated background job (only with job control).
+}
+
+function shopt.user(){
+    # [The Shopt Builtin](https://www.gnu.org/software/bash/manual/html_node/The-Shopt-Builtin.html)
+    # [The shopt builtin command](https://bash-hackers.docs.cern.ch/commands/builtin/shopt)
+    shopt -s autocd;                    # If set, a command name that is the name of a directory is executed as if it were the argument to the cd command.
+    shopt -s cdable_vars;               # Treat every non-directory argument to the cd-command as variable name containing a directory to cd into.
+    shopt -s cdspell;                   # If set, minor errors in the spelling of a directory component in a cd command will be corrected. The errors checked for are transposed characters, a missing character, and one character too many. If a correction is found, the corrected file name is printed, and the command proceeds.
+    shopt -s checkhash;                 # If set, Bash checks that a command found in the hash table exists before trying to execute it. If a hashed command no longer exists, a normal path search is performed.
+    shopt -s checkjobs;                 # If set, Bash lists the status of any stopped and running jobs before exiting an interactive shell. If any jobs are running, this causes the exit to be deferred until a second exit is attempted without an intervening command. The shell always postpones exiting if any jobs are stopped.
+    shopt -s checkwinsize;              # If set, Bash checks the window size after each command and, if necessary, updates the values of the variables LINES and COLUMNS.
+    shopt -s direxpand;                 # If set, bash replaces directory names with the results of word expansion when performing filename completion. This changes the contents of the readline editing buffer. If not set, bash attempts to preserve what the user typed.
+    shopt -s dirspell;                  # If set, Bash will perform spelling corrections on directory names to match a glob.
+    shopt -s dotglob;                   # If set, Bash includes filenames beginning with a . (dot) in the results of [pathname expansion](https://bash-hackers.docs.cern.ch/syntax/expansion/globs). [dotglob](https://mywiki.wooledge.org/glob#dotglob)
+    shopt -s extglob;                   # If set, the extended pattern matching features are enabled. See the important note below under [Parser configurations](https://bash-hackers.docs.cern.ch/internals/shell_options#parser_configurations). [extglob](https://mywiki.wooledge.org/glob#extglob)
+    shopt -s globstar;                  # If set, recursive globbing with ** is enabled. [globstar (since bash 4.0-alpha)](https://mywiki.wooledge.org/glob#globstar_.28since_bash_4.0-alpha.29)
+    shopt -s histappend;                # If set, the history list is appended to the file named by the value of the HISTFILE variable when the shell exits, rather than overwriting the file.
+    shopt -s histreedit;                # If set, and readline is being used, a user is given the opportunity to re-edit a failed history substitution.
+    shopt -s histverify;                # Allow to review a history substitution result by loading the resulting line into the editing buffer, rather than directly executing it.
+    shopt -s nocaseglob;                # If set, Bash matches filenames in a case-insensitive fashion when performing pathname expansion. [nocaseglob (since bash 2.02-alpha1)](https://mywiki.wooledge.org/glob#nocaseglob_.28since_bash_2.02-alpha1.29)
+    shopt -s nocasematch;               # If set, Bash matches patterns in a case-insensitive fashion when performing matching while executing case or [[ conditional commands. [nocasematch](https://mywiki.wooledge.org/glob#nocasematch)
+    shopt -s no_empty_cmd_completion;   # If set, and readline is being used, Bash will not attempt to search the PATH for possible completions when completion is attempted on an empty line.
+    shopt -s shift_verbose;             # If set, the shift builtin prints an error message when the shift count exceeds the number of positional parameters.
+}
+
+function stty.user(){
+    # [https://www.gnu.org/software/coreutils/manual/html_node/stty-invocation.html]
+    # [https://www.gnu.org/software/coreutils/manual/html_node/Characters.html]
+    stty stop '';
+}
+
+set.user
+shopt.user
+stty.user
