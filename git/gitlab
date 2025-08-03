@@ -1,0 +1,11 @@
+# [Variables](https://git-scm.com/docs/git-config#_variables)
+# [COMMIT INFORMATION](https://git-scm.com/docs/git-commit#_commit_information)
+# [Git Commits](https://git-scm.com/docs/git#_git_commits)
+
+[user]
+    # [The user.name and user.email variables determine what ends up in the author and committer field of commit objects. If you need the author or committer to be different, the author.name, author.email, committer.name or committer.email variables can be set. Also, all of these can be overridden by the GIT_AUTHOR_NAME, GIT_AUTHOR_EMAIL, GIT_COMMITTER_NAME, GIT_COMMITTER_EMAIL and EMAIL environment variables.](https://git-scm.com/docs/git-config#Documentation/git-config.txt-username)
+    name = 'Andres G. Delannoy'
+    email = delannoy@cern.ch
+
+[core]
+    sshCommand = ssh -i ~/.ssh/keys/id_rsa_gitlab

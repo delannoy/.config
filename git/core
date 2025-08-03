@@ -1,0 +1,16 @@
+# [Variables](https://git-scm.com/docs/git-config#_variables)
+
+[core]
+    editor = vim    # [Commands such as commit and tag that let you edit messages by launching an editor use the value of this variable when it is set, and the environment variable GIT_EDITOR is not set](https://git-scm.com/docs/git-config#Documentation/git-config.txt-coreeditor)
+    pager = less    # [Text viewer for use by Git commands (e.g., less). The value is meant to be interpreted by the shell.](https://git-scm.com/docs/git-config#Documentation/git-config.txt-corepager)
+
+[core "whitespace"]
+    # [core.whitespace](https://git-scm.com/docs/git-config#Documentation/git-config.txt-corewhitespace)
+    blank-at-eol = true         # treats trailing whitespaces at the end of the line as an error (enabled by default)
+    blank-at-eof = true         # treats blank lines added at the end of file as an error (enabled by default)
+    cr-at-eol = false           # treats a carriage-return at the end of line as part of the line terminator, i.e. with it, trailing-space does not trigger if the character before such a carriage-return is not a whitespace (not enabled by default)
+    indent-with-non-tab = false # treats a line that is indented with space characters instead of the equivalent tabs as an error (not enabled by default)
+    space-before-tab = true     # treats a space character that appears immediately before a tab character in the initial indent part of the line as an error (enabled by default)
+    tab-in-indent = true        # treats a tab character in the initial indent part of the line as an error (not enabled by default)
+    tabwidth = 4                # tells how many character positions a tab occupies; this is relevant for indent-with-non-tab and when Git fixes tab-in-indent errors
+    trailing-space = true       # is a short-hand to cover both blank-at-eol and blank-at-eof
