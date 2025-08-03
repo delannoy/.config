@@ -12,11 +12,17 @@
     path = ../private/git/user
 
 # [Automatically configuring Git based on remote repository URL](https://www.eddgrant.com/blog/2023/03/28/automatically-configuring-git-based-on-remote-url.html)
+# [Customizing Git Configuration Based on Remote Repositories](https://markoivancic.from.hr/customizing-git-configuration-based-on-remote-repositories)
+# [hasconfig:remote.*.url:](https://git-scm.com/docs/git-config#Documentation/git-config.txt-hasconfigremoteurl)
 
-[includeif "hasconfig:remote.*.url:git@github.com**"]
+[includeif "hasconfig:remote.*.url:https://github.com/*/*.git"] # match "https://github.com/<org>/<repo>.git"
+    path = ../private/git/github
+[includeif "hasconfig:remote.*.url:git@github.com:*/*.git"] # match "git@github.com:<org>/<repo>.git"
     path = ../private/git/github
 
-[includeif "hasconfig:remote.*.url:git@gitlab.cern.ch**"]
+[includeif "hasconfig:remote.*.url:https://gitlab.cern.ch/*/*.git"] # match "https://gitlab.cern.ch/<org>/<repo>.git"
+    path = ../private/git/gitlab
+[includeif "hasconfig:remote.*.url:ssh://git@gitlab.cern.ch:*/*/*.git"] # match "ssh://git@gitlab.cern.ch:<port>/<org>/<repo>.git"
     path = ../private/git/gitlab
 
 [http]
