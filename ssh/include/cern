@@ -1,0 +1,25 @@
+# [The LXPLUS Service](https://lxplusdoc.web.cern.ch/)
+
+Host august
+    User                        root
+    Hostname                    %h.cern.ch
+    IdentityFile                ~/.ssh/keys/id_rsa_august
+    PubkeyAuthentication        yes
+    PreferredAuthentications    publickey
+    GSSAPIAuthentication        no
+    GSSAPIDelegateCredentials   no
+
+Host brilsrv01 brilvmlxa brilvmlxb brilvmlxc brilvmlxd brilvmlxe brilvmlxf
+    Hostname                    %h.cern.ch
+
+Host delannoy0 delannoy000
+    Hostname                    %h.cern.ch
+
+Host lxplus lxplus8 lxplus9
+    Hostname                    %h.cern.ch
+
+Host pltoffline pltvme186
+    Hostname                    %h.cern.ch
+
+Host *.cern.ch
+    User                        adelanno

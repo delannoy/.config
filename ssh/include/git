@@ -1,0 +1,12 @@
+
+Host github.com
+    IdentityFile    ~/.ssh/keys/id_rsa_github
+
+Host gitlab.cern.ch
+    IdentityFile    ~/.ssh/keys/id_rsa_gitlab
+
+Host git*
+    PubkeyAuthentication        yes
+    PreferredAuthentications    publickey
+    GSSAPIAuthentication        no
+    GSSAPIDelegateCredentials   no
