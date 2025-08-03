@@ -31,8 +31,18 @@ function apt.search(){
 }
 
 function apt.upgrade(){
+    # https://manpages.ubuntu.com/manpages/xenial/man8/apt.8.html
+    # https://manpages.ubuntu.com/manpages/focal/man8/apt-get.8.html
     function.requires apt || return 1;
-    sudo apt update && sudo apt full-upgrade --auto-remove --purge --yes && sudo apt autoclean;
+    sudo apt update && sudo apt full-upgrade --yes && sudo apt autoremove && sudo apt autoclean;
+    # sudo apt update && sudo apt upgrade --yes && sudo apt autoremove && sudo apt autoclean;
+    # update        update is used to download package information from all configured sources.
+    # upgrade       upgrade is used to install available upgrades of all packages currently installed on the system from the sources configured via sources.list(5).
+    # full-upgrade  full-upgrade performs the function of upgrade but will remove currently installed packages if this is needed to upgrade the system as a whole.
+    # dist-upgrade  dist-upgrade in addition to performing the function of upgrade, also intelligently handles changing dependencies with new versions of packages; apt-get has a "smart" conflict resolution system, and it will attempt to upgrade the most important packages at the expense of less important ones if necessary.
+    # autoremove    autoremove is used to remove packages that were automatically installed to satisfy dependencies for other packages and are now no longer needed.
+    # autoclean     Like clean, autoclean clears out the local repository of retrieved package files. The difference is that it only removes package files that can no longer be downloaded, and are largely useless.
+    # --yes         Automatic yes to prompts; assume "yes" as answer to all prompts and run non-interactively.
 }
 
 function apt.upgrade.randomized(){
