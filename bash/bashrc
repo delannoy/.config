@@ -29,12 +29,17 @@ function ansi(){
     done;
 }
 
+ascii_silhouettify(){
+    # [[ -f "${XDG_CONFIG_HOME}/bash/CERN_LogoBadge.txt" ]] && cat "${XDG_CONFIG_HOME}/bash/CERN_LogoBadge.txt"
+    [[ -f "${XDG_CONFIG_HOME}/bash/CMSlogo_color_nolabel_1024_May2014.txt" ]] && cat "${XDG_CONFIG_HOME}/bash/CMSlogo_color_nolabel_1024_May2014.txt"
+}
+
 function assign.indirect(){
     # [Assigning indirect/reference variables](https://mywiki.wooledge.org/BashFAQ/006#Assigning_indirect.2Freference_variables)
     # [How to use a variable's value as another variable's name in bash](https://stackoverflow.com/a/9715739/13019084)
     read -r -- "$1" <<< "$2"; # [https://bash-hackers.docs.cern.ch/commands/builtin/read]
     # -r        do not allow backslashes to escape any characters
-    log DEBUG "$(declare -p $1)"; # [https://bash-hackers.docs.cern.ch/commands/builtin/declare]
+    log DEBUG "$(declare -p "$1")"; # [https://bash-hackers.docs.cern.ch/commands/builtin/declare]
 }
 
 function function.args(){
@@ -44,7 +49,7 @@ function function.args(){
     # A default value for optional arguments may be specified following ':=', e.g. `optional_argument:=default_value`
     # When calling the parent function, optional positional parameters may be ommited with a quoted empty string, ''
     # If any required parameters are missing, the expected usage (with the expected positional parameters) is printed and an exit code of 64 is returned
-    local function_name param arg bracket_regex equals_regex opt_arg default_value; # [https://bash-hackers.docs.cern.ch/commands/builtin/local]
+    local function_name param arg opt_arg default_value; # [https://bash-hackers.docs.cern.ch/commands/builtin/local]
     assignment_regex='([[:print:]]+):=([[:print:]]+)'; # matches and groups one or more 'printable' character(s) followed by ':=' and matches and groups the following one or more 'printable' character(s).
 
     function_name="$1"; # [https://bash-hackers.docs.cern.ch/syntax/shellvars#funcname]
@@ -84,7 +89,7 @@ function log(){
     local log_priority="$1";
     log.level "${log_priority}" || return 0;
     local message="${log_priority}: $2";
-    (( "${LOG["${log_priority}"]}" >= "${LOG['INFO']}" )) && local date_time="$(date +'%Y-%m-%d %H:%M:%S.%3N')" || local date_time="${EPOCHREALTIME}";
+    (( LOG["${log_priority}"] >= LOG['INFO'] )) && local date_time="$(date +'%Y-%m-%d %H:%M:%S.%3N')" || local date_time="${EPOCHREALTIME}";
     local date_time_fmt="${TXT['dim']}${date_time}${TXT['reset']}";
     local pad="$(( "${COLUMNS}" - "${#message}" + ${#date_time_fmt} - ${#date_time} ))"; # compensate for text formatting around `${date_time}`
     message="$(log.message "${log_priority}" "${message}")";
@@ -115,7 +120,7 @@ function log.message(){
 function execute.line_by_line(){
     # read each line in `input_file` (ignoring all characters after "#" and stripping leading/trailing whitespaces) provide each line as an argument to `function`
     # [How can I read a file (data stream, variable) line-by-line (and/or field-by-field)?](http://mywiki.wooledge.org/BashFAQ/001)
-    local function input_file line value comment;
+    local function input_file value comment;
     function="$1";
     input_file="$2";
     while IFS='#' read -r value comment; do
@@ -135,3 +140,5 @@ source.dir "${XDG_CONFIG_HOME}/bash/functions/"; # (see `bash/profile`)
 source.dir "${XDG_CONFIG_HOME}/bash/aliases/";
 source.dir "${XDG_CONFIG_HOME}/bash/prompt/";
 source.dir "${XDG_CONFIG_HOME}/private/bash/functions/";
+
+ascii_silhouettify
