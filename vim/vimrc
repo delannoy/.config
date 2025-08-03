@@ -1,0 +1,91 @@
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" USER INTERFACE
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+set nocompatible
+" This option has the effect of making Vim either more Vi-compatible, or make Vim behave in a more useful way
+set t_Co=256
+" Number of terminal colors
+colorscheme pablo
+" Load color scheme. This searches 'runtimepath' for the file colors/{name}.vim. The first one that is found is loaded
+syntax on
+" Switch syntax highlighting on according to the current value of the 'filetype' option
+set title
+" When on, the title of the window will be set to the value of 'titlestring' (if it is not empty), or to: filename [+=-] (path) - VIM
+set titlestring=%m%r%{hostname()}:%F\ [%n/%{argc()}]%y
+" When this option is not empty, it will be used for the title of the window
+set list
+" List mode: Useful to see the difference between tabs and spaces and for trailing blanks. Further changed by the 'listchars' option.
+set listchars=tab:→·,trail:·,precedes:←,extends:→,nbsp:‡
+" Strings to use in 'list' mode and for the :list command. It is a comma separated list of string settings
+nnoremap <space> <nop>
+" Disable space-key functionality before assigning it as leader
+let mapleader=' '
+" The 'mapleader' variable allows the special string '<Leader>'to be used in mappings
+let g:netrw_home = $XDG_STATE_HOME.'/vim'
+" The home directory for where bookmarks and history are saved (as .netrwbook and .netrwhist)
+set number
+" Print the line number in front of each line
+set relativenumber
+" Show the line number relative to the line with the cursor in front of each line
+nnoremap <Leader>n :set number! relativenumber! <CR>
+" Toggle line numbers
+set showmode
+" If in Insert, Replace, or Visual mode put a message on the last line
+set ruler
+" Show the line and column number of the cursor position, separated by a comma
+set laststatus=2
+" Last window will have a status line (0) never, (1) only if there are at least two windows, (2) always
+set showcmd
+" Show (partial) command in the last line of the screen
+set cmdheight=2
+" Number of screen lines to use for the command-line. Helps avoiding hit-enter prompts
+set ttimeout
+" Time out on key codes ('set timeout' will time out on :mappings and key codes)
+set ttimeoutlen=200
+" The time in milliseconds that is waited for a key code or mapped key sequence to complete
+set tabpagemax=50
+" Maximum number of tab pages to be opened by the -p command line argument or the ':tab all' command.
+set noswapfile nobackup nowritebackup
+" :noswapfile modifier can be used to not create a swapfile for a new buffer
+" (Don't) make a backup before overwriting a file. The backup is removed after the file was successfully written, unless the 'backup' option is also on.
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" INDENTATION
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+set smarttab
+" When on, a <Tab> in front of a line inserts blanks according to 'shiftwidth'. 'tabstop' or 'softtabstop' is used in other places. A <BS> will delete a 'shiftwidth' worth of space at the start of the line
+set shiftwidth=4
+" Number of spaces to use for each step of (auto)indent
+set tabstop=4
+" Number of spaces that a <Tab> in the file counts for
+set softtabstop=4
+" Number of spaces that a <Tab> counts for while performing editing operations, like inserting a <Tab> or using <BS>. It 'feels' like <Tab>s are being inserted, while in fact a mix of spaces and <Tab>s is used.
+set shiftround
+" Round indent to multiple of 'shiftwidth'. Applies to > and < commands.
+set expandtab
+" In Insert mode: Use the appropriate number of spaces to insert a <Tab>. Spaces are used in indents with the '>' and '<' commands and when 'autoindent' is on.
+filetype on
+" When this option is set, the FileType autocommand event is triggered. All autocommands that match with the value of this option will be executed. Thus the value of 'filetype' is used in place of the file name
+filetype indent on
+" Loads the indent file ["indent.vim" in 'runtimepath'] for specific file types
+set pastetoggle=<F2>
+" specifies the key sequence that toggles the 'paste' option
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" SEARCH
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+set hlsearch
+" When there is a previous search pattern, highlight all its matches
+nnoremap <expr> <Leader>h ( &hlsearch && v:hlsearch ) ? ':nohlsearch<CR>' : ':set hlsearch<CR>'
+" toggle search highlight [https://stackoverflow.com/a/26504944/13019084]
+set ignorecase
+" Ignore case in search patterns
+set smartcase
+" Override the 'ignorecase' option if the search pattern contains upper case characters.
+set incsearch
+" While typing a search command, show where the pattern, as it was typed so far, matches. The matched string is highlighted
+set showmatch
+" When a bracket is inserted, briefly jump to the matching one. The jump is only done if the match can be seen on the screen.
+set matchtime=2
+" Tenths of a second to show the matching paren, when 'showmatch' is
