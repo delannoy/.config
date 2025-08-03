@@ -7,7 +7,7 @@ function convert.pdf_to_png(){
     function.requires convert || return 1;
     local file density quality;
     args file density:=300 quality:=100;
-    convert -density "${quality}" -quality "${density}" -trim "${file}" "${file%%.*}-%02d.png";
+    convert -density "${density}" -quality "${quality}" -trim "${file}" "${file%%.*}-%02d.png";
 }
 
 function ffmpeg.convert_to_mkv(){
