@@ -7,6 +7,8 @@
 # [Tunneling an SSH connection only when necessary using Match](https://mike.place/2017/ssh-match/)
 # [Dynamic aliases to host in ssh config](https://stackoverflow.com/a/70993714)
 
+# `ssh -G host` # Causes ssh to print its configuration after evaluating Host and Match blocks and exit.
+
 Include ~/.ssh/include/cern
 Include ~/.ssh/include/cms
 Include ~/.ssh/include/fnal
