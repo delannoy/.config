@@ -3,26 +3,26 @@
 
 [include]
     # [Includes](https://git-scm.com/docs/git-config#_includes)
-    path = alias
-    path = core
-    path = log
-    path = status
+    path = include/alias
+    path = include/core
+    path = include/log
+    path = include/status
 
 # [Automatically configuring Git based on remote repository URL](https://www.eddgrant.com/blog/2023/03/28/automatically-configuring-git-based-on-remote-url.html)
 # [Customizing Git Configuration Based on Remote Repositories](https://markoivancic.from.hr/customizing-git-configuration-based-on-remote-repositories)
 # [hasconfig:remote.*.url:](https://git-scm.com/docs/git-config#Documentation/git-config.txt-hasconfigremoteurl)
 
 [includeif "hasconfig:remote.*.url:https://github.com/*/*.git"] # match "https://github.com/<org>/<repo>.git"
-    path = github
+    path = include/github
 [includeif "hasconfig:remote.*.url:git@github.com:*/*.git"] # match "git@github.com:<org>/<repo>.git"
-    path = github
+    path = include/github
 
 # [includeif "hasconfig:remote.*.url:*//*gitlab.cern.ch*/*/*"] # match "https://gitlab.cern.ch/<org>/<repo>.git" OR "ssh://git@gitlab.cern.ch:<port>/<org>/<repo>.git"
 #     path = gitlab
 [includeif "hasconfig:remote.*.url:https://gitlab.cern.ch/*/*.git"] # match "https://gitlab.cern.ch/<org>/<repo>.git"
-    path = gitlab
+    path = include/gitlab
 [includeif "hasconfig:remote.*.url:ssh://git@gitlab.cern.ch:*/*/*.git"] # match "ssh://git@gitlab.cern.ch:<port>/<org>/<repo>.git"
-    path = gitlab
+    path = include/gitlab
 
 [http]
     emptyAuth = true # [Attempt authentication without seeking a username or password. This can be used to attempt GSS-Negotiate authentication without specifying a username in the URL, as libcurl normally requires a username for authentication.](https://git-scm.com/docs/git-config#Documentation/git-config.txt-httpemptyAuth)
