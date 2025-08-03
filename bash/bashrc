@@ -1,1 +1,70 @@
 #!/usr/bin/env bash
+
+[[ -v BASH ]] || return 0; # [BASH](https://bash-hackers.docs.cern.ch/syntax/shellvars#bash) [Misc syntax](https://bash-hackers.docs.cern.ch/commands/classictest#misc_syntax)
+
+[[ $- == *i* ]] || return 0; # [How return from .bashrc if not run interactively?](https://askubuntu.com/a/1070182)
+
+declare -A -g LOG=(['NOTSET']=0 ['DEBUG']=10 ['INFO']=20 ['WARNING']=30 ['ERROR']=40 ['CRITICAL']=50); # https://docs.python.org/3/howto/logging.html#logging-levels
+declare -A -g TXT; # [before BASH 4.2, associative array must be declared outside function in order to be global](https://stackoverflow.com/a/10806853/13019084)
+
+function ansi(){
+    # [How can I print text in various colors?](https://mywiki.wooledge.org/BashFAQ/037)
+    # [Terminal codes (ANSI/VT100) introduction](https://bash-hackers.docs.cern.ch/scripting/terminalcodes)
+    # [Coloring Terminal Text: tput and ANSI Escape Sequences](https://www.codequoi.com/en/coloring-terminal-text-tput-and-ansi-escape-sequences/)
+    [[ -n "${NO_COLOR}" ]] && return 0;
+    local i;
+    declare -a fg=('black' 'red' 'green' 'yellow' 'blue' 'magenta' 'cyan' 'white' 'BLACK' 'RED' 'GREEN' 'YELLOW' 'BLUE' 'MAGENTA' 'CYAN' 'WHITE');
+    declare -A attr=(['reset']='sgr0' ['bold']='bold' ['dim']='dim' ['italic']='sitm' ['underline']='smul' ['blink']='blink' ['reverse']='rev' ['invisible']='invis' ['strikethrough']='smxx');
+                    # ['clear']='sgr0' ['bright']='bold' ['faint']='dim' ['italics']='sitm' ['uline']='smul' ['flicker']='blink' ['invert']='rev' ['hide']='invis' ['strikeout']='smxx');
+    for ((i=0; i<=${#fg[@]}-1; i++)); do
+        TXT["${fg[$i]}"]="$(tput setaf $i)";
+        TXT["${fg[$i]}BG"]="$(tput setab $i)";
+    done;
+    for i in "${!attr[@]}"; do
+        TXT["$i"]="$(tput "${attr[$i]}")";
+    done;
+}
+
+function log(){
+    # [Simple logging levels in Bash](https://stackoverflow.com/a/48087251/13019084)
+    local log_priority="$1";
+    log.level "${log_priority}" || return 0;
+    local message="${log_priority}: $2";
+    (( "${LOG["${log_priority}"]}" >= "${LOG['INFO']}" )) && local date_time="$(date +'%Y-%m-%d %H:%M:%S.%3N')" || local date_time="${EPOCHREALTIME}";
+    local date_time_fmt="${TXT['dim']}${date_time}${TXT['reset']}";
+    local pad="$(( "${COLUMNS}" - "${#message}" + ${#date_time_fmt} - ${#date_time} ))"; # compensate for text formatting around `${date_time}`
+    message="$(log.message "${log_priority}" "${message}")";
+    printf "%s%${pad}s\n" "${message}" "${date_time_fmt}"; # [printf modifiers](https://bash-hackers.docs.cern.ch/commands/builtin/printf#modifiers)
+}
+
+function log.level(){
+    # verify that `log_priority` is valid key for `LOG` and check whether `log_priority` exceeds `LOG_LEVEL`.
+    local log_priority="$1";
+    [[ -z "${LOG[${log_priority}]}" ]] && log ERROR "'${log_priority}' is not a valid log level (must be one of: ${!LOG[*]})" && return 1;
+    (( ${LOG[${log_priority}]} >= ${LOG[${LOG_LEVEL}]} ))
+}
+
+function log.message(){
+    # apply text formatting around `message` based on the value of `log_priority`.
+    local log_priority="$1" message="$2";
+    case "${log_priority}" in
+        DEBUG) message="${TXT['BLACK']}${message}${TXT['reset']}";;
+        INFO) message="${TXT['green']}${message}${TXT['reset']}";;
+        WARNING) message="${TXT['yellow']}${message}${TXT['reset']}";;
+        ERROR) message="${TXT['red']}${message}${TXT['reset']}";;
+        CRITICAL) message="${TXT['blink']}${TXT['red']}${message}${TXT['reset']}";;
+        *) return 1;
+    esac
+    printf '%s\n' "${message}";
+}
+
+ansi;
+
+filepath.logger; # defines `log.debug.filepath` and `log.info.filepath` aliases (see `bash/profile`)
+
+log.info.filepath;
+
+source "${XDG_CONFIG_HOME}/bash/shopt";
+source "${XDG_CONFIG_HOME}/bash/functions"; # (see `bash/profile`)
+source "${XDG_CONFIG_HOME}/bash/aliases";
+source "${XDG_CONFIG_HOME}/bash/prompt";
