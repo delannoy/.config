@@ -13,7 +13,7 @@ function docker.install(){
     function.requires apt && function.requires curl || return 1;
     local keyring repo url;
     keyring='/etc/apt/keyrings/docker.asc';
-    repo="deb [arch=$(dpkg --print-architecture) signed-by=${keyring}] ${url} $(source /etc/os-release && echo ${VERSION_CODENAME}) stable";
+    repo="deb [arch=$(dpkg --print-architecture) signed-by=${keyring}] ${url} $(source /etc/os-release && echo "${VERSION_CODENAME}") stable";
     url='https://download.docker.com/linux/debian'; # 'https://download.docker.com/linux/ubuntu'
     docker.uninstall;
     sudo apt update && sudo apt install 'ca-certificates' 'curl';
