@@ -4,6 +4,8 @@
 
 shopt -q login_shell || return 0; # [How to check if a shell is login/interactive/batch](https://unix.stackexchange.com/a/26782)
 
+export LOG_LEVEL='DEBUG';
+
 function env.xdg(){
     # [XDG Base Directory Specification](https://specifications.freedesktop.org/basedir-spec/latest/#variables)
     # [XDG Base Directory](https://wiki.archlinux.org/index.php/XDG_Base_Directory)
@@ -20,15 +22,15 @@ function env.xdg(){
 
 function env.bash(){
     export INPUTRC="${XDG_CONFIG_HOME}/readline/inputrc"; # [The filename for the readline startup file](https://bash-hackers.docs.cern.ch/syntax/shellvars#inputrc)
-    export IGNOREEOF=1; # [If set, the value is the number of consecutive EOF characters (e.g. by Ctrl-D) which must be typed as the first characters on an input line before Bash exits.](https://bash-hackers.docs.cern.ch/syntax/shellvars#ignoreeof)
+    export IGNOREEOF=0; # [If set, the value is the number of consecutive EOF characters (e.g. by Ctrl-D) which must be typed as the first characters on an input line before Bash exits.](https://bash-hackers.docs.cern.ch/syntax/shellvars#ignoreeof)
     export LANG="${LANG:-C}"; # [https://mywiki.wooledge.org/locale]
     export PATH="${XDG_DATA_HOME/share/bin}:${PATH}"; # [The search path for commands. This is a colon-separated list of directories in which the shell looks for commands.](https://bash-hackers.docs.cern.ch/syntax/shellvars#path)
 }
 
 function env.editor(){
-    export EDITOR="$(command -v nvim || command -v vim)"; # [The editor program called by sudoedit, vipw, and other such programs when you tell them to edit a file](https://en.wikibooks.org/wiki/Guide_to_Unix/Environment_Variables#EDITOR)
+    export EDITOR="$(command -v vim)"; # [The editor program called by sudoedit, vipw, and other such programs when you tell them to edit a file](https://en.wikibooks.org/wiki/Guide_to_Unix/Environment_Variables#EDITOR)
     export LESS='--quit-if-one-screen --RAW-CONTROL-CHARS --LONG-PROMPT --window=-4 --ignore-case --no-histdups'; # [https://man7.org/linux/man-pages/man1/less.1.html#ENVIRONMENT_VARIABLES] [https://man7.org/linux/man-pages/man1/less.1.html#OPTIONS] [https://www.topbug.net/blog/2016/09/27/make-gnu-less-more-powerful/]
-    export PAGER="$(command -v bat || command -v less)"; # [The pager called by man and other such programs when you tell them to view a file](https://en.wikibooks.org/wiki/Guide_to_Unix/Environment_Variables#PAGER)
+    export PAGER="$(command -v less)"; # [The pager called by man and other such programs when you tell them to view a file](https://en.wikibooks.org/wiki/Guide_to_Unix/Environment_Variables#PAGER)
     export VIMINIT="source ${XDG_CONFIG_HOME}/vim/vimrc"; # [The value of $VIMINIT is used as an Ex command line](https://vimhelp.org/starting.txt.html#VIMINIT)
     export VISUAL="${EDITOR}"; # [This variable is used to specify the "visual" - screen-oriented - editor. Generally you will want to set it to the same value as the EDITOR variable](https://en.wikibooks.org/wiki/Guide_to_Unix/Environment_Variables#VISUAL)
 }
@@ -80,13 +82,50 @@ function env.lang.rust(){
 
 function env.krb(){
     export KRB5_CONFIG='/etc/krb5.conf'; # [Main Kerberos configuration file.](https://web.mit.edu/kerberos/krb5-1.12/doc/admin/env_variables.html#environment-variables)
-    export KRB5_KTNAME="${XDG_DATA_HOME}/krb5/keytab"; # [Default keytab file name.](https://web.mit.edu/kerberos/krb5-1.12/doc/admin/env_variables.html#environment-variables)                                                                                                 
+    export KRB5_KTNAME="${XDG_DATA_HOME}/krb5/keytab"; # [Default keytab file name.](https://web.mit.edu/kerberos/krb5-1.12/doc/admin/env_variables.html#environment-variables)
+}
+
+function env.user(){
+    export AFS_WORK="${HOME/user/work}";
+    export CMS_ENV='/cvmfs/cms.cern.ch/cmsset_default.sh'
+    export DISTRO_VERSION="$(source '/etc/os-release' 2>/dev/null && echo "${ID^^}${VERSION_ID^^:-${VERSION_CODENAME^^}}")"; # [https://unix.stackexchange.com/a/6348] [https://unix.stackexchange.com/a/25131]
+    export EOS_BRIL_DPG='/eos/cms/store/group/dpg_bril/comm_bril/';
+    export EOS_BRIL_TECH='/eos/cms/store/group/briltech//';
+    export EOS_USER="/eos/user/${USER:0:1}/${USER}";
+    export GIT_STATUS_PROMPT='true';
+    export KRB5_PRINCIPAL="${USER}@CERN.CH";
+    export RSYNCOF='%i %o %b/%7''l %B %L %C %n'; # [rsyncd log format](https://download.samba.org/pub/rsync/rsyncd.conf.html#log_format)
+    export STRFTIME='+%Y.%m.%d-%H.%M.%S.%3N'; # [date(1)](https://man7.org/linux/man-pages/man1/date.1.html#DESCRIPTION)
+    export USER_AGENT='mozilla';
+    export VENV_DIR="${XDG_DATA_HOME}/venv";
+    export XDG_LOCAL_HOME="${HOME}/.local"; # https://gitlab.freedesktop.org/xdg/xdg-specs/-/issues/14#note_2521732
+    # https://theos.kyriasis.com/~kyrias/basedir-spec.html
+    export XDG_BIN_DIRS='/usr/local/bin:/usr/bin';
+    export XDG_BIN_HOME="${XDG_LOCAL_HOME}/bin";
+    export XDG_LIB_DIRS='/usr/local/lib:/usr/lib';
+    export XDG_LIB_HOME="${XDG_LOCAL_HOME}/lib";
 }
 
 function env.xorg(){
     export ICEAUTHORITY="${XDG_CACHE_HOME}/ICEauthority"; # [If the ICEAUTHORITY environment variable if set, this value is returned. Otherwise, the default authorization file name is $HOME/.ICEauthority.](https://www.x.org/releases/X11R7.7/doc/libICE/ICElib.html#authentication_utility_functions)
-    export XAUTHORITY="${XDG_RUNTIME_DIR}/Xauthority"; # [Specifies the name of the authority file on the local host](https://www.ibm.com/docs/en/zos/2.2.0?topic=motif-x-window-system-environment-variables)
+    # export XAUTHORITY="${XDG_CACHE_HOME}/Xauthority";  # this seems to mess up X11 forwarding # "${XDG_RUNTIME_DIR}/Xauthority"; # [Specifies the name of the authority file on the local host](https://www.ibm.com/docs/en/zos/2.2.0?topic=motif-x-window-system-environment-variables)
 }
+
+function filepath.logger(){
+    # pre-calculate whether `INFO` or `DEBUG` levels should be logged (if so, define their printf format), store the results as environment variables, and define alias for startup files.
+    declare -A LOG=(['NOTSET']=0 ['DEBUG']=10 ['INFO']=20 ['WARNING']=30 ['ERROR']=40 ['CRITICAL']=50); # https://docs.python.org/3/howto/logging.html#logging-levels
+    export LOG_DEBUG=$(( ${LOG[DEBUG]} >= ${LOG[${LOG_LEVEL}]} )); # https://mywiki.wooledge.org/ArithmeticExpression
+    export LOG_INFO=$(( ${LOG[INFO]} >= ${LOG[${LOG_LEVEL}]} )); # https://bash-hackers.docs.cern.ch/syntax/arith_expr
+    (( "${LOG_DEBUG}" )) && [[ -z "${NO_COLOR}" ]] && export DEBUG_FMT="$(tput setaf 8)%s$(tput sgr0)\n"; # DEBUG_FMT='\033[90m%s\033[0m\n'
+    (( "${LOG_INFO}" )) && [[ -z "${NO_COLOR}" ]] && export INFO_FMT="$(tput setaf 2)%s$(tput sgr0)\n"; # INFO_FMT='\033[32m%s\033[0m\n'
+    alias log.debug.filepath='(( "${LOG_DEBUG}" )) && printf "${DEBUG_FMT}" "${BASH_SOURCE[0]}"'; # "$(realpath "${BASH_SOURCE[0]}")" # [How do I determine the location of my script?](https://mywiki.wooledge.org/BashFAQ/028)
+    alias log.info.filepath='(( "${LOG_INFO}" )) && printf "${INFO_FMT}" "${BASH_SOURCE[0]}"'; # "$(realpath "${BASH_SOURCE[0]}")" # [Reliable way for a Bash script to get the full path to itself](https://stackoverflow.com/a/11114547)
+}
+
+filepath.logger;
+export -f filepath.logger; # [Can I "export" functions in bash?](https://unix.stackexchange.com/a/22867/663009)
+
+log.info.filepath;
 
 env.xdg;
 env.bash;
@@ -97,4 +136,7 @@ env.lang.go;
 env.lang.python;
 env.lang.rust;
 env.krb;
+env.user;
 env.xorg;
+
+source "${XDG_CONFIG_HOME}/bash/bashrc";
