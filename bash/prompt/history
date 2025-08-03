@@ -1,27 +1,25 @@
 #!/usr/bin/env bash
 
-if [[ -n "${BASH}" ]] && [[ $- == *i* ]];
-    then (( "${_VERBOSE}" >= 3 )) && printf '%s\n' "***$(realpath "${BASH_SOURCE[0]}")***";
-    else return;
-fi
+log.debug.filepath;
 
-_histBkpAppend(){
-    if [[ ! -f "${_HISTFILEBKP}" ]]; then
-        cp --interactive --verbose "${HISTFILE}" "${_HISTFILEBKP}" 2>/dev/null
-    else
-        local prevHistBufferEntry="$(fc -l -n -1 | sed 's|^[[:space:]]*||')" # [https://unix.stackexchange.com/a/38075] [https://www.gnu.org/software/bash/manual/html_node/Bash-History-Builtins.html]
-        [[ "${prevHistBufferEntry}" != "$(tail -1 "${_HISTFILEBKP}")" ]] && printf "#%s\n%s\n" "$(date +%s)" "${prevHistBufferEntry}" >> "${_HISTFILEBKP}" # poor man's implementation of `HISTCONTROL=ignoredups` for `${_HISTFILEBKP}`
-    fi
+function prompt.bash.history.bkp(){
+    local histfile_bkp="${XDG_CONFIG_HOME}/private/bash/${HOSTNAME}.history";
+    [[ ! -f "${histfile_bkp}" ]] && { cp --interactive --verbose "${HISTFILE}" "${histfile_bkp}" 2>/dev/null; return 0; }
+    local previous_history_buffer="$(fc -l -n -1 | sed 's|^[[:space:]]*||')"; # [How can I save the last command to a file?](https://unix.stackexchange.com/a/38075) [https://www.gnu.org/software/bash/manual/html_node/Bash-History-Builtins.html]
+    # -l        list lines instead of editing
+    # -n        omit line numbers when listing
+    [[ "${previous_history_buffer}" != "$(tail -1 "${histfile_bkp}")" ]] && printf "#%s\n%s\n" "$(date +%s)" "${previous_history_buffer}" >> "${histfile_bkp}"; # poor man's implementation of `HISTCONTROL=ignoredups` for `${histfile_bkp}`
 }
 
-_pyHistBkpCopy(){
-    [[ ! -f "${_PYHISTFILEBKP}" ]] && cp --interactive --verbose "${_PYHISTFILE}" "${_PYHISTFILEBKP}" 2>/dev/null # see `historyFileBkp()` in `$PYTHONSTARTUP`
+function prompt.python.history.bkp(){
+    local python_history_bkp="${XDG_CONFIG_HOME}/private/python/${HOSTNAME}.history";
+    [[ ! -f "${python_history_bkp}" ]] && cp --interactive --verbose "${PYTHON_HISTFILE}" "${python_history_bkp}" 2>/dev/null; # see `historyFileBkp()` in `$PYTHONSTARTUP`
 }
 
-_historyPrompt(){
+function prompt.history(){
     # [Bash History Builtins](https://www.gnu.org/software/bash/manual/html_node/Bash-History-Builtins.html)
     # [How can I avoid losing any history lines?](http://mywiki.wooledge.org/BashFAQ/088)
-    history -a # Append the new history lines to the history file. These are history lines entered since the beginning of the current Bash session, but not already appended to the history file.
-    _histBkpAppend
-    _pyHistBkpCopy
+    history -a; # Append the new history lines to the history file. These are history lines entered since the beginning of the current Bash session, but not already appended to the history file.
+    prompt.bash.history.bkp;
+    prompt.python.history.bkp;
 }
