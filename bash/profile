@@ -24,10 +24,10 @@ export LOG_LEVEL='DEBUG';
 function filepath.logger(){
     # pre-calculate whether `INFO` or `DEBUG` levels should be logged (if so, define their printf format), store the results as environment variables, and define alias for startup files.
     declare -A LOG=(['NOTSET']=0 ['DEBUG']=10 ['INFO']=20 ['WARNING']=30 ['ERROR']=40 ['CRITICAL']=50); # https://docs.python.org/3/howto/logging.html#logging-levels
-    export LOG_DEBUG=$(( ${LOG[DEBUG]} >= ${LOG[${LOG_LEVEL}]} )); # https://mywiki.wooledge.org/ArithmeticExpression
-    export LOG_INFO=$(( ${LOG[INFO]} >= ${LOG[${LOG_LEVEL}]} )); # https://bash-hackers.docs.cern.ch/syntax/arith_expr
-    (( "${LOG_DEBUG}" )) && [[ -z "${NO_COLOR}" ]] && export DEBUG_FMT="$(tput setaf 8)%s$(tput sgr0)\n"; # DEBUG_FMT='\033[90m%s\033[0m\n' 
-    (( "${LOG_INFO}" )) && [[ -z "${NO_COLOR}" ]] && export INFO_FMT="$(tput setaf 2)%s$(tput sgr0)\n"; # INFO_FMT='\033[32m%s\033[0m\n' 
+    export LOG_DEBUG=$(( LOG[DEBUG] >= LOG[${LOG_LEVEL}] )); # https://mywiki.wooledge.org/ArithmeticExpression
+    export LOG_INFO=$(( LOG[INFO] >= LOG[${LOG_LEVEL}] )); # https://bash-hackers.docs.cern.ch/syntax/arith_expr
+    (( "${LOG_DEBUG}" )) && [[ -z "${NO_COLOR}" ]] && export DEBUG_FMT="$(tput setaf 8)%s$(tput sgr0)\n"; # DEBUG_FMT='\033[90m%s\033[0m\n'
+    (( "${LOG_INFO}" )) && [[ -z "${NO_COLOR}" ]] && export INFO_FMT="$(tput setaf 2)%s$(tput sgr0)\n"; # INFO_FMT='\033[32m%s\033[0m\n'
     alias log.debug.filepath='(( "${LOG_DEBUG}" )) && printf "${DEBUG_FMT}" "${BASH_SOURCE[0]}"'; # "$(realpath "${BASH_SOURCE[0]}")" # [How do I determine the location of my script?](https://mywiki.wooledge.org/BashFAQ/028)
     alias log.info.filepath='(( "${LOG_INFO}" )) && printf "${INFO_FMT}" "${BASH_SOURCE[0]}"'; # "$(realpath "${BASH_SOURCE[0]}")" # [Reliable way for a Bash script to get the full path to itself](https://stackoverflow.com/a/11114547)
 }
