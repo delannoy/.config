@@ -1,6 +1,6 @@
 aria2       # [aria2 is a lightweight multi-protocol & multi-source, cross platform download utility operated in command-line. It supports HTTP/HTTPS, FTP, SFTP, BitTorrent and Metalink](https://github.com/aria2/aria2)
 copyq       # [Clipboard manager with advanced features](https://github.com/hluk/CopyQ)
-fzy         # [A simple, fast fuzzy finder for the terminal](https://github.com/jhawthorn/fzy)
+# fzy       # [A simple, fast fuzzy finder for the terminal](https://github.com/jhawthorn/fzy)
 htop        # [htop is a cross-platform interactive process viewer](https://github.com/htop-dev/htop)
 kdeconnect  # [Multi-platform app that allows your devices to communicate](https://github.com/KDE/kdeconnect-kde)
 mediainfo   # [Convenient unified display of the most relevant technical and tag data for video and audio files. [https://MediaArea.net/MediaInfo]](https://github.com/MediaArea/MediaInfo)
