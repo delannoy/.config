@@ -6,7 +6,7 @@ export KRB5_CONFIG="${KRB5_CONFIG:-${XDG_CONFIG_HOME}/krb5/conf}"; # [Main Kerbe
 export KRB5_KTNAME="${KRB5_KTNAME:-${XDG_DATA_HOME}/krb5/keytab}"; # [Default keytab file name.](https://web.mit.edu/kerberos/krb5-1.12/doc/admin/env_variables.html#environment-variables)
 
 function krb.principal(){
-    [[ -z "${KRB5_PRINCIPAL}" ]] && read -p "kerberos principal (e.g. '${USER}@CERN.CH'): " KRB5_PRINCIPAL && export KRB5_PRINCIPAL="${KRB5_PRINCIPAL}";
+    [[ -z "${KRB5_PRINCIPAL}" ]] && read -r -p "kerberos principal (e.g. '${USER}@CERN.CH'): " KRB5_PRINCIPAL && export KRB5_PRINCIPAL="${KRB5_PRINCIPAL}";
     # -p                    prompt output the string PROMPT without a trailing newline before attempting to read
 }
 
