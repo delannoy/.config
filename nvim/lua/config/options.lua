@@ -2,6 +2,9 @@
 -- https://neovim.io/doc/user/options.html
 -- https://neovim.io/doc/user/quickref.html#_options
 
+vim.g.mapleader = ' '
+vim.g.maplocalleader = '\\'
+
 local opt = vim.opt
 
 local tabstop = 4
@@ -24,6 +27,10 @@ opt.virtualedit = { -- Virtual editing means that the cursor can be positioned w
     'block' -- Allow virtual editing in Visual block mode.
 }
 
+-- info
+opt.showmode = false -- If in Insert, Replace, or Visual mode: put a message on the last line.
+opt.title = true -- When on, the title of the window will be set to the value of 'titlestring' (if it is not empty) or to filename [+=-] (path) - NVIM
+
 -- line numbers
 opt.number = true -- Print the line number in front of each line.
 opt.relativenumber = true -- Show the line number relative to the line with the cursor in front of each line.
@@ -44,10 +51,10 @@ opt.listchars = { -- Strings to use in 'list' mode and for the :list command.
     trail = '·', -- Character to show for trailing spaces.  When omitted, trailing spaces are blank.
 }
 opt.scrolloff = 4 -- Minimal number of screen lines to keep above and below the cursor.
-opt.showmode = false -- If in Insert, Replace, or Visual mode: put a message on the last line.
 opt.termguicolors = true -- Enables 24-bit RGB color in the TUI.
 opt.wrap = false -- When off, lines will not wrap and only part of long lines will be displayed.
 opt.winblend = 25 -- Enables pseudo-transparency for a floating window. Valid values are in the range of 0 for fully opaque window (disabled) to 100 for fully transparent background.
+-- opt.winborder = 'rounded' -- Defines the default border style of floating windows.
 
 -- search/substitute
 opt.inccommand = 'split' -- When nonempty, shows the effects of :substitute, :smagic, :snomagic and user commands with the :command-preview flag as you type.
