@@ -1,8 +1,10 @@
 
-Table = {
-    merge = {}
-}
+local Table = {}
 
+--- Check if `element` is contained in `input_table`
+--- @param input_table table
+--- @param element string
+--- @return boolean
 function Table.contains(input_table, element)
     for _, value in pairs(input_table) do
         if value == element then
@@ -12,14 +14,20 @@ function Table.contains(input_table, element)
     return false
 end
 
+--- Calculate length of `input_table`
+--- @param input_table table
+--- @return integer
 function Table.length(input_table)
     local count = 0
-    for idx, _ in pairs(input_table) do
+    for _, _ in pairs(input_table) do
         count = count + 1
     end
     return count
 end
 
+--- Return keys in `input_table`
+--- @param input_table table
+--- @return any[]
 function Table.keys(input_table)
     local keys = {}
     for key, _ in pairs(input_table) do
@@ -28,6 +36,9 @@ function Table.keys(input_table)
     return keys
 end
 
+--- Return values in `input_table`
+--- @param input_table table
+--- @return any[]
 function Table.values(input_table)
     local values = {}
     for _, value in pairs(input_table) do
@@ -36,6 +47,10 @@ function Table.values(input_table)
     return values
 end
 
+--- Apply `func` to all values in `input_table`
+--- @param input_table table
+--- @param func function
+--- @return table
 function Table.map(input_table, func)
     local output_table
     for idx, val in pairs(input_table) do
@@ -44,7 +59,11 @@ function Table.map(input_table, func)
     return output_table
 end
 
-function Table.filter(input_table, condition)
+--- Apply `func` to all values in `input_table` that meet `condition`
+--- @param func function
+--- @param condition boolean
+--- @return table
+function Table.filter(input_table, func, condition)
     local output_table
     for idx, val in pairs(input_table) do
         if condition(val) then
@@ -55,6 +74,12 @@ function Table.filter(input_table, condition)
 end
 
 do
+
+    Table.merge = {}
+
+    --- Merge arrays
+    --- @param arrays (any[])[]
+    --- @return any[]
     function Table.merge.arrays(arrays)
         local output_array = {}
         for _, array in ipairs(arrays) do
@@ -65,6 +90,8 @@ do
         return output_array
     end
 
+    --- Merge dictionaries
+    --- @param dicts {[any]: any}[]
     function Table.merge.dicts(dicts)
         local output_dict = {}
         for _, dict in ipairs(dicts) do
