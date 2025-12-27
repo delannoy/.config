@@ -20,3 +20,9 @@ vim.diagnostic.config({
     signs = {text = ascii}, -- https://github.com/manrajgrover/py-log-symbols/blob/master/log_symbols/symbols.py
 })
 
+vim.keymap.set('n', '<leader>dg', vim.diagnostic.open_float, {desc='Show diagnostics in a floating window'})
+vim.keymap.set('n', '<leader>dk', vim.diagnostic.goto_prev, {desc='Move to previous diagnostic and show in a floating window'})
+vim.keymap.set('n', '<leader>d[', vim.diagnostic.goto_prev, {desc='Move to previous diagnostic and show in a floating window'})
+vim.keymap.set('n', '<leader>dj', vim.diagnostic.goto_next, {desc='Move to next diagnostic and show in a floating window'})
+vim.keymap.set('n', '<leader>d]', vim.diagnostic.goto_next, {desc='Move to next diagnostic and show in a floating window'})
+vim.keymap.set('n', '<leader>dq', vim.diagnostic.setloclist, {desc='Add buffer diagnostics to the location list'})
