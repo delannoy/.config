@@ -1,7 +1,11 @@
+
 diffoscope      # [In-depth comparison of files, archives, and directories.](https://salsa.debian.org/reproducible-builds/diffoscope)
                 # diffoscope        in-depth comparison of files, archives, and directories
                 # ├── libarchive-c  Python interface to libarchive
                 # └── python-magic  File type identification using libmagic
+
+duckdb          # [DuckDB is an in-process SQL OLAP Database Management System](https://github.com/duckdb/duckdb)
+                # duckdb  DuckDB embedded database
 
 img2pdf         # [Lossless conversion of raster images to PDF](https://gitlab.mister-muffin.de/josch/img2pdf)
                 # img2pdf                     Convert images to PDF via direct JPEG inclusion.
@@ -27,12 +31,10 @@ pyrosimple      # [An overhauled fork of the pyrocore tools for rTorrent](https:
                 # │   └── wcwidth                        Measures the displayed width of unicode strings in a terminal
                 # ├── python-box<8.0.0,>=7.0.0           Advanced Python dictionaries with dot notation access
                 # ├── python-daemon<4.0.0,>=3.0.1        Library to implement a well-behaved Unix daemon process.
-                # │   ├── docutils                       Docutils -- Python Documentation Utilities
-                # │   ├── lockfile>=0.10                 Platform-independent file locking module
-                # │   └── setuptools>=62.4.0             Easily download, build, install, upgrade, and uninstall Python packages
+                # │   └── lockfile>=0.10                 Platform-independent file locking module
                 # ├── requests<3.0.0,>=2.28.1            Python HTTP for Humans.
                 # │   ├── certifi>=2017.4.17             Python package for providing Mozilla's CA Bundle.
-                # │   ├── charset-normalizer<4,>=2       The Real First Universal Charset Detector. Open, modern and actively maintained alternative to Chardet.
+                # │   ├── charset_normalizer<4,>=2       The Real First Universal Charset Detector. Open, modern and actively maintained alternative to Chardet.
                 # │   ├── idna<4,>=2.5                   Internationalized Domain Names in Applications (IDNA)
                 # │   └── urllib3<3,>=1.21.1             HTTP library with thread-safe connection pooling, file post, and more.
                 # ├── shtab<2.0.0,>=1.5.5                Automagic shell tab completion for Python CLI applications
@@ -42,7 +44,7 @@ pyrosimple      # [An overhauled fork of the pyrocore tools for rTorrent](https:
 speedtest-cli   # [Command line interface for testing internet bandwidth using speedtest.net](https://github.com/sivel/speedtest-cli)
                 # speedtest-cli  Command line interface for testing internet bandwidth using speedtest.net
 
-tmuxp           # Session manager for tmux, which allows users to save and load tmux sessions through simple configuration files.
+tmuxp           # [Session manager for tmux, which allows users to save and load tmux sessions through simple configuration files.](https://github.com/tmux-python/tmuxp)
                 # ├── PyYAML<7.0,>=6.0         YAML parser and emitter for Python
                 # ├── colorama>=0.3.9          Cross-platform colored terminal text.
                 # └── libtmux<0.38.0,>=0.37.0  Typed library that provides an ORM wrapper for tmux, a terminal multiplexer.
@@ -50,17 +52,15 @@ tmuxp           # Session manager for tmux, which allows users to save and load 
 torrent_parser  # [A .torrent file parser and creator for both Python 2 and 3](https://github.com/7sDream/torrent_parser)
                 # torrent_parser  A .torrent file parser and creator for both Python 2 and 3
 
-typer[all]      # [Typer, build great CLIs. Easy to code. Based on Python type hints.](https://github.com/tiangolo/typer)
-                # typer[all]                             Typer, build great CLIs. Easy to code. Based on Python type hints.
-                # ├── click<9.0.0,>=7.1.1                Composable command line interface toolkit
-                # ├── colorama<0.5.0,>=0.4.3             Cross-platform colored terminal text.
-                # ├── rich<14.0.0,>=10.11.0              Render rich text, tables, progress bars, syntax highlighting, markdown and more to the terminal
-                # │   ├── markdown-it-py>=2.2.0          Python port of markdown-it. Markdown parsing, done right!
-                # │   │   └── mdurl~=0.1                 Markdown URL utilities
-                # │   ├── pygments<3.0.0,>=2.13.0        Pygments is a syntax highlighting package written in Python.
-                # │   └── typing-extensions<5.0,>=4.0.0  Backported and Experimental Type Hints for Python 3.8+
-                # ├── shellingham<2.0.0,>=1.3.0          Tool to Detect Surrounding Shell
-                # └── typing-extensions>=3.7.4.3         Backported and Experimental Type Hints for Python 3.8+
+typer           # [Typer, build great CLIs. Easy to code. Based on Python type hints.](https://github.com/tiangolo/typer)
+                # typer                            Typer, build great CLIs. Easy to code. Based on Python type hints.
+                # ├── click>=8.0.0                 Composable command line interface toolkit
+                # ├── rich>=10.11.0                Render rich text, tables, progress bars, syntax highlighting, markdown and more to the terminal
+                # │   ├── markdown-it-py>=2.2.0    Python port of markdown-it. Markdown parsing, done right!
+                # │   │   └── mdurl~=0.1           Markdown URL utilities
+                # │   └── pygments<3.0.0,>=2.13.0  Pygments is a syntax highlighting package written in Python.
+                # ├── shellingham>=1.3.0           Tool to Detect Surrounding Shell
+                # └── typing-extensions>=3.7.4.3   Backported and Experimental Type Hints for Python 3.8+
 
 yt-dlp          # [A youtube-dl fork with additional features and fixes](https://github.com/yt-dlp/yt-dlp)
                 # yt-dlp                            A youtube-dl fork with additional features and patches

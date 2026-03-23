@@ -12,8 +12,16 @@ awkward         # [Manipulate JSON-like data with NumPy-like idioms.](https://gi
                 # ├── packaging                   Core utilities for Python packages
                 # └── typing-extensions>=4.1.0    Backported and Experimental Type Hints for Python 3.8+
 
+bottleneck      # [ Fast NumPy array functions written in C](https://github.com/pydata/bottleneck)
+                # bottleneck  Fast NumPy array functions written in C
+                # └── numpy   Fundamental package for array computing in Python
+
 hepunits        # [Units and constants in the HEP system of units](https://github.com/scikit-hep/hepunits)
                 # hepunits  Units and constants in the HEP system of units
+
+numexpr         # [Fast numerical array expression evaluator for Python, NumPy, Pandas, PyTables and more](https://github.com/pydata/numexpr)
+                # numexpr            Fast numerical expression evaluator for NumPy
+                # └── numpy>=1.13.3  Fundamental package for array computing in Python
 
 numpy           # [The fundamental package for scientific computing with Python [https://www.numpy.org/]](https://github.com/numpy/numpy)
                 # numpy   NumPy is the fundamental package for array computing with Python.
@@ -26,58 +34,9 @@ pandas          # [Flexible and powerful data analysis / manipulation library fo
                 # ├── pytz>=2020.1            World timezone definitions, modern and historical
                 # └── tzdata>=2022.1          Provider of IANA time zone data
 
-pandas[computation,compression,feather,hdf5,performance,plot,xml]
-                # pandas[compression,computation,feather,hdf5,performance,plot,xml]  Powerful data structures for data analysis, time series, and statistics
-                # ├── bottleneck>=1.3.6                                              Fast NumPy array functions written in C
-                # │   └── numpy                                                      Fundamental package for array computing in Python
-                # ├── lxml>=4.9.2                                                    Powerful and Pythonic XML processing library combining libxml2/libxslt with the ElementTree API.
-                # ├── matplotlib>=3.6.3                                              Python plotting package
-                # │   ├── contourpy>=1.0.1                                           Python library for calculating contours of 2D quadrilateral grids
-                # │   │   └── numpy<2.0,>=1.20                                       Fundamental package for array computing in Python
-                # │   ├── cycler>=0.10                                               Composable style cycles
-                # │   ├── fonttools>=4.22.0                                          Tools to manipulate font files
-                # │   ├── kiwisolver>=1.3.1                                          A fast implementation of the Cassowary constraint solver
-                # │   ├── numpy<2,>=1.21                                             Fundamental package for array computing in Python
-                # │   ├── packaging>=20.0                                            Core utilities for Python packages
-                # │   ├── pillow>=8                                                  Python Imaging Library (Fork)
-                # │   ├── pyparsing>=2.3.1                                           pyparsing module - Classes and methods to define and execute parsing grammars
-                # │   └── python-dateutil>=2.7                                       Extensions to the standard Python datetime module
-                # │       └── six>=1.5                                               Python 2 and 3 compatibility utilities
-                # ├── numba>=0.56.4                                                  compiling Python code using LLVM
-                # │   ├── llvmlite<0.43,>=0.42.0dev0                                 lightweight wrapper around basic LLVM functionality
-                # │   └── numpy<1.27,>=1.22                                          Fundamental package for array computing in Python
-                # ├── numexpr>=2.8.4                                                 Fast numerical expression evaluator for NumPy
-                # │   └── numpy>=1.13.3                                              Fundamental package for array computing in Python
-                # ├── numpy<2,>=1.22.4                                               Fundamental package for array computing in Python
-                # ├── pyarrow>=10.0.1                                                Python library for Apache Arrow
-                # │   └── numpy<2,>=1.16.6                                           Fundamental package for array computing in Python
-                # ├── python-dateutil>=2.8.2                                         Extensions to the standard Python datetime module
-                # │   └── six>=1.5                                                   Python 2 and 3 compatibility utilities
-                # ├── pytz>=2020.1                                                   World timezone definitions, modern and historical
-                # ├── scipy>=1.10.0                                                  Fundamental algorithms for scientific computing in Python
-                # │   └── numpy<1.29.0,>=1.22.4                                      Fundamental package for array computing in Python
-                # ├── tables>=3.8.0                                                  Hierarchical datasets for Python
-                # │   ├── blosc2>=2.3.0                                              Python wrapper for the C-Blosc2 library
-                # │   │   ├── msgpack                                                MessagePack serializer
-                # │   │   ├── ndindex>=1.4                                           A Python library for manipulating indices of ndarrays.
-                # │   │   ├── numpy>=1.20.3                                          Fundamental package for array computing in Python
-                # │   │   └── py-cpuinfo                                             Get CPU info with pure Python
-                # │   ├── numexpr>=2.6.2                                             Fast numerical expression evaluator for NumPy
-                # │   │   └── numpy>=1.13.3                                          Fundamental package for array computing in Python
-                # │   ├── numpy>=1.19.0                                              Fundamental package for array computing in Python
-                # │   ├── packaging                                                  Core utilities for Python packages
-                # │   └── py-cpuinfo                                                 Get CPU info with pure Python
-                # ├── tzdata>=2022.7                                                 Provider of IANA time zone data
-                # ├── xarray>=2022.12.0                                              N-D labeled arrays and datasets in Python
-                # │   ├── numpy>=1.23                                                Fundamental package for array computing in Python
-                # │   ├── packaging>=22                                              Core utilities for Python packages
-                # │   └── pandas>=1.5                                                Powerful data structures for data analysis, time series, and statistics
-                # │       ├── numpy<2,>=1.22.4                                       Fundamental package for array computing in Python
-                # │       ├── python-dateutil>=2.8.2                                 Extensions to the standard Python datetime module
-                # │       │   └── six>=1.5                                           Python 2 and 3 compatibility utilities
-                # │       ├── pytz>=2020.1                                           World timezone definitions, modern and historical
-                # │       └── tzdata>=2022.7                                         Provider of IANA time zone data
-                # └── zstandard>=0.19.0                                              Zstandard bindings for Python
+pandas-stubs    # [Public type stubs for pandas](https://github.com/pandas-dev/pandas-stubs)
+                # pandas-stubs              Type annotations for pandas
+                # └── types-pytz>=2022.1.1  Typing stubs for pytz
 
 particle        # [Package to deal with particles, the PDG particle data table, PDGIDs, etc.](https://github.com/scikit-hep/particle)
                 # particle                      Extended PDG particle data and MC identification codes
@@ -87,7 +46,7 @@ particle        # [Package to deal with particles, the PDG particle data table, 
                 # │   └── zipp>=3.1.0           Backport of pathlib-compatible object wrapper for zip files
                 # └── typing-extensions>=4.5    Backported and Experimental Type Hints for Python 3.8+
 
-patsy       # [Describing statistical models in Python using symbolic formulas](https://github.com/pydata/patsy)
+patsy           # [Describing statistical models in Python using symbolic formulas](https://github.com/pydata/patsy)
                 # patsy           A Python package for describing statistical models and for building design matrices.
                 # ├── numpy>=1.4  Fundamental package for array computing in Python
                 # └── six         Python 2 and 3 compatibility utilities
@@ -99,30 +58,22 @@ scipy           # [open-source software for mathematics, science, and engineerin
                 # scipy                      Fundamental algorithms for scientific computing in Python
                 # └── numpy<1.27.0,>=1.19.5  Fundamental package for array computing in Python
 
-sympy           # Computer algebra system (CAS) in Python
+sympy           # [Computer algebra system (CAS) in Python](https://github.com/sympy/sympy)
                 # sympy             Computer algebra system (CAS) in Python
                 # └── mpmath>=0.19  Python library for arbitrary-precision floating-point arithmetic
-
-uproot          # [ROOT I/O in pure Python and NumPy](https://github.com/scikit-hep/uproot5)
-                # uproot                              ROOT I/O in pure Python and NumPy.
-                # ├── awkward>=2.4.6                  Manipulate JSON-like data with NumPy-like idioms.
-                # │   ├── awkward-cpp==29             CPU kernels and compiled extensions for Awkward Array
-                # │   │   ├── importlib_resources     Read resources from Python packages
-                # │   │   │   └── zipp>=3.1.0         Backport of pathlib-compatible object wrapper for zip files
-                # │   │   └── numpy>=1.18.0           Fundamental package for array computing in Python
-                # │   ├── fsspec>=2022.11.0           File-system specification
-                # │   ├── importlib-metadata>=4.13.0  Read metadata from Python packages
-                # │   │   └── zipp>=0.5               Backport of pathlib-compatible object wrapper for zip files
-                # │   ├── numpy>=1.18.0               Fundamental package for array computing in Python
-                # │   ├── packaging                   Core utilities for Python packages
-                # │   └── typing-extensions>=4.1.0    Backported and Experimental Type Hints for Python 3.8+
-                # ├── cramjam>=2.5.0                  Thin Python bindings to de/compression algorithms in Rust
-                # ├── fsspec                          File-system specification
-                # ├── numpy                           Fundamental package for array computing in Python
-                # ├── packaging                       Core utilities for Python packages
-                # └── typing-extensions>=4.1.0        Backported and Experimental Type Hints for Python 3.8+
 
 vector          # [Vector classes and utilities](https://github.com/scikit-hep/vector)
                 # vector             Vector classes and utilities
                 # ├── numpy>=1.13.3  Fundamental package for array computing in Python
                 # └── packaging>=19  Core utilities for Python packages
+
+xarray          # [N-D labeled arrays and datasets in Python](https://github.com/pydata/xarray)
+                # xarray                          N-D labeled arrays and datasets in Python
+                # ├── numpy>=1.20                 Fundamental package for array computing in Python
+                # ├── packaging>=21.3             Core utilities for Python packages
+                # └── pandas>=1.3                 Powerful data structures for data analysis, time series, and statistics
+                #     ├── numpy>=1.20.3           Fundamental package for array computing in Python
+                #     ├── python-dateutil>=2.8.2  Extensions to the standard Python datetime module
+                #     │   └── six>=1.5            Python 2 and 3 compatibility utilities
+                #     ├── pytz>=2020.1            World timezone definitions, modern and historical
+                #     └── tzdata>=2022.1          Provider of IANA time zone data

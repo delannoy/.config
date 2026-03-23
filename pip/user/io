@@ -1,15 +1,6 @@
 
-aiometer    # [A Python concurrency scheduling library, compatible with asyncio and trio](https://github.com/florimondmanca/aiometer)
-            # aiometer                        A Python concurrency scheduling library, compatible with asyncio and trio
-            # ├── anyio<5,>=3.2               High level compatibility layer for multiple asynchronous event loop implementations
-            # │   ├── exceptiongroup>=1.0.2   Backport of PEP 654 (exception groups)
-            # │   ├── idna>=2.8               Internationalized Domain Names in Applications (IDNA)
-            # │   ├── sniffio>=1.1            Sniff out which async library your code is running under
-            # │   └── typing-extensions>=4.1  Backported and Experimental Type Hints for Python 3.8+
-            # └── exceptiongroup              Backport of PEP 654 (exception groups)
-
-duckdb      # [DuckDB is an in-process SQL OLAP Database Management System](https://github.com/duckdb/duckdb)
-            # duckdb  DuckDB embedded database
+fsspec      # [ A specification that python filesystems should adhere to.](https://github.com/fsspec/filesystem_spec)
+            # fsspec  File-system specification
 
 pyarrow     # [Apache Arrow is a multi-language toolbox for accelerated data interchange and in-memory processing](https://github.com/apache/arrow)
             # pyarrow               Python library for Apache Arrow
@@ -25,3 +16,22 @@ tables      # [A Python package to manage extremely large amounts of data](https
             # ├── numpy>=1.19.0      Fundamental package for array computing in Python
             # ├── packaging          Core utilities for Python packages
             # └── py-cpuinfo         Get CPU info with pure Python
+
+uproot      # [ROOT I/O in pure Python and NumPy](https://github.com/scikit-hep/uproot5)
+            # uproot                              ROOT I/O in pure Python and NumPy.
+            # ├── awkward>=2.4.6                  Manipulate JSON-like data with NumPy-like idioms.
+            # │   ├── awkward-cpp==29             CPU kernels and compiled extensions for Awkward Array
+            # │   │   ├── importlib_resources     Read resources from Python packages
+            # │   │   │   └── zipp>=3.1.0         Backport of pathlib-compatible object wrapper for zip files
+            # │   │   └── numpy>=1.18.0           Fundamental package for array computing in Python
+            # │   ├── fsspec>=2022.11.0           File-system specification
+            # │   ├── importlib-metadata>=4.13.0  Read metadata from Python packages
+            # │   │   └── zipp>=0.5               Backport of pathlib-compatible object wrapper for zip files
+            # │   ├── numpy>=1.18.0               Fundamental package for array computing in Python
+            # │   ├── packaging                   Core utilities for Python packages
+            # │   └── typing-extensions>=4.1.0    Backported and Experimental Type Hints for Python 3.8+
+            # ├── cramjam>=2.5.0                  Thin Python bindings to de/compression algorithms in Rust
+            # ├── fsspec                          File-system specification
+            # ├── numpy                           Fundamental package for array computing in Python
+            # ├── packaging                       Core utilities for Python packages
+            # └── typing-extensions>=4.1.0        Backported and Experimental Type Hints for Python 3.8+
