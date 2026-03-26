@@ -3,48 +3,40 @@
 Host august
     User                        root
     Hostname                    %h.cern.ch
-    IdentityFile                ~/.ssh/keys/id_rsa_august
-    PubkeyAuthentication        yes
     PreferredAuthentications    publickey
+    IdentityFile                ~/.ssh/keys/id_rsa_august
+    IdentitiesOnly              yes
+
+Host pltoffline
+    Hostname                    %h.cern.ch
 
 # [The LxTunnel Sevice](https://cern.service-now.com/service-portal?id=kb_article&n=KB0008504)
-# https://resources.web.cern.ch/resources/Manage/Accounts/Settings.aspx
+# > 2FA for external connections will apply only to Kerberos and password logins (*SSH key logins excluded*), but any SSH cross-logins from LXTUNNEL to LXPLUS will be blocked to prevent bypassing 2FA.
+# https://resources-old.web.cern.ch/resources-old/Manage/Accounts/MapSSH.aspx
 Host lxplus_tunnel
     Hostname                    lxtunnel.cern.ch
-    GSSAPIAuthentication        no
-    GSSAPIDelegateCredentials   no
-    ForwardAgent                no
-    IdentityFile                ~/.ssh/keys/id_rsa_lxtunnel
-    PubkeyAuthentication        yes
     PreferredAuthentications    publickey
-    ProxyJump                   none
-    DynamicForward              10880
-    ExitOnForwardFailure        yes
-# ssh -v -F /dev/null -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i /home/delannoy/.ssh/keys/id_rsa_lxtunnel adelanno@lxtunnel.cern.ch
-# ssh -v -F /dev/null -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o GSSAPIAuthentication=yes -o GSSAPIDelegateCredentials=yes adelanno@lxtunnel.cern.ch
+    IdentityFile                ~/.ssh/keys/id_rsa_lxtunnel
+    IdentitiesOnly              yes
 
 # [List of LXPLUS Aliases](https://lxplusdoc.web.cern.ch/evolution/list/)
-Host lxplus lxplus-gpu lxplus-testing lxplus8 lxplus8-arm lxplus9 lxplus9-arm
+Host lxplus lxplus-future lxplus-gpu lxplus-testing
     Hostname                    %h.cern.ch
-    ProxyJump                   none
-
-# [Using an SSH Contol Master to lxplus](https://cern.service-now.com/service-portal?id=kb_article&n=KB0009800)
-Host lxplus8-future lxplus9-future
+Host lxplus8 lxplus8-arm lxplus8-future
     Hostname                    %h.cern.ch
-    ProxyJump                   none
-    ControlPath                 /run/user/%i/%r@%h:%p
-    ControlMaster               auto
-    ControlPersist              1m
-# `ssh -O check lxplus.cern.ch` `ssh -O exit lxplus.cern.ch`
+Host lxplus9 lxplus9-arm lxplus9-future
+    Hostname                    %h.cern.ch
 
+# [CERN OpenStack](https://openstack.cern.ch/project/)
+# https://gitlab.cern.ch/adelanno/openstack/-/blob/master/openstack.sh
 Host brilvmlxa brilvmlxb brilvmlxc brilvmlxd brilvmlxe brilvmlxf
     Hostname                    %h.cern.ch
-
-Host delannoy0 delannoy000 pltoffline
+Host delannoy0 delannoy000
     Hostname                    %h.cern.ch
 
 Match host="*.cern.ch"
     User                        adelanno
 
-Match host="*.cern.ch,!lxplus*.cern.ch,!lxtunnel.cern.ch" !exec="ping -c 1 -W 1 cmsusr.cern.ch 2>&1 >/dev/null"
-    ProxyJump                   lxplus_tunnel
+# if `cmsusr.cern.ch` is not ping-able (imples external connection), `*.cern.ch` hostnames will tunnel through `lxtunnel.cern.ch`, then `brilvmlxa.cern.ch` (if `lxtunnel.cern.ch` authenticates via ssh keys, `brilvmlxa.cern.ch` skips two-factor authentication)
+Match host="*.cern.ch,!lxtunnel.cern.ch" !exec="ping -c 1 -W 0.25 cmsusr.cern.ch >/dev/null 2>&1"
+    ProxyJump                   lxplus_tunnel,brilvmlxa
