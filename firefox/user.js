@@ -3,7 +3,18 @@
 // https://searchfox.org/mozilla-central/source/modules/libpref/init/StaticPrefList.yaml
 // https://kb.mozillazine.org/About:config_entries
 
+user_pref("app.update.suppressPrompts", false);
+
 user_pref("browser.aboutConfig.showWarning", false);
+
+// https://github.com/yokoffing/Betterfox/blob/main/user.js#L152
+// https://github.com/yokoffing/Betterfox/wiki/Common-Overrides#ai-features
+user_pref("browser.ai.control.default", "blocked");
+user_pref("browser.ml.enable", false);
+user_pref("browser.ml.chat.enabled", false);
+user_pref("browser.ml.chat.menu", false);
+user_pref("browser.ml.linkPreview.enabled", false);
+user_pref("browser.tabs.groups.smart.enabled", false);
 
 // [same as Settings > General > Files and Applications > What should Firefox do with other files? > Ask whether to open or save files](https://wiki.archlinux.org/title/Firefox#Additional_settings_to_consider)
 user_pref("browser.download.always_ask_before_handling_new_types", true);
@@ -26,9 +37,26 @@ user_pref("browser.download.useDownloadDir", false); // [False: Ask where to sav
 user_pref('browser.low_commit_space_threshold_mb', 60000);
 user_pref('browser.low_commit_space_threshold_percent', 95);
 
-// https://github.com/yokoffing/Betterfox/wiki/Optional-Hardening#new-tab-shortcuts
+// https://flamedfury.com/posts/disable-ai-in-firefox/
+user_pref('browser.ml.enable', false);
+
+// https://github.com/yokoffing/Betterfox/wiki/Common-Overrides#new-tab-shortcuts
 user_pref("browser.newtabpage.activity-stream.feeds.topsites", false);
-user_pref("browser.newtabpage.activity-stream.showWeather", false);
+user_pref("browser.newtabpage.activity-stream.default.sites", "");
+user_pref("browser.newtabpage.activity-stream.showSponsoredTopSites", false); // Sponsored shortcuts 
+user_pref("browser.newtabpage.activity-stream.feeds.section.topstories", false); // Recommended by Pocket
+user_pref("browser.newtabpage.activity-stream.showSponsored", false); // Sponsored Stories
+user_pref("browser.newtabpage.activity-stream.showWeather", true);
+
+// https://github.com/yokoffing/Betterfox/wiki/Common-Overrides#search-settings
+user_pref("browser.search.suggest.enabled", false);
+
+// https://superuser.com/questions/1086541/how-do-i-make-firefox-47-load-all-my-tabs-on-startup
+user_pref('browser.sessionstore.restore_on_demand', true);
+user_pref('browser.sessionstore.restore_tabs_lazily', true);
+
+// http://kb.mozillazine.org/Browser.startup.page
+user_pref("browser.startup.page", 3); // [3: Resume the previous browser session]
 
 // [True (default): Do not focus new tabs opened from links (load in background)]
 // https://superuser.com/questions/741649/how-to-prevent-background-tabs-from-loading-in-firefox
@@ -39,13 +67,6 @@ user_pref('browser.tabs.min_inactive_duration_before_unload', 3600000);
 
 // https://firefox-source-docs.mozilla.org/browser/tabunloader/
 user_pref('browser.tabs.unloadOnLowMemory', true);
-
-// https://superuser.com/questions/1086541/how-do-i-make-firefox-47-load-all-my-tabs-on-startup
-user_pref('browser.sessionstore.restore_on_demand', true);
-user_pref('browser.sessionstore.restore_tabs_lazily', true);
-
-// http://kb.mozillazine.org/Browser.startup.page
-user_pref("browser.startup.page", 3); // [3: Resume the previous browser session]
 
 // https://support.mozilla.org/gl/questions/1445570
 user_pref('browser.urlbar.showSearchSuggestionsFirst', false);
@@ -69,6 +90,9 @@ user_pref("pdfjs.defaultZoomValue", "page-width");
 
 // https://old.reddit.com/r/firefox/comments/1c63uvc/disable_the_floating_highlight_button_on_pdfs/
 user_pref('pdfjs.enableHighlightFloatingButton', false);
+
+// [Site notifications are blocked to increase security and minimize annoyances](https://github.com/yokoffing/Betterfox/wiki/Common-Overrides#site-notifications)
+user_pref("permissions.default.desktop-notification", 0);
 
 // https://github.com/yokoffing/Betterfox/wiki/Optional-Hardening#password-credit-card-and-address-management
 user_pref("signon.rememberSignons", false);
