@@ -27,6 +27,12 @@ Match host="*.cern.ch,*.cms,*fnal.gov"
     ForwardAgent                yes
     # GSSAPITrustDNS              no # https://devices.docs.cern.ch/devices/mac/AboutKerberosAndSsh/#about-gssapitrustdns
 
+# [Using an SSH Contol Master to lxplus](https://cern.service-now.com/service-portal?id=kb_article&n=KB0009800)
+# Match host="*.cern.ch,*.cms,*fnal.gov"
+#     ControlPath                 /run/user/%i/%r@%h:%p
+#     ControlMaster               auto
+#     ControlPersist              1h
+
 Match host="*.cern.ch,*.cms,*fnal.gov"
     ForwardX11                  yes
     ForwardX11Trusted           yes
