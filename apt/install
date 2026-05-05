@@ -1,0 +1,90 @@
+#!/usr/bin/env bash
+
+DISTRIBUTION="$(grep '^ID=' /etc/os-release | cut -d= -f2)"
+ARCHITECTURE="$(dpkg --print-architecture)"
+
+function brave(){
+    # https://brave.com/linux/
+    local keyring='/usr/share/keyrings/brave-browser-archive-keyring.gpg'
+    local apt_sources='/etc/apt/sources.list.d/brave-browser-release.sources'
+    local remote='https://brave-browser-apt-release.s3.brave.com'
+    sudo curl --fail --show-error --silent --location "${remote}/brave-browser-archive-keyring.gpg" --output "${keyring}"
+    sudo curl --fail --show-error --silent --location "${remote}/brave-browser.sources" --output "${apt_sources}"
+    sudo apt update
+    sudo apt install brave-browser
+}
+
+function dropbox.desktop(){
+    # https://help.dropbox.com/installs/linux-commands
+    local url="https://linux.dropbox.com/packages/${DISTRIBUTION}/"
+    local filename="$(curl --silent "${url}" | grep --extended-regexp --only-matching "dropbox_[0-9]{4}.[\.0-9]+_${ARCHITECTURE}.deb" | sort --version-sort | tail --lines 1)"
+    curl --progress-bar --location "${url}/${filename}" --output "${XDG_CACHE_HOME}/${filename}"
+    sudo apt install "${XDG_CACHE_HOME}/${filename}"
+}
+
+function dropbox.daemon(){
+    # https://www.dropbox.com/install-linux
+    [[ $(uname -m) != 'x86_64' ]] && return 1
+    local bin_dir="${HOME}/.local/bin"
+    local cache_dir="${XDG_CACHE_HOME:-$HOME/.cache}"
+    mkdir --parents "${bin_dir}"
+    curl --progress-bar --location 'https://linux.dropboxstatic.com/packages/dropbox.py' --output "${bin_dir}/dropbox.py"
+    chmod +x "${bin_dir}/dropbox.py"
+    curl --progress-bar --location 'https://www.dropbox.com/download?plat=lnx.x86_64' --output "${cache_dir}/dropbox_linux_x86_64.tgz"
+    tar --extract --gzip --file="${cache_dir}/dropbox_linux_x86_64.tgz" --directory="${HOME}"
+    "${HOME}/.dropbox-dist/dropboxd"
+}
+
+function fsearch(){
+    # https://github.com/cboxdoerfer/fsearch#download
+    sudo add-apt-repository 'ppa:christian-boxdoerfer/fsearch-daily'
+    sudo apt update
+    sudo apt install fsearch
+}
+
+function gnu.installed(){
+    # https://git.savannah.gnu.org/cgit/coreutils.git/tree/README#n8
+    local util utils
+    utils=(arch b2sum base32 base64 basename basenc cat chcon chgrp chmod chown \
+        chroot cksum comm coreutils cp csplit cut date dd df dir dircolors dirname \
+        du echo env expand expr factor false fmt fold groups head hostid hostname \
+        id install join kill link ln logname ls md5sum mkdir mkfifo mknod mktemp \
+        mv nice nl nohup nproc numfmt od paste pathchk pinky pr printenv printf ptx \
+        pwd readlink realpath rm rmdir runcon seq sha1sum sha224sum sha256sum \
+        sha384sum sha512sum shred shuf sleep sort split stat stdbuf stty sum sync \
+        tac tail tee test timeout touch tr true truncate tsort tty uname unexpand \
+        uniq unlink uptime users vdir wc who whoami yes)
+    for util in "${utils[@]}"; do
+        [[ -z "$(command -v ${util})" ]] && echo "${util}"
+    done
+}
+
+function posix.installed(){
+    # https://pubs.opengroup.org/onlinepubs/9699919799/idx/utilities.html
+    # pup 'a text{}' -f <(curl --silent 'https://pubs.opengroup.org/onlinepubs/9699919799/idx/utilities.html') | xargs
+    local util utils
+    utils=(admin alias ar asa at awk basename batch bc bg c99 cal cat cd cflow chgrp chmod chown cksum cmp comm command compress cp \
+        crontab csplit ctags cut cxref date dd delta df diff dirname du echo ed env ex expand expr false fc fg file find fold fort77 \
+        fuser gencat get getconf getopts grep hash head iconv id ipcrm ipcs jobs join kill lex link ln locale localedef logger logname \
+        lp ls m4 mailx make man mesg mkdir mkfifo more mv newgrp nice nl nm nohup od paste patch pathchk pax pr printf prs ps pwd qalter \
+        qdel qhold qmove qmsg qrerun qrls qselect qsig qstat qsub read renice rm rmdel rmdir sact sccs sed sh sleep sort split strings strip \
+        stty tabs tail talk tee test time touch tput tr true tsort tty type ulimit umask unalias uname uncompress unexpand unget uniq unlink \
+        uucp uudecode uuencode uustat uux val vi wait wc what who write xargs yacc zcat)
+    for util in "${utils[@]}"; do
+        [[ -z "$(command -v ${util})" ]] && echo "${util}"
+    done
+}
+
+function zoom(){
+    # https://support.zoom.com/hc/en/article?id=zm_kb&sysparm_article=KB0063458
+    # https://www.linuxcapable.com/how-to-install-zoom-on-debian-linux/
+    local url="https://zoom.us/client/latest/zoom_${ARCHITECTURE}.deb"
+    curl --progress-bar --location "${url}" --output "${XDG_CACHE_HOME}/${url##*/}"
+    sudo apt install "${XDG_CACHE_HOME}/${url##*/}"
+}
+
+function zoom.dependencies(){
+    # https://support.zoom.com/hc/en/article?id=zm_kb&sysparm_article=KB0063458
+    sudo apt install libglib2.0-0 libgstreamer-plugins-base0.10-0 libxcb-shape0 libxcb-shm0 libxcb-xfixes0 libxcb-randr0 libxcb-image0 \
+        libfontconfig1 libgl1-mesa-glx libxi6 libsm6 libxrender1 libpulse0 libxcomposite1 libxslt1.1 libsqlite3-0 libxcb-keysyms1 libxcb-xtest0 ibus
+}
