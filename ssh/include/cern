@@ -18,6 +18,7 @@ Host lxplus_tunnel
     PreferredAuthentications    publickey
     IdentityFile                ~/.ssh/keys/id_rsa_lxtunnel
     IdentitiesOnly              yes
+    DynamicForward              10888
 
 # [List of LXPLUS Aliases](https://lxplusdoc.web.cern.ch/evolution/list/)
 Host lxplus lxplus-future lxplus-gpu lxplus-testing
