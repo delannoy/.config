@@ -16,3 +16,6 @@ F1::ESC
 #F10::MEDIA_PREV
 #F11::MEDIA_PLAY_PAUSE
 #F12::MEDIA_NEXT
+
+; PrtSc key sends WIN+ALT+S
+PrintScreen::SendInput("#+s")
