@@ -49,12 +49,12 @@ vim.keymap.set(nv, '<C-k>', '<C-w><C-k>', opts('Move focus to the upper split'))
 vim.keymap.set(n, '<leader>b', function() vim.cmd.buffer('#') end, opts('Switch to alternate buffer'))
 
 -- Switch to next/prev buffer
-vim.keymap.set(nv, '<M-PageDown>', vim.cmd.bnext, opts('Switch to next buffer'))
-vim.keymap.set(nv, '<M-l>', vim.cmd.bnext, opts('Switch to next buffer'))
-vim.keymap.set(nv, '<M-j>', vim.cmd.bnext, opts('Switch to next buffer'))
-vim.keymap.set(nv, '<M-PageUp>', vim.cmd.bprevious, opts('Switch to previous buffer'))
-vim.keymap.set(nv, '<M-k>', vim.cmd.bprevious, opts('Switch to previous buffer'))
-vim.keymap.set(nv, '<M-h>', vim.cmd.bprevious, opts('Switch to previous buffer'))
+vim.keymap.set(nvi, '<M-PageDown>', vim.cmd.bnext, opts('Switch to next buffer'))
+vim.keymap.set(nvi, '<M-l>', vim.cmd.bnext, opts('Switch to next buffer'))
+vim.keymap.set(nvi, '<M-j>', vim.cmd.bnext, opts('Switch to next buffer'))
+vim.keymap.set(nvi, '<M-PageUp>', vim.cmd.bprevious, opts('Switch to previous buffer'))
+vim.keymap.set(nvi, '<M-k>', vim.cmd.bprevious, opts('Switch to previous buffer'))
+vim.keymap.set(nvi, '<M-h>', vim.cmd.bprevious, opts('Switch to previous buffer'))
 
 -- Don't pollute jumplist with {} motions
 vim.keymap.set(n, '{', function() jump_paragraph('{') end, opts('Previous paragraph (do not pollute jumplist)'))
