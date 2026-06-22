@@ -101,7 +101,7 @@ function krb.keytab.create.cern(){
     # [Generating a user keytab](https://cern.service-now.com/service-portal?id=kb_article&n=KB0003405)
     function.requires ssh && function.requires scp || return 1;
     local username remote_keytab;
-    args username remote_keytab:="${HOME}/private/keytab";
+    args username remote_keytab:='~/private/keytab';
     ssh -F /dev/null -t "${username}@lxplus.cern.ch" "/usr/sbin/cern-get-keytab --user --keytab=${remote_keytab}";
     # -F configfile     Specifies an alternative per-user configuration file.
     # -t                Force pseudo-terminal allocation.
@@ -120,4 +120,5 @@ function krb.init.cern(){
     [[ ! -f "${KRB5_KTNAME}" ]] && krb.keytab.create.cern;
     [[ ! "$(krb.list.keytab)" =~ ${KRB5_PRINCIPAL} ]] && krb.keytab.create.cern;
     [[ ! "$(pgrep --list-full k5start)" =~ ${KRB5_PRINCIPAL} ]] && krb.daemon;
+    krb.init;
 }
