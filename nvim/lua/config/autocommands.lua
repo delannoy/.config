@@ -19,8 +19,7 @@ local function buffer_cursor_restore()
     if mark_row <= line_count then
         local opt = {window=0, pos={mark_row, mark_col}}
         pcall(vim.api.nvim_win_set_cursor, opt.window, opt.pos)
-        opt = {keys='zvzz', mode='n', escape_ks=true}
-        vim.api.nvim_feedkeys(opt.keys, opt.mode, opt.escape_ks)
+        vim.cmd.normal({'zvzz', bang=true}) -- `bang=true` is equivalent to `normal!` (ignores keymaps) https://learnvimscriptthehardway.stevelosh.com/chapters/29.html
         -- zv: View cursor line: Open just enough folds to make the line in which the cursor is located not folded.
         -- zz: Redraw, line [count] at center of window (default cursor line) and leave cursor in the same column
     end
@@ -56,7 +55,9 @@ vim.api.nvim_create_autocmd('FileType', {
     desc = 'Switch on spell checking for several filetypes',
     group = create_augroup('filetype_spellcheck'),
     pattern = {'latex', 'tex', 'md', 'markdown'},
-    command = 'setlocal spell',
+    callback = function()
+        vim.opt_local.spell = true
+    end,
 })
 
 vim.api.nvim_create_autocmd('BufEnter', {
@@ -65,12 +66,12 @@ vim.api.nvim_create_autocmd('BufEnter', {
     callback = format_newline_comment,
 })
 
-vim.api.nvim_create_autocmd('TextYankPost', {
-    desc = 'Highlight when yanking text',
-    group = create_augroup('yank_highlight'),
+vim.api.nvim_create_autocmd('QuickFixCmdPost', {
+    desc = 'Open quickfix after executing a quickfix command (e.g. `:grep`)',
+    group = create_augroup('quickfix_jump'),
     callback = function()
-        vim.highlight.on_yank({timeout=100}) -- https://github.com/neovim/neovim/issues/31210#issuecomment-2476511467
-     end,
+        vim.cmd.copen()
+    end,
 })
 
 vim.api.nvim_create_autocmd('TextYankPost', {
@@ -79,4 +80,12 @@ vim.api.nvim_create_autocmd('TextYankPost', {
     callback = function(args) -- Lua callback receives one argument, a table with these keys: {id, event, group, file, match, buf, data}
         register_history.add(args.buf)
     end
+})
+
+vim.api.nvim_create_autocmd('TextYankPost', {
+    desc = 'Highlight when yanking text',
+    group = create_augroup('yank_highlight'),
+    callback = function()
+        vim.highlight.on_yank({timeout=100}) -- https://github.com/neovim/neovim/issues/31210#issuecomment-2476511467
+     end,
 })
