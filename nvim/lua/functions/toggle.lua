@@ -24,6 +24,13 @@ function toggle.columns()
     toggle.signcolumn()
 end
 
+-- Toggle `vim.diagnostic.config().virtual_lines`
+function toggle.diagnostic_virtual_lines()
+    -- https://neovim.io/doc/user/diagnostic.html#diagnostic-toggle-virtual-lines-example
+    local new_config = not vim.diagnostic.config().virtual_lines
+    vim.diagnostic.config({virtual_lines=new_config})
+end
+
 --- Toggle `number`, `relativenumber`
 function toggle.line_numbers()
     toggle.option('number', {true, false})
