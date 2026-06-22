@@ -48,7 +48,7 @@ LumiNibble(lhc_freq := LHC_FREQUENCY_BRILCALC){
     SendInput(LumiNibble(LHC_FREQUENCY_BRILCALC))
 }
 
-::\lhc_rf_frequency::400788860 ; https://accelconf.web.cern.ch/IPAC10/papers/tupeb056.pdf
+::\lhc_rf_frequency::400788860 ; ALB.SR4.B1:FGC_FREQ ALB.SR4.B2:FGC_FREQ https://accelconf.web.cern.ch/IPAC10/papers/tupeb056.pdf
 ::\lhc_frequency::400788860/35640 ≈ 11245.478675645343
 
 ::\lhc_circumference::26658.883 ; http://cds.cern.ch/record/782076/files/CERN-2004-003-V1-ft.pdf [table 2.4]
