@@ -1,0 +1,60 @@
+[
+    [
+        {"$": "shift_state_selector", "default": {"label": "`", "popup": {"relevant": [{"label": "~"}]}}, "shiftedManual": {"label": "~"}},
+        {"$": "shift_state_selector", "default": {"label": "1", "popup": {"relevant": [{"label": "!"}]}}, "shiftedManual": {"label": "!"}},
+        {"$": "shift_state_selector", "default": {"label": "2", "popup": {"relevant": [{"label": "@"}]}}, "shiftedManual": {"label": "@"}},
+        {"$": "shift_state_selector", "default": {"label": "3", "popup": {"relevant": [{"label": "#"}]}}, "shiftedManual": {"label": "#"}},
+        {"$": "shift_state_selector", "default": {"label": "4", "popup": {"relevant": [{"label": "$"}]}}, "shiftedManual": {"label": "$"}},
+        {"$": "shift_state_selector", "default": {"label": "5", "popup": {"relevant": [{"label": "%"}]}}, "shiftedManual": {"label": "%"}},
+        {"$": "shift_state_selector", "default": {"label": "6", "popup": {"relevant": [{"label": "^"}]}}, "shiftedManual": {"label": "^"}},
+        {"$": "shift_state_selector", "default": {"label": "7", "popup": {"relevant": [{"label": "&"}]}}, "shiftedManual": {"label": "&"}},
+        {"$": "shift_state_selector", "default": {"label": "8", "popup": {"relevant": [{"label": "*"}]}}, "shiftedManual": {"label": "*"}},
+        {"$": "shift_state_selector", "default": {"label": "9", "popup": {"relevant": [{"label": "("}]}}, "shiftedManual": {"label": "("}},
+        {"$": "shift_state_selector", "default": {"label": "0", "popup": {"relevant": [{"label": ")"}]}}, "shiftedManual": {"label": ")"}},
+        {"$": "shift_state_selector", "default": {"label": "-", "popup": {"relevant": [{"label": "_"}]}}, "shiftedManual": {"label": "_"}},
+        {"$": "shift_state_selector", "default": {"label": "+", "popup": {"relevant": [{"label": "+"}]}}, "shiftedManual": {"label": "+"}}
+    ],
+    [
+        {"type": "placeholder"},
+        {"label": "q"},
+        {"label": "w"},
+        {"label": "e", "popup": {"relevant": [{"label": "é"}, {"label": "è"}, {"label": "ê"}, {"label": "ë"}]}},
+        {"label": "r"},
+        {"label": "t"},
+        {"label": "y", "popup": {"relevant": [{"label": "ý"}, {"label": "ÿ"}]}},
+        {"label": "u", "popup": {"relevant": [{"label": "ú"}, {"label": "ù"}, {"label": "û"}, {"label": "ü"}]}},
+        {"label": "i", "popup": {"relevant": [{"label": "í"}, {"label": "ì"}, {"label": "î"}, {"label": "ï"}]}},
+        {"label": "o", "popup": {"relevant": [{"label": "ó"}, {"label": "ò"}, {"label": "ô"}, {"label": "ö"}, {"label": "õ"}, {"label": "œ"}, {"label": "ø"}]}},
+        {"label": "p"},
+        {"$": "shift_state_selector", "default": {"label": "[", "popup": {"relevant": [{"label": "{"}]}}, "shiftedManual": {"label": "{"}},
+        {"$": "shift_state_selector", "default": {"label": "]", "popup": {"relevant": [{"label": "}"}]}}, "shiftedManual": {"label": "}"}}
+    ],
+    [
+        {"type": "placeholder"},
+        {"label": "a", "popup": {"relevant": [{"label": "á"}, {"label": "à"}, {"label": "â"}, {"label": "ä"}, {"label": "ã"}, {"label": "æ"}, {"label": "å"}]}},
+        {"label": "s", "popup": {"relevant": [{"label": "ß"}, {"label": "ś"}, {"label": "š"}]}},
+        {"label": "d"},
+        {"label": "f"},
+        {"label": "g"},
+        {"label": "h"},
+        {"label": "j"},
+        {"label": "k"},
+        {"label": "l"},
+        {"$": "shift_state_selector", "default": {"label": ";", "popup": {"relevant": [{"label": ":"}]}}, "shiftedManual": {"label": ":"}},
+        {"$": "shift_state_selector", "default": {"label": "'", "popup": {"relevant": [{"label": "\""}]}}, "shiftedManual": {"label": "\""}},
+        {"$": "shift_state_selector", "default": {"label": "\\", "popup": {"relevant": [{"label": "|"}]}}, "shiftedManual": {"label": "|"}}
+    ],
+    [
+        {"label": "z", "popup": {"relevant": [{"label": "ź"}, {"label": "ż"}, {"label": "ž"}]}, "width": 0.15},
+        {"label": "x", "width": 0.15},
+        {"label": "c", "popup": {"relevant": [{"label": "ç"}, {"label": "ć"}, {"label": "č"}]}, "width": 0.15},
+        {"label": "v", "width": 0.15},
+        {"label": "b", "width": 0.15},
+        {"label": "n", "popup": {"relevant": [{"label": "ñ"}, {"label": "ń"}]}, "width": 0.15},
+        {"label": "m", "width": 0.15},
+        {"$": "shift_state_selector", "default": {"label": ",", "popup": {"relevant": [{"label": "<"}]}, "width": 0.15}, "shiftedManual": {"label": "<", "width": 0.15}},
+        {"$": "shift_state_selector", "default": {"label": ".", "popup": {"relevant": [{"label": ">"}]}, "width": 0.15}, "shiftedManual": {"label": ">", "width": 0.15}},
+        {"$": "shift_state_selector", "default": {"label": "/", "popup": {"relevant": [{"label": "?"}]}, "width": 0.15}, "shiftedManual": {"label": "?", "width": 0.15}},
+        {"type": "placeholder", "width": 0.15}
+    ]
+]
