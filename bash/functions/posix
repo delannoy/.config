@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+log.debug.filepath;
+
+function CD(){
+    local target;
+    args target;
+    [[ -d "${target}" ]] && cd "${target}";
+    [[ -f "${target}" ]] && cd "$(dirname "$(realpath "${target}")")";
+}
