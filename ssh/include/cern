@@ -27,6 +27,8 @@ Host lxplus8 lxplus8-arm lxplus8-future
     Hostname                    %h.cern.ch
 Host lxplus9 lxplus9-arm lxplus9-future
     Hostname                    %h.cern.ch
+Host lxplus10
+    Hostname                    %h.cern.ch
 
 # [CERN OpenStack](https://openstack.cern.ch/project/)
 # https://gitlab.cern.ch/adelanno/openstack/-/blob/master/openstack.sh
@@ -38,6 +40,6 @@ Host delannoy0 delannoy000
 Match host="*.cern.ch"
     User                        adelanno
 
-# if `cmsusr.cern.ch` is not ping-able (imples external connection), `*.cern.ch` hostnames will tunnel through `lxtunnel.cern.ch`, then `brilvmlxa.cern.ch` (if `lxtunnel.cern.ch` authenticates via ssh keys, `brilvmlxa.cern.ch` skips two-factor authentication)
+# if `cmsusr.cern.ch` is not ping-able (implies external connection), `*.cern.ch` hostnames will tunnel through `lxtunnel.cern.ch`, then `delannoy0.cern.ch` (if `lxtunnel.cern.ch` authenticates via ssh keys, `delannoy0.cern.ch` skips two-factor authentication)
 Match host="*.cern.ch,!lxtunnel.cern.ch" !exec="ping -c 1 -W 0.25 cmsusr.cern.ch >/dev/null 2>&1"
-    ProxyJump                   lxplus_tunnel,brilvmlxa
+    ProxyJump                   lxplus_tunnel,delannoy0
