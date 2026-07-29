@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+
+log.debug.filepath;
+
+function systemctl.reload(){
+    systemctl --user daemon-reload
+}
+
+function systemctl.start(){
+    local service;
+    args service;
+    systemctl --user start "${service}"
+}
+
+function systemctl.status(){
+    local service;
+    args service;
+    systemctl --user status "${service}"
+}
+
+function systemctl.stop(){
+    local service;
+    args service;
+    systemctl --user stop "${service}"
+}
