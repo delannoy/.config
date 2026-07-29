@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+# to do:
+    # show battery discharge rate since previous execution?
+
+log.debug.filepath;
+
+function prompt.battery(){
+    local path energy_now energy_full;
+    path='/sys/class/power_supply/BAT'*;
+    [[ "$(cat ${path}/status)" != 'Discharging' ]] && return;
+    energy_now="$(<${path}/energy_now)";
+    energy_full="$(<${path}/energy_full)";
+    bc --mathlib <<< "scale = 2; 100 * ${energy_now} / ${energy_full}";
+}
