@@ -20,6 +20,6 @@ function prompt.history(){
     # [Bash History Builtins](https://www.gnu.org/software/bash/manual/html_node/Bash-History-Builtins.html)
     # [How can I avoid losing any history lines?](http://mywiki.wooledge.org/BashFAQ/088)
     history -a; # Append the new history lines to the history file. These are history lines entered since the beginning of the current Bash session, but not already appended to the history file.
-    prompt.bash.history.bkp;
-    prompt.python.history.bkp;
+    # prompt.bash.history.bkp;
+    # prompt.python.history.bkp;
 }
