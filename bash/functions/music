@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+
+log.debug.filepath;
+
+function lastfm.now_playing(){
+    function.requires jq && function.requires curl || return 1;
+    local song artist album;
+    local tmp_file='/tmp/nowPlaying';
+    curl --silent 'https://www.last.fm/user/adelannoy/partial/now' --output "${tmp_file}";
+    IFS=$'\n' read -r -d '' track artist album <<< "$(pup 'a[href^=/music] text{}' --file "${tmp_file}")";
+    # -r        do not allow backslashes to escape any characters
+    # -d delim  continue until the first character of DELIM is read, rather than newline
+    printf '🧑: %s\n💿: %s\n🎵: %s\n' "${artist}" "${album}" "${track}";
+    # [How do I make my terminal display graphical pictures?](https://askubuntu.com/a/698064)
+    if [[ -n "$(command -v ptmv)" ]]; then # if [[ -x "${HOME}/.cargo/bin/viu" ]]; then
+        img="$(pup 'span.cover-art img attr{src}' -f "${tmp_file}")";
+        curl --silent "${img}" --output "${tmp_file}";
+        ptmv --width 80 "${tmp_file}"; # "${HOME}/.cargo/bin/viu" --width 80 "${tmp_file}";
+    fi
+}
+
+function lyrics.ovh(){
+    function.requires jq && function.requires curl || return 1;
+    local artist track;
+    args artist track;
+    # IFS=$'\n' read -r -d '' track artist album <<< "$(pup 'a[href^=/music] text{}' -f <(curl -s 'https://www.last.fm/user/adelannoy/now'))"
+    jq --raw-output '.lyrics' <(curl -s "https://api.lyrics.ovh/v1/${artist// /+}/${track// /+}"); # [lyrics.ovh](https://lyricsovh.docs.apiary.io/) # [Bash-Snippets](https://github.com/alexanderepstein/Bash-Snippets#apis-used)
+}
+
