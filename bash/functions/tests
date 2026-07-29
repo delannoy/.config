@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+log.debug.filepath;
+
+function test.colors(){
+    function.requires msgcat && function.requires git || return 1;
+    # [256-xterm-24bit-rgb-color-chart](http://www.calmar.ws/vim/256-xterm-24bit-rgb-color-chart.html)
+    msgcat --color=test # [The environment variable TERM](https://www.gnu.org/software/gettext/manual/html_node/The-TERM-variable.html#The-TERM-variable)
+    for bg in {0..15}; do printf "$(tput setab "${bg}")%*s$(tput sgr0)" "$(tput cols)"; done;
+    for fg in {0..15}; do for bg in {0..15}; do printf "$(tput setaf "$fg")$(tput setab "$bg")%s%02d %s%02d$(tput sgr0) " 'fg' "$fg" 'bg' "$bg"; done; echo; done;
+    local colors=(black red green yellow blue magenta cyan white); for fg in "${colors[@]}"; do for bg in "${colors[@]}"; do printf "$(git config --get-color '' "${fg} ${bg}")%8s%8s$(git config --get-color '' 'reset') " "${fg}" "${bg}"; done; echo; done; # [https://git-scm.com/docs/git-config#Documentation/git-config.txt-color]
+}
+
+function test.logging(){
+    log DEBUG 'pants exist';
+    log INFO 'you are wearing pants';
+    log WARNING 'your pants are warm';
+    log ERROR 'your pants are on fire';
+    log CRITICAL 'your pants are lava';
+}
