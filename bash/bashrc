@@ -121,8 +121,7 @@ function execute.line_by_line(){
     # read each line in `input_file` (ignoring all characters after "#" and stripping leading/trailing whitespaces) provide each line as an argument to `function`
     # [How can I read a file (data stream, variable) line-by-line (and/or field-by-field)?](http://mywiki.wooledge.org/BashFAQ/001)
     local function input_file value comment;
-    function="$1";
-    input_file="$2";
+    args function input_file:
     while IFS='#' read -r value comment; do
         value="${value%%+([[:space:]])}"; # [How do I trim leading and trailing whitespace from each line of some output?](https://unix.stackexchange.com/a/360648)
         [[ -n "${value}" ]] && "${function}" "${value}";
