@@ -2,6 +2,13 @@
 
 log.debug.filepath;
 
+function bw.login(){
+    function.requires bw || return 1;
+    local totp;
+    args totp;
+    bw login "${BW_USER}" "${BW_PASSWORD}" --method 0 --code "${totp}"
+}
+
 function convert.pdf_to_png(){
     # https://stackoverflow.com/a/13784772/13019084
     function.requires convert || return 1;
