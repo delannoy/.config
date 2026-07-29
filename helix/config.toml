@@ -1,0 +1,103 @@
+# bufferline = "multiple"
+# 
+# [editor.cursor-shape]
+# insert = "bar"
+# 
+# [keys.normal]
+# esc = ["collapse_selection", "keep_primary_selection"] # https://www.youtube.com/watch?v=aiSI6vdZWgE&t=1m48s
+
+theme = "onedark"
+
+# https://docs.helix-editor.com/configuration.html
+
+[editor]
+scrolloff = 4 # Number of lines of padding around the edge of the screen when scrolling.
+mouse = false # Enable mouse mode.
+middle-click-paste = true # Middle click paste support.
+scroll-lines = 4 # Number of lines to scroll per scroll wheel step.
+shell = ["bash", "-c"] # Shell to use when running external commands.
+line-number = "relative" # Line number display: absolute simply shows each line's number, while relative shows the distance from the current line. When unfocused or in insert mode, relative will still show absolute line numbers.
+cursorline = false # Highlight all lines with a cursor.
+gutters = ["diagnostics", "spacer", "line-numbers", "spacer", "diff"] # Gutters to display: Available are diagnostics and line-numbers and spacer, note that diagnostics also includes other features like breakpoints, 1-width padding will be inserted if gutters is non-empty
+auto-completion = true # Enable automatic pop up of auto-completion.
+auto-format = false # Enable automatic formatting on save.
+idle-timeout = 250 # Time in milliseconds since last keypress before idle timers trigger. Used for autocompletion, set to 0 for instant.
+completion-trigger-len = 2 # The min-length of word under cursor to trigger autocompletion
+auto-info = true # Whether to display infoboxes
+true-color = false # Set to true to override automatic detection of terminal truecolor support in the event of a false negative.
+rulers = [] # List of column positions at which to display the rulers. Can be overridden by language specific rulers in languages.toml file.
+bufferline = "multiple" # Renders a line at the top of the editor displaying open buffers. Can be always, never or multiple (only shown if more than one buffer is in use)
+color-modes = false # Whether to color the mode indicator with different colors depending on the mode itself
+insert-final-newline = false # Whether to automatically insert a trailing line-ending on write if missing
+
+[editor.statusline]
+left = ["mode", "spinner"]
+center = ["file-name", "read-only-indicator", "file-modification-indicator"]
+right = ["diagnostics", "selections", "register", "position", "file-encoding", "file-line-ending", "file-type"]
+separator = "│"
+# mode                          The current editor mode (NOR/INS/SEL)
+# spinner                       A progress spinner indicating LSP activity
+# file-name                     The path/name of the opened file
+# file-modification-indicator   The indicator to show whether the file is modified (a [+] appears when there are unsaved changes)
+# file-encoding                 The encoding of the opened file if it differs from UTF-8
+# file-line-ending              The file line endings (CRLF or LF)
+# read-only-indicator           An indicator that shows [readonly] when a file cannot be written
+# file-type                     The type of the opened file
+# diagnostics                   The number of warnings and/or errors
+# selections                    The number of active selections
+# position                      The cursor position
+# position-percentage           The cursor position as a percentage of the total number of lines
+# separator                     The string defined in editor.statusline.separator (defaults to "│")
+# spacer                        Inserts a space between elements (multiple/contiguous spacers may be specified)
+# register                      The current selected register
+
+[editor.lsp]
+display-messages = false # Display LSP progress messages below statusline
+auto-signature-help	= true # Enable automatic popup of signature help (parameter hints)
+display-signature-help-docs = true # Display docs under signature help popup
+
+[editor.cursor-shape]
+normal = "block" # Cursor shape in normal mode
+insert = "bar" # Cursor shape in insert mode
+select = "underline" # Cursor shape in select mode
+
+[editor.file-picker]
+hidden = false # Enables ignoring hidden files.
+parents = false # Enables reading ignore files from parent directories.
+ignore = false # Enables reading .ignore files.
+git-ignore = true # Enables reading .gitignore files.
+git-global = true # Enables reading global .gitignore, whose path is specified in git's config: core.excludefile option.
+git-exclude = true # Enables reading .git/info/exclude file.
+max-depth = 10 # Set with an integer value for maximum depth to recure.
+
+[editor.auto-pairs]
+'(' = ')'
+'{' = '}'
+'[' = ']'
+"'" = "'"
+'"' = '"'
+'`' = '`'
+'<' = '>'
+
+[editor.search]
+smart-case = true # Enable smart case regex searching (case insensitive unless pattern contains upper case characters)
+wrap-around = true #  Whether the search should wrap after depleting the matches
+
+# [editor.whitespace]
+# render = "all" # Whether to render whitespace. May either be "all" or "none", or a table with sub-keys space, tab, and newline.
+
+[editor.whitespace.render]
+space = "none"
+tab = "all"
+newline = "all"
+
+[editor.whitespace.characters]
+space = "·"
+nbsp = "⍽"
+tab = "→"
+newline = "⏎"
+tabpad = "·"
+
+[editor.indent-guides]
+render = false # Whether to render indent guides.
+character = "|" # Literal character to use for rendering the indent guide
