@@ -1,0 +1,70 @@
+#!/usr/bin/env bash
+
+log.debug.filepath;
+
+function sshd.config(){
+    function.requires sed || return 1;
+    sudo sed --in-place 's|^PasswordAuthentication.*|PasswordAuthentication yes|g' "$(find /etc/ssh/ -name 'sshd_config')";
+    printf '%s\n%s\n%s\n'                                       \
+           'ChallengeResponseAuthentication yes'                \
+           'PasswordAuthentication          yes'                \
+           'PermitRootLogin                 no'                 | sudo tee '/etc/ssh/sshd';
+    sudo service ssh --full-restart;
+}
+
+function ssh.controlmaster.check(){
+    function.requires ssh || return 1;
+    local host;
+    args host;
+    ssh -O check "${host}"
+}
+
+function ssh.controlmaster.exit(){
+    function.requires ssh || return 1;
+    local host;
+    args host;
+    ssh -O exit "${host}"
+}
+
+function ssh.keygen(){
+    function.requires ssh-keygen && function.requires ssh-copy-id || return 1;
+    local host_name ip key_type user;
+    args host_name ip key_type:='ed25519' user:="${USER}";
+    ssh-keygen -t "${key_type}" -N '' -f "${HOME}/.ssh/keys/id_${key_type}_${host_name}";
+        # -t    Specifies the type of key to create. The possible values are “dsa”, “ecdsa”, “ed25519”, or “rsa”.
+        # -N    Provides the new passphrase.
+        # -f    Specifies the filename of the key file.
+    ssh-copy-id -i "${HOME}/.ssh/keys/id_${key_type}_${host_name}.pub" "${user}@${ip}";
+        # -i    Use only the key(s) contained in identity_file (rather than looking for identities via ssh-add(1) or in the default_ID_file).
+}
+
+function ssh.lxtunnel(){
+    local user=$1 auth="$2" dest="$3";
+    ssh -v -F /dev/null -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ProxyCommand="ssh -W %h:%p -o ${auth} ${user}@lxtunnel.cern.ch" -o GSSAPIAuthentication=yes -o GSSAPIDelegateCredentials=yes "${user}@${dest}";
+}
+
+function ssh.lxtunnel.test(){
+    local proxy="$1" lxtunnel_ssh_key="$2";
+    ssh.lxtunnel ${USER} GSSAPIAuthentication=yes lxplus.cern.ch;
+    ssh.lxtunnel ${USER} GSSAPIAuthentication=yes ${proxy};
+    ssh.lxtunnel ${USER} IdentityFile=${lxtunnel_ssh_key} lxplus.cern.ch;
+    ssh.lxtunnel ${USER} IdentityFile=${lxtunnel_ssh_key} ${proxy};
+}
+
+function ssh.lxtunnel.lxplus(){
+    local user=$1 auth="$2" jump_host="$3";
+    local lxtunnel="ssh -W %%h:%%p -o ${auth} ${user}@lxtunnel.cern.ch";
+    local proxyCommand="ssh -W %h:%p -o GSSAPIAuthentication=yes -o ProxyCommand='${lxtunnel}' ${user}@${jump_host}";
+    local ssh_options=(-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ProxyCommand="${proxyCommand}" -o GSSAPIAuthentication=yes -o GSSAPIDelegateCredentials=yes);
+    ssh -v -F /dev/null "${ssh_options[@]}" "${user}@lxplus.cern.ch";
+}
+
+function ssh.lxtunnel.lxplus.test(){
+    local proxy="$1" lxtunnel_ssh_key="$2";
+    ssh.lxtunnel.lxplus ${USER} GSSAPIAuthentication=yes ${proxy}
+    ssh.lxtunnel.lxplus ${USER} IdentityFile=${lxtunnel_ssh_key} ${proxy}
+}
+
+function ssh.noconfig(){
+    ssh -v -F /dev/null -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null "$@"
+}
