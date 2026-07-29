@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+log.debug.filepath;
+
+function prompt.weather(){
+    local 'city';
+    args 'city:=Geneve';
+    curl "wttr.in/${city}?format=|%l|%f|%C|%p|"; # [wttr.in](https://github.com/chubin/wttr.in?tab=readme-ov-file#one-line-output)
+}
