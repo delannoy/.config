@@ -1,16 +1,30 @@
 #!/usr/bin/env bash
 
-log.debug.filepath;
+log.debug.filepath
+
+function afs.quota(){
+    # https://cern.service-now.com/service-portal?id=kb_article&n=KB0000905
+    local area="${1-user}"
+    local afs_path="/afs/cern.ch/${area}/${USER:0:1}/${USER}/"
+    echo "${afs_path}"
+    fs listquota -human "${afs_path}"
+}
 
 function CD(){
-    local target="$1";
-    [[ -d "${target}" ]] && cd "${target}";
+    local target="$1"
+    [[ -d "${target}" ]] && cd "${target}"
     [[ -f "${target}" ]] && cd "$(dirname "$(realpath "${target}")")"
+}
+
+function dfs.mount(){
+    # https://espace.cern.ch/winservices-help/DFS/WebDAV/Pages/UsingDavfsOnOlderLinux.aspx
+    sudo yum install davfs2
+    sudo mount.davfs 'https://dfs.cern.ch/dfs' '/localdata/dfs' -o username='adelanno'
 }
 
 function debug.shell(){
     # [https://bash-hackers.docs.cern.ch/scripting/bashbehaviour] [How to start a shell without any user configuration?](https://stackoverflow.com/a/21391035)
-    env --ignore-environment bash --noprofile --norc;
+    env --ignore-environment bash --noprofile --norc
     # --ignore-environment  start with an empty environment
     # --noprofile           Do not read either the system-wide startup file /etc/profile or any of the personal initialization files ~/.bash_profile, ~/.bashlogin, or ~/.profile
     # --norc                Do not read and execute the system wide initialization file /etc/bash.bashrc and the personal initialization file ~/.bashrc if the shell is interactive
@@ -18,11 +32,11 @@ function debug.shell(){
 
 function find.latest(){
     # [How can I sort or compare files based on some metadata attribute (newest / oldest modification time, size, etc)?](http://mywiki.wooledge.org/BashFAQ/003)
-    local latest;
+    local latest
     for file in "$@"; do
-        [[ "${file}" -nt "${latest}" ]] && latest="${file}";
-    done;
-    echo "${latest}";
+        [[ "${file}" -nt "${latest}" ]] && latest="${file}"
+    done
+    echo "${latest}"
 }
 
 function krb.keytab.create(){
@@ -35,6 +49,59 @@ function krb.keytab.create(){
     [[ ! -f "${krb5_ktname}" ]] && echo 'something went wrong :( try again' && return 1
 }
 
+function krb.daemon(){
+    local krb5_ktname="${KRB5_KTNAME:-1}"
+    k5start -v -b -t -K 60 -u "${KRB5_PRINCIPAL}" -f "${krb5_ktname}"
+    # -v                    Be verbose.  This will print out a bit of additional information about what is being attempted and what the results are.
+    # -b                    After starting, detach from the controlling terminal and run in the background.
+    # -t                    Get AFS token via aklog or AKLOG
+    # -K minutes            Run in daemon mode to keep a ticket alive indefinitely. The program reawakens after minutes minutes, checks if the ticket will expire before or less than two minutes after the next scheduled check, and gets a new ticket if needed.
+    # -u client principal   This specifies the principal to obtain credentials as.
+    # -f keytab             Authenticate using the keytab keytab rather than asking for a password.
+}
+
+function krb.init(){
+    local krb5_ktname="${KRB5_KTNAME:-1}"
+    kinit -l 72h -V -k -f -p -t "${krb5_ktname}" "${KRB5_PRINCIPAL}"
+    # -l lifetime       Requests a ticket with the lifetime lifetime. For example, `kinit -l 5:30` or `kinit -l 5h30m`.
+    # -V                display verbose output.
+    # -k                requests a ticket, obtained from a key in the local host's keytab
+    # -f                requests forwardable tickets
+    # -p                requests proxiable tickets
+    # -t keytab_file    The location of the keytab may be specified with the -t keytab_file option
+}
+
+function krb.cache_file(){
+    local regex_pattern='Ticket cache: FILE:([A-Za-z0-9_\/]+)' # local regex_pattern='Ticket cache: FILE:(/tmp/krb5cc_[0-9]+)'
+    while read -r line; do
+        [[ "${line}" =~ ${regex_pattern} ]] && printf '%s\n' "${BASH_REMATCH[1]}" # printf '%s\n%s\n' "${line}" "${BASH_REMATCH[1]}"
+    done <<< $(klist)
+}
+
+# function _krb.cache.tmux(){
+#     # [Kerberos ticket in tmux session](https://superuser.com/a/1294931/1765015)
+#     local session_name="${1:-tmux}"
+#     local krb_tmp_cache_file="$(krb.cache_file)"
+#     local krb_cache_file="/home/delannoy/${krb_tmp_cache_file##*/}"
+#     /bin/cp -fv "${krb_tmp_cache_file}" "${krb_cache_file}"
+#     export KRB5CCNAME="FILE:${krb_cache_file}"
+#     tmux new-session -s "${session_name}"
+# }
+
+# function _krb.k5start.tmux(){
+#     # https://hsf-training.github.io/analysis-essentials/shell-extras/persistent-screen.html
+#     local session_name="${1:-tmux}"
+#     local krb5_ktname="${KRB5_KTNAME:-1}"
+#     k5start -v -t -u "${KRB5_PRINCIPAL}" -K 60 -f "${krb5_ktname}" -- tmux new-session -s "${session_name}"
+#     # k5reauth -f -i 3600 -p "${KRB5_PRINCIPAL}" -k "${KRB5_KTNAME}" -- tmux new-session -s "${session_name}" "$(krb.init)"
+#     # -u <client principal>
+#     # -v                    Be verbose.  This will print out a bit of additional information about what is being attempted and what the results are.
+#     # -t                    Get AFS token via aklog or AKLOG
+#     # -K <minutes>          Run in daemon mode to keep a ticket alive indefinitely. The program reawakens after minutes minutes, checks if the ticket will expire before or less than two minutes after the next scheduled check, and gets a new ticket if needed.
+#     # -U                    Use the first principal in the keytab as the client principal and don't look for a principal on the command line
+#     # -f <keytab>           Authenticate using the keytab keytab rather than asking for a password.
+# }
+
 function lcg.view(){
     # https://lcgdocs.web.cern.ch/lcgdocs/lcgreleases/introduction/#complete-stacks-views
     local lcg_release="$(find '/cvmfs/sft.cern.ch/lcg/views/' -maxdepth 1 -regextype posix-extended -regex '.*/LCG_[0-9]{3}' | sort --version-sort | tail -1)"
@@ -46,7 +113,9 @@ function lcg.view(){
 }
 
 function lcg.release(){
+    # https://lcgdocs.web.cern.ch/lcgdocs/lcgreleases/introduction/#individual-packages-releases
     local release="$1"
+    [[ -z "$!" ]] && { find '/cvmfs/sft.cern.ch/lcg/releases/' -maxdepth 1 -printf '%f  '; return; }
     local version="$(find "/cvmfs/sft.cern.ch/lcg/releases/${release}" -maxdepth 2 -name x86_64-el*-gcc*-opt | sort --version-sort | tail -1)"
     local env_script="${version}/${release}-env.sh"
     [[ -f "${env_script}" ]] || return 1
@@ -55,34 +124,60 @@ function lcg.release(){
 }
 
 function mkcd(){
-    local dir="$1";
-    mkdir --parents --verbose "${dir}" && cd "${dir}";
+    local dir="$1"
+    mkdir --parents --verbose "${dir}" && cd "${dir}"
+}
+
+function openstack.root(){
+    local instance="${1:-delannoy000}"
+    local ssh_key="${HOME}/.ssh/keys/id_rsa_openstack"
+    ssh -F /dev/null -i "${ssh_key}" -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null "root@${instance}"
 }
 
 function rsync.progress(){
     # [How can I view a progress bar when running rsync?](https://askubuntu.com/a/907717)
-    rsync --archive --info='PROGRESS2' "$@";
+    rsync --archive --info='PROGRESS2' "$@"
     # `rsync --info=help | grep PROGRESS`
     # PROGRESS   Mention 1) per-file progress or 2) total transfer progress
 }
 
+function systemctl.tmux.enable(){
+    # https://cern.service-now.com/service-portal?id=kb_article&n=KB0008111
+    systemctl --user enable --now tmux.service
+    systemctl --user start tmux.service
+    systemctl --user status tmux.service
+}
+
+function systemctl.tmux.disable(){
+    # https://cern.service-now.com/service-portal?id=kb_article&n=KB0008111
+    systemctl --user stop tmux.service
+    systemctl --user status tmux.service
+    systemctl --user disable --now tmux.service
+}
+
 function timer(){
-    local time="$1";
-    local fractional=$(bc <<< "${time} - ${time}/1"); # amount after decimal point, i.e. bc <<< $time/1 corresponds to int($time)
-    sleep "${fractional}";
-    time=$(bc <<< "${time}/1");
+    local time="$1"
+    local fractional=$(bc <<< "${time} - ${time}/1") # amount after decimal point, i.e. bc <<< $time/1 corresponds to int($time)
+    sleep "${fractional}"
+    time=$(bc <<< "${time}/1")
     for ((time="${time}"; time>0; time--)); do
-        printf "${TXT[yellow]}%s\r${TXT[reset]}" "wait ${time} seconds...";
-        sleep 1;
-    done;
+        printf "${TXT[yellow]}%s\r${TXT[reset]}" "wait ${time} seconds..."
+        sleep 1
+    done
+}
+
+function tmux.attach(){
+    local session="$1"
+    [[ -z "${session}" ]] && { tmux list-sessions; return 0; }
+    tmux new-session -A -D -s "${session}" # The -A flag makes new-session behave like attach-session if session-name already exists; in this case, -D behaves like -d to attach-session (any other clients attached to the session are detached)
 }
 
 function venv(){
     [[ -z "$1" ]] && { find "${VENV_DIR:-"${PWD}"}" -mindepth 1 -maxdepth 1 -type d -printf "%f\n"; return 0; }
-    local venv_name="$1";
-    local venv_dir="${VENV_DIR:-"${PWD}"}";
-    mkdir --parents --verbose "${venv_dir}";
-    local venv_activate="${venv_dir}/${venv_name}/bin/activate";
-    [[ ! -f "${venv_activate}" ]] && python3 -m venv "${venv_dir}/${venv_name}";
-    source "${venv_activate}";
+    local venv_name="$1"
+    local venv_dir="${VENV_DIR:-"${PWD}"}"
+    mkdir --parents --verbose "${venv_dir}"
+    local venv_activate="${venv_dir}/${venv_name}/bin/activate"
+    [[ ! -f "${venv_activate}" ]] && python3.12 -m venv "${venv_dir}/${venv_name}"
+    source "${venv_activate}"
 }
