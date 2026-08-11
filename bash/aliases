@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-log.debug.filepath;
+log.debug.filepath
 
 function alias.network(){
     alias scp='scp -p -r'
