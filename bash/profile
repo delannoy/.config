@@ -90,6 +90,7 @@ function env.user(){
     export AFS_WORK="${HOME/user/work}";
     export CMS_ENV='/cvmfs/cms.cern.ch/cmsset_default.sh'
     export DISTRO_VERSION="$(source '/etc/os-release' 2>/dev/null && echo "${ID^^}${VERSION_ID^^:-${VERSION_CODENAME^^}}")"; # [https://unix.stackexchange.com/a/6348] [https://unix.stackexchange.com/a/25131]
+    export EOS_MGM_URL='root://eosuser.cern.ch'; # https://eos-docs.web.cern.ch/quickstart/client/configure.html https://cern.service-now.com/service-portal?id=kb_article&n=KB0001998
     export EOS_BRIL_DPG='/eos/cms/store/group/dpg_bril/comm_bril/';
     export EOS_BRIL_DAQ='/eos/cms/store/brildaq-data';
     export EOS_BRIL_TECH='/eos/cms/store/group/briltech//';
