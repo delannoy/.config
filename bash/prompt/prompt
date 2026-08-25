@@ -2,58 +2,68 @@
 
 log.debug.filepath;
 
-BC=$(command -v 'bc')
-
-function prompt.fmt(){
-    local text="$1";
-    local format=$2;
-    local base_color='cyan';
-    printf "%s" "${PROMPT_TXT["${format:-${base_color}}"]}${text}${PROMPT_TXT['reset']}";
-}
-
 function prompt.ansi(){
     # [Wrapping the tput output in \[ \] is recommended by the Bash man page. [...] The wrap will not work with command substitution, in which case the raw \1 \2 must be used](https://wiki.archlinux.org/title/Bash/Prompt_customization#Terminfo_escape_sequences)
     # [Since square brackets are usually only relevant in the prompt, if you're using colors in the output of a script or something, you should not use them](https://unix.stackexchange.com/a/158421)
-    declare -A -g PROMPT_TXT;
+    declare -A -g PROMPT;
     local SOH='\001'; # [https://www.compart.com/en/unicode/U+0001]
     local STX='\002'; # [https://www.compart.com/en/unicode/U+0002]
     local key;
     for key in "${!TXT[@]}"; do
-        PROMPT_TXT[${key}]="${SOH}${TXT[${key}]}${STX}";
+        PROMPT[${key}]="${SOH}${TXT[${key}]}${STX}";
     done
-}
-
-function prompt.ps1(){
-    local exit_code="$?";
-    local base_color='cyan';
-    [[ -n ${BC} ]] && local process_time=$(bc <<< "${EPOCHREALTIME} - ${process_timer}") && unset process_timer; # [Timer for process execution time](https://jakemccrary.com/blog/2015/05/03/put-the-last-commands-run-time-in-your-bash-prompt/)
-    local window_title='\e]0; \H:\w \a'; # [Customizing the terminal window title](https://wiki.archlinux.org/title/Bash/Prompt_customization#Customizing_the_terminal_window_title)
-    sudo --non-interactive id 1>/dev/null 2>&1 && local user_color='RED' || local user_color="${base_color}"; # Change "${user_color}" if user has sudo rights (if sudo timeout has not lapsed and password input not required) [https://superuser.com/a/1088918] # [Multiple redirections](https://bash-hackers.docs.cern.ch/syntax/redirection#multiple_redirections)
-    [[ "${GIT_STATUS_PROMPT,,}" == 'true' ]] && local git_status="$(prompt.git)";
-
-    PS1="[$(prompt.fmt '\D{%Y-%m-%d %H:%M:%S}')] "; # datetime
-    PS1+="[$(prompt.fmt '\u' "${user_color}")@$(prompt.fmt '\H')] "; # user@host
-    PS1+="[$(prompt.fmt "${DISTRO_VERSION}"):$(prompt.fmt "${SHELL##*/}_\v")] "; # distro:shell
-    (( "${SHLVL}" > 1 )) && PS1+="[$(prompt.fmt shlvl 'YELLOW'):$(prompt.fmt "${SHLVL}" 'YELLOW')] "; # interactive sub-shell level
-    [[ -v STY ]] && PS1+="[$(prompt.fmt 'screen' 'YELLOW'):$(prompt.fmt "${STY#*.}" 'YELLOW')] "; # screen session
-    [[ -v TMUX ]] && PS1+="[$(prompt.fmt 'tmux' 'YELLOW'):$(prompt.fmt "$(tmux display-message -p '#S')" 'YELLOW')] "; # tmux session
-    [[ -v VIRTUAL_ENV ]] && PS1+="[$(prompt.fmt 'venv' 'GREEN'):$(prompt.fmt "${VIRTUAL_ENV##*/}" 'GREEN')] "; # python virtual environment
-    [[ -n "${git_status}" ]] && PS1+="[${git_status}] "; # git status
-    PS1+="[$(prompt.fmt '\w/')]"; # working directory
-    [[ -n "$(jobs -r -p)" ]] && PS1+=" [$(prompt.fmt 'jobs' 'YELLOW'):$(prompt.fmt '\j' 'YELLOW')]"; # running jobs
-    [[ -n ${BC} ]] && (( $(bc <<<"${process_time} > 1") )) && PS1+=" [$(prompt.fmt "${process_time}s" 'RED')]"; # process execution time (if greater than 1 second)
-    (( "${exit_code}" != 0 )) && PS1+=" [$(prompt.fmt "${exit_code}" 'RED'):$(prompt.fmt "${ERR[${exit_code}]}" 'RED')]"; # non-zero exit code
-    PS1+="${window_title}\n\$ "
-
-}
-
-function prompt.command(){
-    prompt.ps1;
-    prompt.history;
 }
 
 prompt.ansi;
 
-trap 'process_timer="${process_timer:-${EPOCHREALTIME}}"' DEBUG; # [Timer for process execution time](https://jakemccrary.com/blog/2015/05/03/put-the-last-commands-run-time-in-your-bash-prompt/)
+function prompt.ps1.env(){
+    local jobs='\j';
+    local green="${PROMPT['GREEN']}" reset="${PROMPT['reset']}" yellow="${PROMPT['YELLOW']}"
+    (( "${SHLVL}" > 1 )) && PS1+="[${yellow}shlvl${reset}:${yellow}${SHLVL}${reset}] "; # interactive sub-shell level
+    (( ${jobs@P} != 0 )) && PS1+="[${yellow}jobs${reset}:${yellow}\j${reset}] "; # running jobs [${parameter@operator}](https://www.gnu.org/software/bash/manual/html_node/Shell-Parameter-Expansion.html) [https://stackoverflow.com/a/53870978]
+    [[ -v STY ]] && PS1+="[${yellow}screen${reset}:${yellow}${STY#*.}${reset}] "; # screen session
+    [[ -v TMUX ]] && PS1+="[${yellow}tmux${reset}:${yellow}$(tmux display-message -p '#S')${reset}] "; # tmux session
+    [[ -v VIRTUAL_ENV ]] && PS1+="[${green}venv${reset}:${green}${VIRTUAL_ENV##*/}${reset}] "; # python virtual environment
+}
+
+function prompt.ps1.exit(){
+    local exit_code="$1";
+    local red="${PROMPT['RED']}" reset="${PROMPT['reset']}";
+    [[ "${CMD_RUN}" != 1 ]] && return 0;
+    local sec=1000000; # 1 sec = 1E6 ms
+    local precision=2 ; # decimal points
+    local process_time=$(( ${EPOCHREALTIME/./} - ${PROCESS_TIMER/./} )); # [Timer for process execution time](https://jakemccrary.com/blog/2015/05/03/put-the-last-commands-run-time-in-your-bash-prompt/)
+    unset CMD_RUN PROCESS_TIMER;
+    if (( process_time > sec )); then
+        local s=$(( process_time/sec ));
+        local ms=$(( (process_time%sec) / (sec/10**precision) ));
+        printf -v ms "%0*d" "${precision}" "${ms}" # [pad $ms with $precision zeros](https://bash-hackers.docs.cern.ch/commands/builtin/printf#field_and_printing_modifiers)
+        PS1+=" [${red}${s}.${ms}s${reset}]"; # process execution time (if greater than 1 second)
+    fi
+    [[ "${exit_code}" != 0 ]] && PS1+=" [${red}${exit_code}${reset}:${red}${ERR[${exit_code}]}${reset}]"; # exit code (if non-zero)
+}
+
+function prompt.ps1(){
+    local exit_code="$?";
+    local window_title='\e]0; \H:\w \a'; # [Customizing the terminal window title](https://wiki.archlinux.org/title/Bash/Prompt_customization#Customizing_the_terminal_window_title)
+    local default="${PROMPT['cyan']}" red="${PROMPT['RED']}" reset="${PROMPT['reset']}";
+    sudo --non-interactive --validate 2>/dev/null && local user="${red}"|| local user="${default}"; # Change "${user}" if user has sudo rights (if sudo timeout has not lapsed and password input not required) [https://superuser.com/a/1088918]
+    [[ "${GIT_STATUS_PROMPT,,}" == 'true' ]] && local git_status="$(prompt.git_status)";
+    PS1="[${default}\D{%Y-%m-%d %H:%M:%S}${reset}] " # datetime
+    PS1+="[${user}\u${reset}@${default}\H${reset}] "; # user@host
+    PS1+="[${default}${DISTRO_VERSION}${reset}:${default}${SHELL##*/}_\v${reset}] "; # distro:shell
+    prompt.ps1.env;
+    [[ -n "${git_status}" ]] && PS1+="[${git_status}] "; # git status
+    PS1+="[${default}\w/${reset}]"; # working directory
+    prompt.ps1.exit "${exit_code}";
+    PS1+="${window_title}\n\$ ";
+}
+
+function prompt.command(){
+    prompt.ps1;
+    history -a; # Append the new history lines to the history file. These are history lines entered since the beginning of the current Bash session, but not already appended to the history file.
+}
+
+trap 'LAST_ARG="$_"; [[ $BASH_COMMAND != prompt.command ]] && { CMD_RUN=1; PROCESS_TIMER="${PROCESS_TIMER:-${EPOCHREALTIME}}"; }; : "${LAST_ARG}"' DEBUG; # [Timer for process execution time](https://jakemccrary.com/blog/2015/05/03/put-the-last-commands-run-time-in-your-bash-prompt/)
 
 export PROMPT_COMMAND=prompt.command;
