@@ -2,93 +2,101 @@
 
 log.debug.filepath;
 
-function git.v1.branch(){
-    local line="$1";
-    gs['oid']="$(git rev-parse --short HEAD 2>&1)";
-    read -r _ gs['branch'] gs['ab'] <<< "${line}";
-    if [[ "${gs[branch]}" =~ ... ]]; then
-        IFS=: read -r gs['head'] gs['upstream'] <<< "${gs[branch]/.../:}";
-    else
-        gs[head]="${gs[branch]}";
-    fi;
+function prompt.git_status(){
+    # BASH parser for `git status --porcelain=v2` [https://git-scm.com/docs/git-status#_porcelain_format_version_2]
+    local git_status="$(${GIT_BIN} status --porcelain=v2 --branch --show-stash 2>/dev/null)";
+    [[ -z "${git_status}" ]] && return 0;
+    unset GS;
+    declare -A -g GS; # [associative array requires BASH>=4.0](https://bash-hackers.docs.cern.ch/syntax/arrays#associative_bash_4)
+    local line index work_tree;
+    while IFS= read -r line; do # By default, read [removes] all leading and trailing whitespace characters [http://mywiki.wooledge.org/BashFAQ/001#Trimming]
+        case "${line:0:2}" in
+            '# ') prompt.git_status.branch "${line}";;
+            '? ') (( GS['?']++ ));; # untracked
+            '! ') (( GS['!']++ ));; # ignored
+            '1 '|'2 '|'u ')
+                # [https://git-scm.com/docs/git-status#_changed_tracked_entries]
+                case "${line:0:1}" in
+                    '1') (( GS['changed']++ ));;
+                    '2') (( GS['renamed_copied']++ ));;
+                    'u') (( GS['unmerged']++ ));;
+                esac
+                # [https://git-scm.com/docs/git-status#_short_format]
+                index="${line:2:1}";
+                work_tree="${line:3:1}";
+                [[ "${index}" != '.' ]] && (( GS["${index^}"]++ )); # [${PARAMETER^}](https://bash-hackers.docs.cern.ch/syntax/pe#case_modification)
+                [[ "${work_tree}" != '.' ]] && (( GS["${work_tree,}"]++ )); # [${parameter,}](https://bash-hackers.docs.cern.ch/syntax/pe#case_modification)
+                ;;
+        esac
+    done <<< "${git_status}"
+    prompt.git_status.ps1
 }
 
-function git.v2.branch(){ # [https://git-scm.com/docs/git-status#_branch_headers]
-    local header="$1";
-    local line="$2";
-    [[ "${line:0:${#header}}" == "${header}" ]] && gs["${header#*.}"]="${line:$(( ${#header}+1 ))}";
-}
-
-function git.branch(){
+function prompt.git_status.branch(){
+    # [https://git-scm.com/docs/git-status#_branch_headers]
     local line="$1";
-    if [[ "${GIT_PORCELAIN}" == 'v1' ]] && [[ "${line:0:3}" == "## " ]]; then
-        git.v1.branch "${line}";
-    else
-        git.v2.branch '# branch.oid' "${line}";
-        git.v2.branch '# branch.head' "${line}";
-        git.v2.branch '# branch.upstream' "${line}";
-        git.v2.branch '# branch.ab' "${line}";
-    fi
-    [[ "${gs[ab]}" =~ [+]([0-9]+) ]] && gs[+]="${BASH_REMATCH[1]}";
-    [[ "${gs[ab]}" =~ [-]([0-9]+) ]] && gs[-]="${BASH_REMATCH[1]}";
-    [[ "${gs[ab]}" =~ 'ahead '([0-9]+) ]] && gs[+]="${BASH_REMATCH[1]}";
-    [[ "${gs[ab]}" =~ 'behind '([0-9]+) ]] && gs[-]="${BASH_REMATCH[1]}";
-}
-
-function git.state(){
-    # [https://git-scm.com/docs/git-status#_short_format]
-    local line="$1";
-    [[ "${GIT_PORCELAIN}" == 'v1' ]] && { local index=0; local worktree=1; } || { local index=2; local worktree=3; }
-    for state in 'A' 'C' 'D' 'M' 'R' 'U'; do
-        [[ "${line:${index}:1}" == "${state}" ]] && ((gs["${state^}"]+=1)); # [uppercase^](https://bash-hackers.docs.cern.ch/syntax/pe#case_modification)
-        [[ "${line:${worktree}:1}" == "${state}" ]] && ((gs["${state,}"]+=1)); # [lowercase,](https://bash-hackers.docs.cern.ch/syntax/pe#case_modification)
-    done
-}
-
-function git.status(){ # [https://git-scm.com/docs/git-status#_changed_tracked_entries]
-    local line="$1";
-    if [[ "${GIT_PORCELAIN}" == 'v1' ]] && [[ "${line:0:3}" != "## " ]]; then
-        git.state "${line}";
-        return 0;
-    fi
-    case "${line:0:1}" in
-        '?') ((gs['?']+=1));; # untracked items
-        '!') ((gs['!']+=1));; # ignored items
-        '1') ((gs['changed']+=1)) && git.state "${line}";; # ordinary changed entries
-        '2') ((gs['mvcp']+=1)) && git.state "${line}";; # renamed or copied entries
-        'u') ((gs['unmerged']+=1)) && git.state "${line}";; # unmerged entries
+    case "${line}" in # [${PARAMETER#PATTERN}](https://bash-hackers.docs.cern.ch/syntax/pe#from_the_beginning)
+        '# branch.oid'*) GS['oid']="${line#*'branch.oid '}";;
+        '# branch.head'*) GS['head']="${line#*'branch.head '}";;
+        '# branch.upstream'*) GS['upstream']="${line#*'branch.upstream '}";;
+        '# branch.ab'*) prompt.git_status.ahead_behind "${line}";;
+        '# stash'*) GS['stash']="${line#*'stash '}";; # [https://git-scm.com/docs/git-status#_stash_information]
     esac
 }
 
-function git.ps1(){
-    local ps1;
-    [[ "${gs[head]}" == '(detached)' ]] && ps1="${TXT[red]}" || ps1="${TXT[green]}";
-    ps1+="${gs[head]}${TXT[reset]}@";
-    [[ "${gs[oid]}" == '(initial)' ]] && ps1+="${TXT[yellow]}${gs[oid]}" || ps1+="${TXT[magenta]}${gs[oid]:0:7}";
+function prompt.git_status.ahead_behind(){
+    # [https://git-scm.com/docs/git-status#_branch_headers]
+    local line="$1";
+    local ab="${line#*'branch.ab '}";
+    GS['-']="${ab#* -}";
+    ab="${ab%% -*}"; # [${PARAMETER%%PATTERN}](https://bash-hackers.docs.cern.ch/syntax/pe#from_the_end)
+    GS['+']="${ab#+}";
+}
+
+function prompt.git_status.ps1(){
+    # [A:added, C:copied, D:deleted, M:modified, R:renamed, T:type_changed(symlink/submodule), U:unmerged](https://git-scm.com/docs/git-status#_output)
+    local ps1 key;
+    [[ "${GS[head]}" == '(detached)' ]] && ps1="${TXT[red]}" || ps1="${TXT[green]}";
+    ps1+="${GS[head]}${TXT[reset]}@";
+    [[ "${GS[oid]}" == '(initial)' ]] && ps1+="${TXT[yellow]}${GS[oid]}" || ps1+="${TXT[magenta]}${GS[oid]:0:7}";
     ps1+="${TXT[cyan]}↓${TXT[reset]}";
-    [[ -n "${gs[upstream]}" ]] && ps1+=":${TXT[red]}${gs[upstream]}${TXT[cyan]}↑${TXT[reset]}";
-    for key in '+' '-'; do (( "${gs[${key}]:-0}" > 0 )) && ps1+=":${TXT[RED]}${gs[${key}]}${key^^}${TXT[reset]}"; done;
-    for key in 'A' 'C' 'D' 'M' 'R' 'U'; do [[ -n "${gs[${key}]}" ]] && ps1+=":${TXT[GREEN]}${gs[${key}]}${key}${TXT[reset]}"; done;
-    for key in 'a' 'c' 'd' 'm' 'r' 'u'; do [[ -n "${gs[${key}]}" ]] && ps1+=":${TXT[RED]}${gs[${key}]}${key^^}${TXT[reset]}"; done;
-    for key in '?' '!'; do [[ -n "${gs[${key}]}" ]] && ps1+=":${TXT[yellow]}${gs[${key}]}${key}${TXT[reset]}"; done;
+    [[ -n "${GS[upstream]}" ]] && ps1+=":${TXT[red]}${GS[upstream]}${TXT[cyan]}↑${TXT[reset]}";
+    for key in '+' '-'; do (( "${GS[${key}]:-0}" > 0 )) && ps1+=":${TXT[RED]}${GS[${key}]}${key^^}${TXT[reset]}"; done;
+    for key in 'A' 'C' 'D' 'M' 'R' 'T' 'U'; do [[ -n "${GS[${key}]}" ]] && ps1+=":${TXT[yellow]}${GS[${key}]}${key}${TXT[reset]}"; done;
+    for key in 'a' 'c' 'd' 'm' 'r' 't' 'u'; do [[ -n "${GS[${key}]}" ]] && ps1+=":${TXT[RED]}${GS[${key}]}${key^^}${TXT[reset]}"; done;
+    for key in '?' '!'; do [[ -n "${GS[${key}]}" ]] && ps1+=":${TXT[yellow]}${GS[${key}]}${key}${TXT[reset]}"; done;
     printf "%s\n" "${ps1}";
 }
 
-function prompt.git(){
-    # BASH parser for `git status --branch --porcelain` (supports porcelain v1 and v2)
-    # The first field in the the short-format (staged entries) are indicated in red and the second field (unstaged entries) are indicated in green [https://stackoverflow.com/a/1587952/13019084]
-    # [https://git-scm.com/docs/git-status#_output]
-    unset gs;
-    declare -A -g gs; # [associative array requires BASH>=4.0](https://bash-hackers.docs.cern.ch/syntax/arrays#associative_bash_4)
-    local git_status;
-    [[ -n "$(command -v 'git.exe')" ]] && local git='git.exe' || local git='git'; # [Faster git status under WSL2](https://markentier.tech/posts/2020/10/faster-git-under-wsl2/)
-    ${git} rev-parse --is-inside-work-tree >/dev/null 2>&1 || return 0;
-    git_status="$(${git} status --porcelain=v2 --branch 2>/dev/null)"; # [https://git-scm.com/docs/git-status#_porcelain_format_version_2]
-    [[ -z "${git_status}" ]] && export GIT_PORCELAIN='v1' && git_status="$(${git} status --porcelain --branch)"; # [https://git-scm.com/docs/git-status#_porcelain_format_version_1]
-    local line;
+function prompt.git_status.v1(){
+    # [https://git-scm.com/docs/git-status#_porcelain_format_version_1]
+    local git_status="$(${GIT_BIN} status --porcelain --branch --show-stash 2>/dev/null)";
+    [[ -z "${git_status}" ]] && return 0;
+    unset GS;
+    declare -A -g GS; # [associative array requires BASH>=4.0](https://bash-hackers.docs.cern.ch/syntax/arrays#associative_bash_4)
+    local line index work_tree;
     while IFS= read -r line; do # By default, read [removes] all leading and trailing whitespace characters [http://mywiki.wooledge.org/BashFAQ/001#Trimming]
-        git.branch "${line}";
-        git.status "${line}"; # [[ "$(${git} ls-files "$(${git} rev-parse --show-toplevel)" | wc -l)" <= 100 ]] && git.status "${line}";
+        case "${line:0:2}" in
+            '##') prompt.git_status.v1.branch "${line}";;
+            '??') (( GS['?']++ ));; # untracked
+            '!!') (( GS['!']++ ));; # ignored
+            *) # [https://git-scm.com/docs/git-status#_short_format]
+                index="${line:0:1}";
+                work_tree="${line:1:1}";
+                [[ "${index}" != ' ' ]] && (( GS["${index^}"]++ )); # [${PARAMETER^}](https://bash-hackers.docs.cern.ch/syntax/pe#case_modification)
+                [[ "${work_tree}" != ' ' ]] && (( GS["${work_tree,}"]++ )); # [${parameter,}](https://bash-hackers.docs.cern.ch/syntax/pe#case_modification)
+                ;;
+        esac
     done <<< "${git_status}"
-    git.ps1;
+    prompt.git_status.ps1
+}
+
+function prompt.git_status.v1.branch(){
+    local line="$1"
+    local branch ab;
+    read -r _ branch ab <<< "${line}";
+    GS['oid']="$(git rev-parse --short HEAD 2>&1)";
+    [[ ! "${branch}" =~ ... ]] && GS['head']="${branch}" || IFS=: read -r GS['head'] GS['upstream'] <<< "${branch/.../:}";
+    [[ "${ab}" =~ 'ahead '([0-9]+) ]] && GS[+]="${BASH_REMATCH[1]}";
+    [[ "${ab}" =~ 'behind '([0-9]+) ]] && GS[-]="${BASH_REMATCH[1]}";
 }
