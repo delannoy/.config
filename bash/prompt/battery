@@ -6,10 +6,14 @@
 log.debug.filepath;
 
 function prompt.battery(){
-    local path energy_now energy_full;
-    path='/sys/class/power_supply/BAT'*;
-    [[ "$(cat ${path}/status)" != 'Discharging' ]] && return;
-    energy_now="$(<${path}/energy_now)";
-    energy_full="$(<${path}/energy_full)";
-    bc --mathlib <<< "scale = 2; 100 * ${energy_now} / ${energy_full}";
+    local path status energy_now energy_full;
+    local paths=('/sys/class/power_supply/BAT'*);
+    path="${paths[0]}"
+    read -r status < "${path}/status"
+    [[ "${status}" != 'Discharging' ]] && return 0;
+    read -r energy_now < "${path}/energy_now";
+    read -r energy_full < "${path}/energy_full";
+    local integer=$(( 100 * energy_now / energy_full ))
+    local remainder=$(( 100 * energy_now % energy_full ))
+    printf '%d.%02d' "${integer}" "$(( (100 * remainder) / energy_full ))"
 }
