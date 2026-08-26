@@ -4,7 +4,7 @@ log.debug.filepath;
 
 export DISTRO_VERSION="$(source '/etc/os-release' 2>/dev/null && echo "${ID}_${VERSION_ID:-${VERSION_CODENAME}}" || lsb_release --short --id --release 2>/dev/null | tr -d '\n')"; # [https://unix.stackexchange.com/a/6348] [https://unix.stackexchange.com/a/25131]
 
-path.executable 'git.exe' && export GIT_BIN='git.exe' || { path.executable 'git' && export GIT_BIN='git'; } # [Faster git status under WSL2](https://markentier.tech/posts/2020/10/faster-git-under-wsl2/)
+type -P 'git.exe' >/dev/null && export GIT_BIN='git.exe' || { type -P 'git' >/dev/null && export GIT_BIN='git'; } # [Faster git status under WSL2](https://markentier.tech/posts/2020/10/faster-git-under-wsl2/)
 export GIT_STATUS_PROMPT='true';
 
 export RSYNCOF='%i %o %b/%7''l %B %L %C %n'; # [rsyncd log format](https://download.samba.org/pub/rsync/rsyncd.conf.html#log_format)
