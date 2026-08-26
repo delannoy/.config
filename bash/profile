@@ -5,12 +5,13 @@
 
 function benchmark(){
     # [Debugging slow bash startup files](https://mdjnewman.me/2017/10/debugging-slow-bash-startup-files/)
-    exec 5> >(ts -i "%.s" >> /tmp/timestamps);
+    local output_path="$1";
+    exec 5> >(ts -i "%.s" >> "$1");
     export BASH_XTRACEFD='5';
     set -x;
 }
 
-# benchmark
+benchmark '/tmp/timestamps'
 
 [[ -v BASH ]] || return 0; # [BASH](https://bash-hackers.docs.cern.ch/syntax/shellvars#bash) [Misc syntax](https://bash-hackers.docs.cern.ch/commands/classictest#misc_syntax)
 
@@ -18,31 +19,32 @@ shopt -q login_shell || return 0; # [How to check if a shell is login/interactiv
 
 export LOG_LEVEL='DEBUG';
 
-# [If the NO_COLOR environment variable is set, Python will disable all color in the output](https://docs.python.org/3.13/using/cmdline.html#using-on-controlling-color)
-# export NO_COLOR=''; # [Command-line software which adds ANSI color to its output by default should check for a NO_COLOR environment variable that, when present and not an empty string (regardless of its value), prevents the addition of ANSI color.](https://no-color.org/)
+unset NO_COLOR; # [Command-line software which adds ANSI color to its output by default should check for a NO_COLOR environment variable that, when present and not an empty string (regardless of its value), prevents the addition of ANSI color.](https://no-color.org/)
 
 function filepath.logger(){
-    # pre-calculate whether `INFO` or `DEBUG` levels should be logged (if so, define their printf format), store the results as environment variables, and define alias for startup files.
+    # pre-calculate whether `INFO` or `DEBUG` levels should be logged (if so, define their printf format) and define alias for startup files.
     declare -A LOG=(['NOTSET']=0 ['DEBUG']=10 ['INFO']=20 ['WARNING']=30 ['ERROR']=40 ['CRITICAL']=50); # https://docs.python.org/3/howto/logging.html#logging-levels
-    export LOG_DEBUG=$(( LOG[DEBUG] >= LOG[${LOG_LEVEL}] )); # https://mywiki.wooledge.org/ArithmeticExpression
-    export LOG_INFO=$(( LOG[INFO] >= LOG[${LOG_LEVEL}] )); # https://bash-hackers.docs.cern.ch/syntax/arith_expr
-    (( "${LOG_DEBUG}" )) && [[ -z "${NO_COLOR}" ]] && export DEBUG_FMT="$(tput setaf 8)%s$(tput sgr0)\n"; # DEBUG_FMT='\033[90m%s\033[0m\n'
-    (( "${LOG_INFO}" )) && [[ -z "${NO_COLOR}" ]] && export INFO_FMT="$(tput setaf 2)%s$(tput sgr0)\n"; # INFO_FMT='\033[32m%s\033[0m\n'
-    alias log.debug.filepath='(( "${LOG_DEBUG}" )) && printf "${DEBUG_FMT}" "${BASH_SOURCE[0]}"'; # "$(realpath "${BASH_SOURCE[0]}")" # [How do I determine the location of my script?](https://mywiki.wooledge.org/BashFAQ/028)
-    alias log.info.filepath='(( "${LOG_INFO}" )) && printf "${INFO_FMT}" "${BASH_SOURCE[0]}"'; # "$(realpath "${BASH_SOURCE[0]}")" # [Reliable way for a Bash script to get the full path to itself](https://stackoverflow.com/a/11114547)
+    local format_debug='%s\n' format_info='%s\n' log_level="${LOG[${LOG_LEVEL:-'NOTSET'}]}";
+    [[ -v NO_COLOR ]] || { format_debug="$(tput setaf 8)%s$(tput sgr0)\n"; format_info="$(tput setaf 2)%s$(tput sgr0)\n"; }; # format_debug='\033[90m%s\033[0m\n'; format_info='\033[32m%s\033[0m\n' # https://mywiki.wooledge.org/ArithmeticExpression https://bash-hackers.docs.cern.ch/syntax/arith_expr
+    (( LOG['DEBUG'] >= log_level )) && FORMAT_DEBUG="${format_debug}"; # format_debug='\033[90m%s\033[0m\n' # https://mywiki.wooledge.org/ArithmeticExpression
+    (( LOG['INFO'] >= log_level )) && FORMAT_INFO="${format_info}"; # format_info='\033[32m%s\033[0m\n' # https://bash-hackers.docs.cern.ch/syntax/arith_expr
+    alias log.debug.filepath='printf "${FORMAT_DEBUG}" "${BASH_SOURCE[0]}"'; # [How do I determine the location of my script?](https://mywiki.wooledge.org/BashFAQ/028)
+    alias log.info.filepath='printf "${FORMAT_INFO}" "${BASH_SOURCE[0]}"'; # [Reliable way for a Bash script to get the full path to itself](https://stackoverflow.com/a/11114547)
 }
 
 function path.executable(){
     # check whether argument is found in `$PATH` and whether it is executable.
-    local executable_path;
-    executable_path="$(command -v "$1")" && [[ -x "${executable_path}" ]]
+    local search_path=false;
+    "${search_path}" || return 0;
+    type -P "${1}" >/dev/null && return 0;
 }
 
 function source.dir(){
     # [How to source all files in a directory?](https://stackoverflow.com/a/12426672) [Sourcing Files in Bash Profile using Wildcard](https://askubuntu.com/a/1271269/1987701)
+    [[ -d "${1}" ]] || return 0;
     local file dir="${1%*/}"; # strip trailing '/' [https://mywiki.wooledge.org/BashFAQ/100#Removing_part_of_a_string]
     for file in "${dir}"/[!.]*; do # matching_files="$(compgen -G "${dir}/${glob}")"; # [How can I check whether a directory is empty or not?](https://mywiki.wooledge.org/BashFAQ/004)
-        [[ -f "${file}" ]] && source "${file}";
+        [[ -f "${file}" && -r "${file}" ]] && source "${file}";
     done;
 }
 
@@ -58,7 +60,8 @@ function xdg(){
     export XDG_DATA_HOME="${HOME}/.local/share"; # base directory relative to which user-specific data files should be stored
     export XDG_STATE_HOME="${HOME}/.local/state"; # base directory relative to which user-specific state files should be stored
     export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-"/run/user/${UID}"}"; # base directory relative to which user-specific non-essential runtime files and other file objects (such as sockets, named pipes, ...) should be stored
-    mkdir --parents --verbose "${XDG_DATA_HOME}" "${XDG_STATE_HOME}";
+    [[ -d "${XDG_DATA_HOME}" ]] || mkdir --parents --verbose "${XDG_DATA_HOME}";
+    [[ -d "${XDG_STATE_HOME}" ]] || mkdir --parents --verbose "${XDG_STATE_HOME}";
 }
 
 xdg;
@@ -71,4 +74,5 @@ export -f filepath.logger source.dir; # [Can I "export" functions in bash?](http
 
 source.dir "${XDG_CONFIG_HOME}/bash/env/";
 source.dir "${XDG_CONFIG_HOME}/private/bash/env/";
+source "${XDG_CONFIG_HOME}/bash/shopt";
 source "${XDG_CONFIG_HOME}/bash/bashrc";
