@@ -11,7 +11,7 @@ function benchmark(){
     set -x;
 }
 
-benchmark '/tmp/timestamps'
+# benchmark '/tmp/timestamps'
 
 [[ -v BASH ]] || return 0; # [BASH](https://bash-hackers.docs.cern.ch/syntax/shellvars#bash) [Misc syntax](https://bash-hackers.docs.cern.ch/commands/classictest#misc_syntax)
 
@@ -74,5 +74,4 @@ export -f filepath.logger source.dir; # [Can I "export" functions in bash?](http
 
 source.dir "${XDG_CONFIG_HOME}/bash/env/";
 source.dir "${XDG_CONFIG_HOME}/private/bash/env/";
-source "${XDG_CONFIG_HOME}/bash/shopt";
 source "${XDG_CONFIG_HOME}/bash/bashrc";
