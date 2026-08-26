@@ -2,7 +2,7 @@
 
 log.debug.filepath;
 
-declare -ag ERR;
+declare -a -g ERR;
 
 # [https://github.com/torvalds/linux/blob/master/include/uapi/asm-generic/errno-base.h]
 # [Exit Code when called with No Arguments](https://stackoverflow.com/a/51102258/13019084)
